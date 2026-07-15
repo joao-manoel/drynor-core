@@ -30,7 +30,9 @@ jobs:
         cache: gradle
 
     - name: Publish to GitHub Packages
-      run: ./gradlew clean build publish --no-daemon
+      run: |
+        chmod +x gradlew
+        ./gradlew clean build publish --no-daemon
       env:
         GITHUB_ACTOR: ${{ github.actor }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
