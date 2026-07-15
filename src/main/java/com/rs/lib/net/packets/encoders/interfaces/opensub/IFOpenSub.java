@@ -1,0 +1,51 @@
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//  Copyright (C) 2021 Trenton Kress
+//  This file is part of project: Darkan
+//
+package com.rs.lib.net.packets.encoders.interfaces.opensub;
+
+import com.rs.lib.io.OutputStream;
+import com.rs.lib.net.ServerPacket;
+import com.rs.lib.net.packets.PacketEncoder;
+
+public class IFOpenSub extends PacketEncoder {
+
+	private boolean overlay;
+	private int topId;
+	private int topChildId;
+	private int subId;
+
+	public IFOpenSub(int topId, int topChildId, int subId, boolean overlay) {
+		super(ServerPacket.IF_OPENSUB);
+		this.subId = subId;
+		this.topId = topId;
+		this.topChildId = topChildId;
+		this.overlay = overlay;
+	}
+
+	@Override
+	public void encodeBody(OutputStream stream) {
+		int[] xteas = new int[4];
+		int topUid = topId << 16 | topChildId;
+		stream.writeInt(xteas[0]);
+		stream.writeIntInverseMiddle(xteas[2]);
+		stream.writeIntInverseMiddle(xteas[1]);
+		stream.writeShortAddLittle(subId);
+		stream.writeIntLittle(xteas[3]);
+		stream.writeInt(topUid);
+		stream.writeByteInverse(overlay ? 1 : 0);
+	}
+
+}

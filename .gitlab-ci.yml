@@ -1,0 +1,40 @@
+image: eclipse-temurin:24.0.1_9-jdk-alpine
+
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+
+.cache_gradle:
+  cache:
+    key: "$CI_COMMIT_REF_NAME-gradle"
+    policy: pull-push
+    paths:
+      - .gradle/caches/
+      - .gradle/wrapper/
+
+build:
+  stage: build
+  script: ./gradlew assemble --build-cache --parallel --max-workers=$(nproc)
+  cache:
+    key: "$CI_COMMIT_REF_NAME-gradle"
+    policy: pull-push
+    paths:
+      - build/
+  extends:
+    - .cache_gradle
+
+deploy:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "master"'
+  script:
+    - echo "Deploying build artifacts..."
+    - ./gradlew publish --parallel --max-workers=$(nproc)
+  environment: production
+  cache:
+    key: "$CI_COMMIT_REF_NAME-gradle"
+    policy: pull-push
+    paths:
+      - build/
+  extends:
+    - .cache_gradle
