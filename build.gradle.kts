@@ -13,7 +13,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/joao-manoel/gielenor-core")
+            url = uri("https://maven.pkg.github.com/joao-manoel/drynor-core")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                     ?: providers.gradleProperty("gpr.user").orNull
