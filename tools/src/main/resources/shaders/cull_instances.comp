@@ -1,0 +1,74 @@
+#version 430 core
+
+// GPU frustum culling for the multi-draw-indirect object path.
+//
+// One invocation per *draw item*, where a draw item is one (object instance, mesh batch)
+// pair. Each item owns a reserved slot range inside the visible-index buffer, keyed by the
+// draw command it belongs to, so a surviving item only has to claim a slot with an atomic
+// increment of that command's instanceCount. Commands whose items are all culled end the
+// dispatch with instanceCount == 0 and draw nothing.
+//
+// Nothing here is read back by the CPU: the counts the draw needs live entirely in the
+// command buffer, and the debug counters go into a ring the CPU samples frames later.
+
+layout(local_size_x = 64) in;
+
+// Mirrors DrawElementsIndirectCommand: five tightly packed uints.
+struct DrawCommand {
+    uint count;
+    uint instanceCount;
+    uint firstIndex;
+    uint baseVertex;
+    uint baseInstance;
+};
+
+// World-space bounding sphere per item: xyz = centre, w = radius.
+layout(std430, binding = 3) readonly buffer BoundsBlock {
+    vec4 itemBounds[];
+};
+
+// Per item: x = index of the draw command it belongs to, y = its triangle count.
+layout(std430, binding = 4) readonly buffer ItemCommandBlock {
+    uvec2 itemCommand[];
+};
+
+layout(std430, binding = 5) buffer CommandBlock {
+    DrawCommand commands[];
+};
+
+layout(std430, binding = 2) writeonly buffer VisibleBlock {
+    uint visibleItems[];
+};
+
+// Debug counters, sampled by the CPU several frames later. Two uints per slot:
+// [statsIndex] = visible items, [statsIndex + 1] = visible triangles.
+layout(std430, binding = 6) buffer StatsBlock {
+    uint counters[];
+};
+
+uniform vec4 frustumPlanes[6];
+uniform uint itemCount;
+uniform uint statsIndex;
+
+void main() {
+    uint item = gl_GlobalInvocationID.x;
+    if (item >= itemCount) return;
+
+    vec4 sphere = itemBounds[item];
+
+    // Outside if the sphere sits entirely behind any one plane.
+    for (int p = 0; p < 6; ++p) {
+        if (dot(frustumPlanes[p].xyz, sphere.xyz) + frustumPlanes[p].w < -sphere.w) {
+            return;
+        }
+    }
+
+    uvec2 meta = itemCommand[item];
+    uint commandIndex = meta.x;
+
+    uint slot = atomicAdd(commands[commandIndex].instanceCount, 1u);
+    visibleItems[commands[commandIndex].baseInstance + slot] = item;
+
+    atomicAdd(counters[statsIndex], 1u);
+    atomicAdd(counters[statsIndex + 1u], meta.y);
+}

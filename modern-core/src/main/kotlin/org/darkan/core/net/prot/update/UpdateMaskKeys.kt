@@ -1,0 +1,52 @@
+package org.darkan.core.net.prot.update
+
+enum class PlayerMaskKey {
+    APPEARANCE,
+    TINT,
+    VARN_CLEAR,
+    VARN_NO_CLEAR,
+    BODY_MODEL_ROTATOR,
+    FACE_DIRECTION,
+    FACE_ENTITY,
+    MOVE_TYPE,
+    TEMPORARY_MOVE_TYPE,
+    FORCE_MOVEMENT,
+    ANIMATION,
+    ANIMATION_SEQUENCE,
+    SPOT_ANIM_1,
+    SPOT_ANIM_2,
+    SPOT_ANIM_3,
+    SPOT_ANIM_4,
+    FORCE_TALK,
+    FORCE_CHAT,
+    HITS,
+    MAP_DOT_1,
+    MAP_DOT_2,
+}
+
+enum class NpcMaskKey {
+    NAME_CHANGE,
+    TRANSFORMATION,
+    CHANGE_COMBAT_LEVEL,
+    BAS,
+    BODY_MESH_MODIFIER,
+    HEAD_MESH_MODIFIER,
+    BODY_MODEL_ROTATOR,
+    TINT,
+    VARN_SET,
+    VARN_CLEAR,
+    FACE_ENTITY,
+    FACE_TILE,
+    FORCE_MOVEMENT,
+    ANIMATION,
+    ANIMATION_SEQUENCE,
+    SPOT_ANIM_1,
+    SPOT_ANIM_2,
+    SPOT_ANIM_3,
+    SPOT_ANIM_4,
+    FORCE_TALK,
+    HITS,
+    STATS_UPDATE,
+}
+
+

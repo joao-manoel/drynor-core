@@ -1,0 +1,38 @@
+{
+ "source": "the 26 master capes (objs 25324-25349) imported from RS3 949: every cape texture was a lone op 39 sprite with opaque, opacity and hdr all pointing at it, so the client's only alpha source was the colour's red channel; each gets a grey alpha sprite carrying its colour sprite's own alpha channel, wired to the texture's opacity output, with effectCombiner 2 on the material",
+ "naming": "the objs name every material through their retexture arrays: 2563 is Agility's own emblem (the Agility cape retextures nothing), every other cape retextures 2563 to its own material, and Invention retextures 2589 to 2590; 2562 and 2588 are the cape cloth (pixel-identical sprites 12042 and 12068), 2589 is Invention's base emblem (pixel-identical to Agility's 12043); the skill spellings are the RS3 material gamevals (master_skillcape_*), so Constitution keeps RS3's hitpoints",
+ "ceilings": {
+  "graphic": 12424
+ },
+ "sprites": [
+  {"material": 2562, "graphic": 12425, "gameval": "master_skillcape_cloth_alpha"},
+  {"material": 2563, "graphic": 12426, "gameval": "master_skillcape_agility_alpha"},
+  {"material": 2564, "graphic": 12427, "gameval": "master_skillcape_attack_alpha"},
+  {"material": 2565, "graphic": 12428, "gameval": "master_skillcape_strength_alpha"},
+  {"material": 2566, "graphic": 12429, "gameval": "master_skillcape_defence_alpha"},
+  {"material": 2567, "graphic": 12430, "gameval": "master_skillcape_ranged_alpha"},
+  {"material": 2568, "graphic": 12431, "gameval": "master_skillcape_prayer_alpha"},
+  {"material": 2569, "graphic": 12432, "gameval": "master_skillcape_magic_alpha"},
+  {"material": 2570, "graphic": 12433, "gameval": "master_skillcape_runecrafting_alpha"},
+  {"material": 2571, "graphic": 12434, "gameval": "master_skillcape_construction_alpha"},
+  {"material": 2572, "graphic": 12435, "gameval": "master_skillcape_hitpoints_alpha"},
+  {"material": 2573, "graphic": 12436, "gameval": "master_skillcape_herblore_alpha"},
+  {"material": 2574, "graphic": 12437, "gameval": "master_skillcape_thieving_alpha"},
+  {"material": 2575, "graphic": 12438, "gameval": "master_skillcape_crafting_alpha"},
+  {"material": 2576, "graphic": 12439, "gameval": "master_skillcape_fletching_alpha"},
+  {"material": 2577, "graphic": 12440, "gameval": "master_skillcape_slayer_alpha"},
+  {"material": 2578, "graphic": 12441, "gameval": "master_skillcape_hunter_alpha"},
+  {"material": 2579, "graphic": 12442, "gameval": "master_skillcape_divination_alpha"},
+  {"material": 2580, "graphic": 12443, "gameval": "master_skillcape_mining_alpha"},
+  {"material": 2581, "graphic": 12444, "gameval": "master_skillcape_smithing_alpha"},
+  {"material": 2582, "graphic": 12445, "gameval": "master_skillcape_fishing_alpha"},
+  {"material": 2583, "graphic": 12446, "gameval": "master_skillcape_cooking_alpha"},
+  {"material": 2584, "graphic": 12447, "gameval": "master_skillcape_firemaking_alpha"},
+  {"material": 2585, "graphic": 12448, "gameval": "master_skillcape_woodcutting_alpha"},
+  {"material": 2586, "graphic": 12449, "gameval": "master_skillcape_farming_alpha"},
+  {"material": 2587, "graphic": 12450, "gameval": "master_skillcape_summoning_alpha"},
+  {"material": 2588, "graphic": 12451, "gameval": "master_skillcape_invention_cloth_alpha"},
+  {"material": 2589, "graphic": 12452, "gameval": "master_skillcape_invention_base_alpha"},
+  {"material": 2590, "graphic": 12453, "gameval": "master_skillcape_invention_alpha"}
+ ]
+}

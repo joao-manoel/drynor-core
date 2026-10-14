@@ -1,0 +1,13 @@
+.git
+.gradle
+.kotlin
+.idea
+/build
+/modern-core/build
+/legacy-compat/build
+/cs2/build
+/tools/build
+/buildSrc/build
+.env
+.env.*
+*.log

@@ -1,0 +1,75 @@
+{
+ "source": "RS3 revision 949 tree ~/darkan/darkan-3-undercut/unpacked-cache; the default (golden) loot beam, varbit bslay_lootbeam_active_default = 1, one spotanim per value tier; 727 ids allocated next-free, contiguously, in this order",
+ "ceilings": {
+  "graphic": 12418,
+  "texture": 2590,
+  "material": 2590,
+  "base": 3534,
+  "anim": 4084,
+  "seq": 17219,
+  "producer": 740,
+  "effector": 17,
+  "model": 73501,
+  "spotanim": 3251
+ },
+ "materials": [
+  {"rs3": 4024, "gameval": "njloot_2013_base_pattern", "rs3Texture": 11781, "graphic": 12419, "opacityGraphic": 12422, "texture": 2591, "material": 2591},
+  {"rs3": 3053, "gameval": "energy_beam_white", "rs3Texture": 5692, "graphic": 12420, "opacityGraphic": 12423, "texture": 2592, "material": 2592},
+  {"rs3": 3001, "gameval": "energy_ball2", "rs3Texture": 5698, "graphic": 12421, "opacityGraphic": 12424, "texture": 2593, "material": 2593}
+ ],
+ "opacityGraphics": "727's sprite texture op (type 39) hands the texture RGB only, and the per-pixel alpha comes from the texture's opacity output, so every RS3 texture with partial alpha needs a second sprite holding the alpha as grey; all three do, and they take the next three graphic ids after the colour sprites, named <material>_alpha",
+ "reusedMaterials": {
+  "3075": {"material": 857, "reason": "learned: RS3 glowing_orb is 727 857 on all 13 producers both caches share"},
+  "2914": {"material": 1498, "reason": "learned: RS3 polypore_fungus_billboard is 727 1498 on all 6 shared producers"},
+  "3131": {"material": 1168, "reason": "learned: RS3 clan_torch_glow is 727 1168 on all 9 shared billboards"}
+ },
+ "reusedBillboards": {
+  "rs3Material3131Size111": {"billboard": 119, "reason": "727 billboards 119, 120, 122 and 165 are materialId 1168 size 111; the lowest is taken"}
+ },
+ "base": {"rs3": 3986, "base": 3535},
+ "producers": [
+  {"rs3": 1419, "producer": 741},
+  {"rs3": 1420, "producer": 742},
+  {"rs3": 1421, "producer": 743},
+  {"rs3": 1422, "producer": 744},
+  {"rs3": 1423, "producer": 745},
+  {"rs3": 1424, "producer": 746}
+ ],
+ "effectors": [
+  {"rs3": 21, "effector": 18, "decision": "written with type 0 and sizeMultiplier 0, so no opcode 4: the 727 client reads effector opcode 4 as a bare int where Jagex's files hold a byte and an int, so the type is never read and the multiplier's low byte becomes the next opcode (RS3's type 2 / multiplier 1 made it opcode 1 and a rotation of 2057, which overruns COSINE[rotation shl 3]); the client's type is always 0, and the multiplier only matters to types 1 and 2, so nothing the client can draw is lost"}
+ ],
+ "tiers": [
+  {
+   "tier": 1,
+   "rs3": {"spotanim": 4419, "model": 91549, "seq": 21976, "anim": 2786},
+   "anim": 4085,
+   "seq": {"id": 17220, "gameval": "njloot_2013_glow_t1"},
+   "model": {"id": 73502, "gameval": "njloot_2013_t1"},
+   "spotanim": {"id": 3252, "gameval": "njloot_2013_glow_t1"}
+  },
+  {
+   "tier": 2,
+   "rs3": {"spotanim": 4420, "model": 91550, "seq": 21975, "anim": 2787},
+   "anim": 4086,
+   "seq": {"id": 17221, "gameval": "njloot_2013_glow_t2"},
+   "model": {"id": 73503, "gameval": "njloot_2013_t2"},
+   "spotanim": {"id": 3253, "gameval": "njloot_2013_glow_t2"}
+  },
+  {
+   "tier": 3,
+   "rs3": {"spotanim": 4421, "model": 91548, "seq": 21974, "anim": 2785},
+   "anim": 4087,
+   "seq": {"id": 17222, "gameval": "njloot_2013_glow_t3"},
+   "model": {"id": 73504, "gameval": "njloot_2013_t3"},
+   "spotanim": {"id": 3254, "gameval": "njloot_2013_glow_t3"}
+  },
+  {
+   "tier": 4,
+   "rs3": {"spotanim": 4422, "model": 91547, "seq": 21973, "anim": 2784},
+   "anim": 4088,
+   "seq": {"id": 17223, "gameval": "njloot_2013_glow"},
+   "model": {"id": 73505, "gameval": "njloot_2013_t4"},
+   "spotanim": {"id": 3255, "gameval": "njloot_2013_glow"}
+  }
+ ]
+}

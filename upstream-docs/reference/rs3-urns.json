@@ -1,0 +1,2882 @@
+{
+ "source": "RS3 revision 949 tree ~/darkan/darkan-3-undercut/unpacked-cache; 727 ids allocated next-free, contiguously, in this order",
+ "ceilings": {
+  "obj": 25358,
+  "model": 73416,
+  "seq": 17185,
+  "struct": 11388,
+  "enum_5465_length": 290
+ },
+ "existing": [
+  {
+   "skill": "smithing",
+   "tier": 1,
+   "obj": {
+    "unfired": 20271,
+    "norune": 20272,
+    "cert_norune": 20273,
+    "rune": 20274,
+    "started": 20275,
+    "full": 20276
+   },
+   "gameval": {
+    "unfired": "urns_smithing1_unfired",
+    "norune": "urns_smithing1_norune",
+    "cert_norune": "cert_urns_smithing1_norune",
+    "rune": "urns_smithing1_rune",
+    "started": "urns_smithing1_started",
+    "full": "urns_smithing1_full"
+   },
+   "name": {
+    "unfired": "Cracked smithing urn (unfired)",
+    "norune": "Cracked smithing urn (no rune)",
+    "rune": "Cracked smithing urn (empty)",
+    "started": "Cracked smithing urn",
+    "full": "Cracked smithing urn (full)"
+   },
+   "level": 4,
+   "wheelXp": 14.0,
+   "fireXp": 23.1,
+   "rs3Capacity": 200.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5872,
+    "gameval": "skillguide_crafting72",
+    "name": "Cracked smithing urn",
+    "level": 4
+   }
+  },
+  {
+   "skill": "smithing",
+   "tier": 2,
+   "obj": {
+    "unfired": 20277,
+    "norune": 20278,
+    "cert_norune": 20279,
+    "rune": 20280,
+    "started": 20281,
+    "full": 20282
+   },
+   "gameval": {
+    "unfired": "urns_smithing2_unfired",
+    "norune": "urns_smithing2_norune",
+    "cert_norune": "cert_urns_smithing2_norune",
+    "rune": "urns_smithing2_rune",
+    "started": "urns_smithing2_started",
+    "full": "urns_smithing2_full"
+   },
+   "name": {
+    "unfired": "Fragile smithing urn (unfired)",
+    "norune": "Fragile smithing urn (no rune)",
+    "rune": "Fragile smithing urn (empty)",
+    "started": "Fragile smithing urn",
+    "full": "Fragile smithing urn (full)"
+   },
+   "level": 17,
+   "wheelXp": 20.0,
+   "fireXp": 31.8,
+   "rs3Capacity": 1430.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5879,
+    "gameval": "skillguide_crafting79",
+    "name": "Fragile smithing urn",
+    "level": 17
+   }
+  },
+  {
+   "skill": "smithing",
+   "tier": 3,
+   "obj": {
+    "unfired": 20283,
+    "norune": 20284,
+    "cert_norune": 20285,
+    "rune": 20286,
+    "started": 20287,
+    "full": 20288
+   },
+   "gameval": {
+    "unfired": "urns_smithing3_unfired",
+    "norune": "urns_smithing3_norune",
+    "cert_norune": "cert_urns_smithing3_norune",
+    "rune": "urns_smithing3_rune",
+    "started": "urns_smithing3_started",
+    "full": "urns_smithing3_full"
+   },
+   "name": {
+    "unfired": "Plain smithing urn (unfired)",
+    "norune": "Plain smithing urn (no rune)",
+    "rune": "Plain smithing urn (empty)",
+    "started": "Plain smithing urn",
+    "full": "Plain smithing urn (full)"
+   },
+   "level": 35,
+   "wheelXp": 29.0,
+   "fireXp": 42.0,
+   "rs3Capacity": 2980.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5884,
+    "gameval": "skillguide_crafting84",
+    "name": "Plain smithing urn",
+    "level": 35
+   }
+  },
+  {
+   "skill": "smithing",
+   "tier": 4,
+   "obj": {
+    "unfired": 20289,
+    "norune": 20290,
+    "cert_norune": 20291,
+    "rune": 20292,
+    "started": 20293,
+    "full": 20294
+   },
+   "gameval": {
+    "unfired": "urns_smithing4_unfired",
+    "norune": "urns_smithing4_norune",
+    "cert_norune": "cert_urns_smithing4_norune",
+    "rune": "urns_smithing4_rune",
+    "started": "urns_smithing4_started",
+    "full": "urns_smithing4_full"
+   },
+   "name": {
+    "unfired": "Strong smithing urn (unfired)",
+    "norune": "Strong smithing urn (no rune)",
+    "rune": "Strong smithing urn (empty)",
+    "started": "Strong smithing urn",
+    "full": "Strong smithing urn (full)"
+   },
+   "level": 49,
+   "wheelXp": 36.0,
+   "fireXp": 52.0,
+   "rs3Capacity": 7254.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5889,
+    "gameval": "skillguide_crafting89",
+    "name": "Strong smithing urn",
+    "level": 49
+   }
+  },
+  {
+   "skill": "woodcutting",
+   "tier": 1,
+   "obj": {
+    "unfired": 20295,
+    "norune": 20296,
+    "cert_norune": 20297,
+    "rune": 20298,
+    "started": 20299,
+    "full": 20300
+   },
+   "gameval": {
+    "unfired": "urns_woodcutting1_unfired",
+    "norune": "urns_woodcutting1_norune",
+    "cert_norune": "cert_urns_woodcutting1_norune",
+    "rune": "urns_woodcutting1_rune",
+    "started": "urns_woodcutting1_started",
+    "full": "urns_woodcutting1_full"
+   },
+   "name": {
+    "unfired": "Cracked woodcutting urn (unfired)",
+    "norune": "Cracked woodcutting urn (no rune)",
+    "rune": "Cracked woodcutting urn (empty)",
+    "started": "Cracked woodcutting urn",
+    "full": "Cracked woodcutting urn (full)"
+   },
+   "level": 4,
+   "wheelXp": 14.0,
+   "fireXp": 23.1,
+   "rs3Capacity": 800.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5871,
+    "gameval": "skillguide_crafting71",
+    "name": "Cracked woodcutting urn",
+    "level": 4
+   }
+  },
+  {
+   "skill": "woodcutting",
+   "tier": 2,
+   "obj": {
+    "unfired": 20301,
+    "norune": 20302,
+    "cert_norune": 20303,
+    "rune": 20304,
+    "started": 20305,
+    "full": 20306
+   },
+   "gameval": {
+    "unfired": "urns_woodcutting2_unfired",
+    "norune": "urns_woodcutting2_norune",
+    "cert_norune": "cert_urns_woodcutting2_norune",
+    "rune": "urns_woodcutting2_rune",
+    "started": "urns_woodcutting2_started",
+    "full": "urns_woodcutting2_full"
+   },
+   "name": {
+    "unfired": "Fragile woodcutting urn (unfired)",
+    "norune": "Fragile woodcutting urn (no rune)",
+    "rune": "Fragile woodcutting urn (empty)",
+    "started": "Fragile woodcutting urn",
+    "full": "Fragile woodcutting urn (full)"
+   },
+   "level": 15,
+   "wheelXp": 19.0,
+   "fireXp": 30.0,
+   "rs3Capacity": 2125.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5877,
+    "gameval": "skillguide_crafting77",
+    "name": "Fragile woodcutting urn",
+    "level": 15
+   }
+  },
+  {
+   "skill": "woodcutting",
+   "tier": 3,
+   "obj": {
+    "unfired": 20307,
+    "norune": 20308,
+    "cert_norune": 20309,
+    "rune": 20310,
+    "started": 20311,
+    "full": 20312
+   },
+   "gameval": {
+    "unfired": "urns_woodcutting3_unfired",
+    "norune": "urns_woodcutting3_norune",
+    "cert_norune": "cert_urns_woodcutting3_norune",
+    "rune": "urns_woodcutting3_rune",
+    "started": "urns_woodcutting3_started",
+    "full": "urns_woodcutting3_full"
+   },
+   "name": {
+    "unfired": "Plain woodcutting urn (unfired)",
+    "norune": "Plain woodcutting urn (no rune)",
+    "rune": "Plain woodcutting urn (empty)",
+    "started": "Plain woodcutting urn",
+    "full": "Plain woodcutting urn (full)"
+   },
+   "level": 44,
+   "wheelXp": 34.0,
+   "fireXp": 48.0,
+   "rs3Capacity": 4125.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5887,
+    "gameval": "skillguide_crafting87",
+    "name": "Plain woodcutting urn",
+    "level": 44
+   }
+  },
+  {
+   "skill": "woodcutting",
+   "tier": 4,
+   "obj": {
+    "unfired": 20313,
+    "norune": 20314,
+    "cert_norune": 20315,
+    "rune": 20316,
+    "started": 20317,
+    "full": 20318
+   },
+   "gameval": {
+    "unfired": "urns_woodcutting4_unfired",
+    "norune": "urns_woodcutting4_norune",
+    "cert_norune": "cert_urns_woodcutting4_norune",
+    "rune": "urns_woodcutting4_rune",
+    "started": "urns_woodcutting4_started",
+    "full": "urns_woodcutting4_full"
+   },
+   "name": {
+    "unfired": "Strong woodcutting urn (unfired)",
+    "norune": "Strong woodcutting urn (no rune)",
+    "rune": "Strong woodcutting urn (empty)",
+    "started": "Strong woodcutting urn",
+    "full": "Strong woodcutting urn (full)"
+   },
+   "level": 61,
+   "wheelXp": 42.0,
+   "fireXp": 58.2,
+   "rs3Capacity": 8312.5,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5893,
+    "gameval": "skillguide_crafting93",
+    "name": "Strong woodcutting urn",
+    "level": 61
+   }
+  },
+  {
+   "skill": "fishing",
+   "tier": 1,
+   "obj": {
+    "unfired": 20319,
+    "norune": 20320,
+    "cert_norune": 20321,
+    "rune": 20322,
+    "started": 20323,
+    "full": 20324
+   },
+   "gameval": {
+    "unfired": "urns_fishing1_unfired",
+    "norune": "urns_fishing1_norune",
+    "cert_norune": "cert_urns_fishing1_norune",
+    "rune": "urns_fishing1_rune",
+    "started": "urns_fishing1_started",
+    "full": "urns_fishing1_full"
+   },
+   "name": {
+    "unfired": "Cracked fishing urn (unfired)",
+    "norune": "Cracked fishing urn (no rune)",
+    "rune": "Cracked fishing urn (empty)",
+    "started": "Cracked fishing urn",
+    "full": "Cracked fishing urn (full)"
+   },
+   "level": 1,
+   "wheelXp": 13.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 750.0,
+   "activator": 555,
+   "noruneOption": "Add water rune",
+   "struct": {
+    "id": 5868,
+    "gameval": "skillguide_crafting68",
+    "name": "Cracked fishing urn",
+    "level": 1
+   }
+  },
+  {
+   "skill": "fishing",
+   "tier": 2,
+   "obj": {
+    "unfired": 20325,
+    "norune": 20326,
+    "cert_norune": 20327,
+    "rune": 20328,
+    "started": 20329,
+    "full": 20330
+   },
+   "gameval": {
+    "unfired": "urns_fishing2_unfired",
+    "norune": "urns_fishing2_norune",
+    "cert_norune": "cert_urns_fishing2_norune",
+    "rune": "urns_fishing2_rune",
+    "started": "urns_fishing2_started",
+    "full": "urns_fishing2_full"
+   },
+   "name": {
+    "unfired": "Fragile fishing urn (unfired)",
+    "norune": "Fragile fishing urn (no rune)",
+    "rune": "Fragile fishing urn (empty)",
+    "started": "Fragile fishing urn",
+    "full": "Fragile fishing urn (full)"
+   },
+   "level": 15,
+   "wheelXp": 19.0,
+   "fireXp": 30.0,
+   "rs3Capacity": 1750.0,
+   "activator": 555,
+   "noruneOption": "Add water rune",
+   "struct": {
+    "id": 5876,
+    "gameval": "skillguide_crafting76",
+    "name": "Fragile fishing urn",
+    "level": 15
+   }
+  },
+  {
+   "skill": "fishing",
+   "tier": 3,
+   "obj": {
+    "unfired": 20331,
+    "norune": 20332,
+    "cert_norune": 20333,
+    "rune": 20334,
+    "started": 20335,
+    "full": 20336
+   },
+   "gameval": {
+    "unfired": "urns_fishing3_unfired",
+    "norune": "urns_fishing3_norune",
+    "cert_norune": "cert_urns_fishing3_norune",
+    "rune": "urns_fishing3_rune",
+    "started": "urns_fishing3_started",
+    "full": "urns_fishing3_full"
+   },
+   "name": {
+    "unfired": "Plain fishing urn (unfired)",
+    "norune": "Plain fishing urn (no rune)",
+    "rune": "Plain fishing urn (empty)",
+    "started": "Plain fishing urn",
+    "full": "Plain fishing urn (full)"
+   },
+   "level": 41,
+   "wheelXp": 32.0,
+   "fireXp": 46.8,
+   "rs3Capacity": 2500.0,
+   "activator": 555,
+   "noruneOption": "Add water rune",
+   "struct": {
+    "id": 5886,
+    "gameval": "skillguide_crafting86",
+    "name": "Plain fishing urn",
+    "level": 41
+   }
+  },
+  {
+   "skill": "fishing",
+   "tier": 4,
+   "obj": {
+    "unfired": 20337,
+    "norune": 20338,
+    "cert_norune": 20339,
+    "rune": 20340,
+    "started": 20341,
+    "full": 20342
+   },
+   "gameval": {
+    "unfired": "urns_fishing4_unfired",
+    "norune": "urns_fishing4_norune",
+    "cert_norune": "cert_urns_fishing4_norune",
+    "rune": "urns_fishing4_rune",
+    "started": "urns_fishing4_started",
+    "full": "urns_fishing4_full"
+   },
+   "name": {
+    "unfired": "Strong fishing urn (unfired)",
+    "norune": "Strong fishing urn (no rune)",
+    "rune": "Strong fishing urn (empty)",
+    "started": "Strong fishing urn",
+    "full": "Strong fishing urn (full)"
+   },
+   "level": 53,
+   "wheelXp": 38.0,
+   "fireXp": 54.0,
+   "rs3Capacity": 3000.0,
+   "activator": 555,
+   "noruneOption": "Add water rune",
+   "struct": {
+    "id": 5891,
+    "gameval": "skillguide_crafting91",
+    "name": "Strong fishing urn",
+    "level": 53
+   }
+  },
+  {
+   "skill": "fishing",
+   "tier": 5,
+   "obj": {
+    "unfired": 20343,
+    "norune": 20344,
+    "cert_norune": 20345,
+    "rune": 20346,
+    "started": 20347,
+    "full": 20348
+   },
+   "gameval": {
+    "unfired": "urns_fishing5_unfired",
+    "norune": "urns_fishing5_norune",
+    "cert_norune": "cert_urns_fishing5_norune",
+    "rune": "urns_fishing5_rune",
+    "started": "urns_fishing5_started",
+    "full": "urns_fishing5_full"
+   },
+   "name": {
+    "unfired": "Decorated fishing urn (unfired)",
+    "norune": "Decorated fishing urn (no rune)",
+    "rune": "Decorated fishing urn (empty)",
+    "started": "Decorated fishing urn",
+    "full": "Decorated fishing urn (full)"
+   },
+   "level": 76,
+   "wheelXp": 50.0,
+   "fireXp": 72.0,
+   "rs3Capacity": 9500.0,
+   "activator": 555,
+   "noruneOption": "Add water rune",
+   "struct": {
+    "id": 5895,
+    "gameval": "skillguide_crafting95",
+    "name": "Decorated fishing urn",
+    "level": 76
+   }
+  },
+  {
+   "skill": "cooking",
+   "tier": 1,
+   "obj": {
+    "unfired": 20349,
+    "norune": 20350,
+    "cert_norune": 20351,
+    "rune": 20352,
+    "started": 20353,
+    "full": 20354
+   },
+   "gameval": {
+    "unfired": "urns_cooking1_unfired",
+    "norune": "urns_cooking1_norune",
+    "cert_norune": "cert_urns_cooking1_norune",
+    "rune": "urns_cooking1_rune",
+    "started": "urns_cooking1_started",
+    "full": "urns_cooking1_full"
+   },
+   "name": {
+    "unfired": "Cracked cooking urn (unfired)",
+    "norune": "Cracked cooking urn (no rune)",
+    "rune": "Cracked cooking urn (empty)",
+    "started": "Cracked cooking urn",
+    "full": "Cracked cooking urn (full)"
+   },
+   "level": 1,
+   "wheelXp": 13.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 2000.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5867,
+    "gameval": "skillguide_crafting67",
+    "name": "Cracked cooking urn",
+    "level": 1
+   }
+  },
+  {
+   "skill": "cooking",
+   "tier": 2,
+   "obj": {
+    "unfired": 20355,
+    "norune": 20356,
+    "cert_norune": 20357,
+    "rune": 20358,
+    "started": 20359,
+    "full": 20360
+   },
+   "gameval": {
+    "unfired": "urns_cooking2_unfired",
+    "norune": "urns_cooking2_norune",
+    "cert_norune": "cert_urns_cooking2_norune",
+    "rune": "urns_cooking2_rune",
+    "started": "urns_cooking2_started",
+    "full": "urns_cooking2_full"
+   },
+   "name": {
+    "unfired": "Fragile cooking urn (unfired)",
+    "norune": "Fragile cooking urn (no rune)",
+    "rune": "Fragile cooking urn (empty)",
+    "started": "Fragile cooking urn",
+    "full": "Fragile cooking urn (full)"
+   },
+   "level": 12,
+   "wheelXp": 18.0,
+   "fireXp": 24.0,
+   "rs3Capacity": 2750.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5875,
+    "gameval": "skillguide_crafting75",
+    "name": "Fragile cooking urn",
+    "level": 12
+   }
+  },
+  {
+   "skill": "cooking",
+   "tier": 3,
+   "obj": {
+    "unfired": 20361,
+    "norune": 20362,
+    "cert_norune": 20363,
+    "rune": 20364,
+    "started": 20365,
+    "full": 20366
+   },
+   "gameval": {
+    "unfired": "urns_cooking3_unfired",
+    "norune": "urns_cooking3_norune",
+    "cert_norune": "cert_urns_cooking3_norune",
+    "rune": "urns_cooking3_rune",
+    "started": "urns_cooking3_started",
+    "full": "urns_cooking3_full"
+   },
+   "name": {
+    "unfired": "Plain cooking urn (unfired)",
+    "norune": "Plain cooking urn (no rune)",
+    "rune": "Plain cooking urn (empty)",
+    "started": "Plain cooking urn",
+    "full": "Plain cooking urn (full)"
+   },
+   "level": 36,
+   "wheelXp": 30.0,
+   "fireXp": 42.9,
+   "rs3Capacity": 4750.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5885,
+    "gameval": "skillguide_crafting85",
+    "name": "Plain cooking urn",
+    "level": 36
+   }
+  },
+  {
+   "skill": "cooking",
+   "tier": 4,
+   "obj": {
+    "unfired": 20367,
+    "norune": 20368,
+    "cert_norune": 20369,
+    "rune": 20370,
+    "started": 20371,
+    "full": 20372
+   },
+   "gameval": {
+    "unfired": "urns_cooking4_unfired",
+    "norune": "urns_cooking4_norune",
+    "cert_norune": "cert_urns_cooking4_norune",
+    "rune": "urns_cooking4_rune",
+    "started": "urns_cooking4_started",
+    "full": "urns_cooking4_full"
+   },
+   "name": {
+    "unfired": "Strong cooking urn (unfired)",
+    "norune": "Strong cooking urn (no rune)",
+    "rune": "Strong cooking urn (empty)",
+    "started": "Strong cooking urn",
+    "full": "Strong cooking urn (full)"
+   },
+   "level": 51,
+   "wheelXp": 37.0,
+   "fireXp": 52.5,
+   "rs3Capacity": 5250.0,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5890,
+    "gameval": "skillguide_crafting90",
+    "name": "Strong cooking urn",
+    "level": 51
+   }
+  },
+  {
+   "skill": "cooking",
+   "tier": 5,
+   "obj": {
+    "unfired": 20373,
+    "norune": 20374,
+    "cert_norune": 20375,
+    "rune": 20376,
+    "started": 20377,
+    "full": 20378
+   },
+   "gameval": {
+    "unfired": "urns_cooking5_unfired",
+    "norune": "urns_cooking5_norune",
+    "cert_norune": "cert_urns_cooking5_norune",
+    "rune": "urns_cooking5_rune",
+    "started": "urns_cooking5_started",
+    "full": "urns_cooking5_full"
+   },
+   "name": {
+    "unfired": "Decorated cooking urn (unfired)",
+    "norune": "Decorated cooking urn (no rune)",
+    "rune": "Decorated cooking urn (empty)",
+    "started": "Decorated cooking urn",
+    "full": "Decorated cooking urn (full)"
+   },
+   "level": 81,
+   "wheelXp": 52.0,
+   "fireXp": 78.0,
+   "rs3Capacity": 7737.5,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "struct": {
+    "id": 5896,
+    "gameval": "skillguide_crafting96",
+    "name": "Decorated cooking urn",
+    "level": 81
+   }
+  },
+  {
+   "skill": "mining",
+   "tier": 1,
+   "obj": {
+    "unfired": 20379,
+    "norune": 20380,
+    "cert_norune": 20381,
+    "rune": 20382,
+    "started": 20383,
+    "full": 20384
+   },
+   "gameval": {
+    "unfired": "urns_mining1_unfired",
+    "norune": "urns_mining1_norune",
+    "cert_norune": "cert_urns_mining1_norune",
+    "rune": "urns_mining1_rune",
+    "started": "urns_mining1_started",
+    "full": "urns_mining1_full"
+   },
+   "name": {
+    "unfired": "Cracked mining urn (unfired)",
+    "norune": "Cracked mining urn (no rune)",
+    "rune": "Cracked mining urn (empty)",
+    "started": "Cracked mining urn",
+    "full": "Cracked mining urn (full)"
+   },
+   "level": 1,
+   "wheelXp": 13.0,
+   "fireXp": 16.8,
+   "rs3Capacity": 437.5,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5866,
+    "gameval": "skillguide_crafting66",
+    "name": "Cracked mining urn",
+    "level": 1
+   }
+  },
+  {
+   "skill": "mining",
+   "tier": 2,
+   "obj": {
+    "unfired": 20385,
+    "norune": 20386,
+    "cert_norune": 20387,
+    "rune": 20388,
+    "started": 20389,
+    "full": 20390
+   },
+   "gameval": {
+    "unfired": "urns_mining2_unfired",
+    "norune": "urns_mining2_norune",
+    "cert_norune": "cert_urns_mining2_norune",
+    "rune": "urns_mining2_rune",
+    "started": "urns_mining2_started",
+    "full": "urns_mining2_full"
+   },
+   "name": {
+    "unfired": "Fragile mining urn (unfired)",
+    "norune": "Fragile mining urn (no rune)",
+    "rune": "Fragile mining urn (empty)",
+    "started": "Fragile mining urn",
+    "full": "Fragile mining urn (full)"
+   },
+   "level": 17,
+   "wheelXp": 20.0,
+   "fireXp": 31.8,
+   "rs3Capacity": 1000.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5878,
+    "gameval": "skillguide_crafting78",
+    "name": "Fragile mining urn",
+    "level": 17
+   }
+  },
+  {
+   "skill": "mining",
+   "tier": 3,
+   "obj": {
+    "unfired": 20391,
+    "norune": 20392,
+    "cert_norune": 20393,
+    "rune": 20394,
+    "started": 20395,
+    "full": 20396
+   },
+   "gameval": {
+    "unfired": "urns_mining3_unfired",
+    "norune": "urns_mining3_norune",
+    "cert_norune": "cert_urns_mining3_norune",
+    "rune": "urns_mining3_rune",
+    "started": "urns_mining3_started",
+    "full": "urns_mining3_full"
+   },
+   "name": {
+    "unfired": "Plain mining urn (unfired)",
+    "norune": "Plain mining urn (no rune)",
+    "rune": "Plain mining urn (empty)",
+    "started": "Plain mining urn",
+    "full": "Plain mining urn (full)"
+   },
+   "level": 32,
+   "wheelXp": 28.0,
+   "fireXp": 40.8,
+   "rs3Capacity": 1625.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5883,
+    "gameval": "skillguide_crafting83",
+    "name": "Plain mining urn",
+    "level": 32
+   }
+  },
+  {
+   "skill": "mining",
+   "tier": 4,
+   "obj": {
+    "unfired": 20397,
+    "norune": 20398,
+    "cert_norune": 20399,
+    "rune": 20400,
+    "started": 20401,
+    "full": 20402
+   },
+   "gameval": {
+    "unfired": "urns_mining4_unfired",
+    "norune": "urns_mining4_norune",
+    "cert_norune": "cert_urns_mining4_norune",
+    "rune": "urns_mining4_rune",
+    "started": "urns_mining4_started",
+    "full": "urns_mining4_full"
+   },
+   "name": {
+    "unfired": "Strong mining urn (unfired)",
+    "norune": "Strong mining urn (no rune)",
+    "rune": "Strong mining urn (empty)",
+    "started": "Strong mining urn",
+    "full": "Strong mining urn (full)"
+   },
+   "level": 48,
+   "wheelXp": 36.0,
+   "fireXp": 49.2,
+   "rs3Capacity": 2000.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5888,
+    "gameval": "skillguide_crafting88",
+    "name": "Strong mining urn",
+    "level": 48
+   }
+  },
+  {
+   "skill": "mining",
+   "tier": 5,
+   "obj": {
+    "unfired": 20403,
+    "norune": 20404,
+    "cert_norune": 20405,
+    "rune": 20406,
+    "started": 20407,
+    "full": 20408
+   },
+   "gameval": {
+    "unfired": "urns_mining5_unfired",
+    "norune": "urns_mining5_norune",
+    "cert_norune": "cert_urns_mining5_norune",
+    "rune": "urns_mining5_rune",
+    "started": "urns_mining5_started",
+    "full": "urns_mining5_full"
+   },
+   "name": {
+    "unfired": "Decorated mining urn (unfired)",
+    "norune": "Decorated mining urn (no rune)",
+    "rune": "Decorated mining urn (empty)",
+    "started": "Decorated mining urn",
+    "full": "Decorated mining urn (full)"
+   },
+   "level": 78,
+   "wheelXp": 51.0,
+   "fireXp": 57.0,
+   "rs3Capacity": 3125.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "struct": {
+    "id": 5892,
+    "gameval": "skillguide_crafting92",
+    "name": "Decorated mining urn",
+    "level": 78
+   }
+  },
+  {
+   "skill": "prayer",
+   "tier": 1,
+   "obj": {
+    "unfired": 20409,
+    "norune": 20410,
+    "cert_norune": 20411,
+    "rune": 20412,
+    "started": 20413,
+    "full": 20414
+   },
+   "gameval": {
+    "unfired": "urns_prayer1_unfired",
+    "norune": "urns_prayer1_norune",
+    "cert_norune": "cert_urns_prayer1_norune",
+    "rune": "urns_prayer1_rune",
+    "started": "urns_prayer1_started",
+    "full": "urns_prayer1_full"
+   },
+   "name": {
+    "unfired": "Impious urn (unfired)",
+    "norune": "Impious urn (no rune)",
+    "rune": "Impious urn (empty)",
+    "started": "Impious urn",
+    "full": "Impious urn (full)"
+   },
+   "level": 1,
+   "wheelXp": 12.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 100.0,
+   "activator": 556,
+   "noruneOption": "Add air rune",
+   "struct": {
+    "id": 5869,
+    "gameval": "skillguide_crafting69",
+    "name": "Impious urn",
+    "level": 1
+   }
+  },
+  {
+   "skill": "prayer",
+   "tier": 2,
+   "obj": {
+    "unfired": 20415,
+    "norune": 20416,
+    "cert_norune": 20417,
+    "rune": 20418,
+    "started": 20419,
+    "full": 20420
+   },
+   "gameval": {
+    "unfired": "urns_prayer2_unfired",
+    "norune": "urns_prayer2_norune",
+    "cert_norune": "cert_urns_prayer2_norune",
+    "rune": "urns_prayer2_rune",
+    "started": "urns_prayer2_started",
+    "full": "urns_prayer2_full"
+   },
+   "name": {
+    "unfired": "Accursed urn (unfired)",
+    "norune": "Accursed urn (no rune)",
+    "rune": "Accursed urn (empty)",
+    "started": "Accursed urn",
+    "full": "Accursed urn (full)"
+   },
+   "level": 26,
+   "wheelXp": 25.0,
+   "fireXp": 37.5,
+   "rs3Capacity": 312.5,
+   "activator": 556,
+   "noruneOption": "Add air rune",
+   "struct": {
+    "id": 5882,
+    "gameval": "skillguide_crafting82",
+    "name": "Accursed urn",
+    "level": 26
+   }
+  },
+  {
+   "skill": "prayer",
+   "tier": 3,
+   "obj": {
+    "unfired": 20421,
+    "norune": 20422,
+    "cert_norune": 20423,
+    "rune": 20424,
+    "started": 20425,
+    "full": 20426
+   },
+   "gameval": {
+    "unfired": "urns_prayer3_unfired",
+    "norune": "urns_prayer3_norune",
+    "cert_norune": "cert_urns_prayer3_norune",
+    "rune": "urns_prayer3_rune",
+    "started": "urns_prayer3_started",
+    "full": "urns_prayer3_full"
+   },
+   "name": {
+    "unfired": "Infernal urn (unfired)",
+    "norune": "Infernal urn (no rune)",
+    "rune": "Infernal urn (empty)",
+    "started": "Infernal urn",
+    "full": "Infernal urn (full)"
+   },
+   "level": 62,
+   "wheelXp": 40.0,
+   "fireXp": 60.0,
+   "rs3Capacity": 1562.5,
+   "activator": 556,
+   "noruneOption": "Add air rune",
+   "struct": {
+    "id": 5894,
+    "gameval": "skillguide_crafting94",
+    "name": "Infernal urn",
+    "level": 62
+   }
+  }
+ ],
+ "sets": [
+  {
+   "skill": "farming",
+   "tier": 1,
+   "skillId": 19,
+   "rs3Obj": {
+    "unfired": 40804,
+    "cert_unfired": 40805,
+    "norune": 40806,
+    "cert_norune": 40807,
+    "rune": 40808,
+    "started": 40809,
+    "full": 40810,
+    "cert_full": 40811
+   },
+   "obj": {
+    "unfired": 25359,
+    "cert_unfired": 25360,
+    "norune": 25361,
+    "cert_norune": 25362,
+    "rune": 25363,
+    "started": 25364,
+    "full": 25365,
+    "cert_full": 25366
+   },
+   "gameval": {
+    "unfired": "urns_farming1_unfired",
+    "cert_unfired": "cert_urns_farming1_unfired",
+    "norune": "urns_farming1_norune",
+    "cert_norune": "cert_urns_farming1_norune",
+    "rune": "urns_farming1_rune",
+    "started": "urns_farming1_started",
+    "full": "urns_farming1_full",
+    "cert_full": "cert_urns_farming1_full"
+   },
+   "name": {
+    "unfired": "Cracked farming urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Cracked farming urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Cracked farming urn (empty)",
+    "started": "Cracked farming urn",
+    "full": "Cracked farming urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119881": 73417,
+    "119879": 73418,
+    "119843": 73419,
+    "119880": 73420,
+    "119878": 73421
+   },
+   "modelNames": {
+    "119881": "urns_farming1_unfired",
+    "119879": "urns_farming1_norune",
+    "119843": "urns_farming_01",
+    "119880": "urns_farming1_rune",
+    "119878": "urns_farming1_full"
+   },
+   "seq": {
+    "teleport": 17186,
+    "runeIn": 17187
+   },
+   "rs3Seq": {
+    "teleport": 30959,
+    "runeIn": 30964
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_farming_01",
+    "runeIn": "human_rune_in_urn_farming_01"
+   },
+   "cloneSeq": {
+    "teleport": 10829,
+    "runeIn": 11420
+   },
+   "struct": 11389,
+   "enumRow": 290,
+   "structName": "skillguide_crafting_farming1_urn",
+   "rs3Struct": 37685,
+   "structLabel": "Cracked farming urn",
+   "level": 5,
+   "wheelXp": 14.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 1100.0,
+   "capacity": 1100.0,
+   "activator": 561,
+   "noruneOption": "Add nature rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 40,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": false,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "farming",
+   "tier": 2,
+   "skillId": 19,
+   "rs3Obj": {
+    "unfired": 40812,
+    "cert_unfired": 40813,
+    "norune": 40814,
+    "cert_norune": 40815,
+    "rune": 40816,
+    "started": 40817,
+    "full": 40818,
+    "cert_full": 40819
+   },
+   "obj": {
+    "unfired": 25367,
+    "cert_unfired": 25368,
+    "norune": 25369,
+    "cert_norune": 25370,
+    "rune": 25371,
+    "started": 25372,
+    "full": 25373,
+    "cert_full": 25374
+   },
+   "gameval": {
+    "unfired": "urns_farming2_unfired",
+    "cert_unfired": "cert_urns_farming2_unfired",
+    "norune": "urns_farming2_norune",
+    "cert_norune": "cert_urns_farming2_norune",
+    "rune": "urns_farming2_rune",
+    "started": "urns_farming2_started",
+    "full": "urns_farming2_full",
+    "cert_full": "cert_urns_farming2_full"
+   },
+   "name": {
+    "unfired": "Fragile farming urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Fragile farming urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Fragile farming urn (empty)",
+    "started": "Fragile farming urn",
+    "full": "Fragile farming urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119885": 73422,
+    "119883": 73423,
+    "119844": 73424,
+    "119884": 73425,
+    "119882": 73426
+   },
+   "modelNames": {
+    "119885": "urns_farming2_unfired",
+    "119883": "urns_farming2_norune",
+    "119844": "urns_farming_02",
+    "119884": "urns_farming2_rune",
+    "119882": "urns_farming2_full"
+   },
+   "seq": {
+    "teleport": 17188,
+    "runeIn": 17189
+   },
+   "rs3Seq": {
+    "teleport": 30960,
+    "runeIn": 30965
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_farming_02",
+    "runeIn": "human_rune_in_urn_farming_02"
+   },
+   "cloneSeq": {
+    "teleport": 10830,
+    "runeIn": 11421
+   },
+   "struct": 11390,
+   "enumRow": 291,
+   "structName": "skillguide_crafting_farming2_urn",
+   "rs3Struct": 37689,
+   "structLabel": "Fragile farming urn",
+   "level": 18,
+   "wheelXp": 21.0,
+   "fireXp": 24.0,
+   "rs3Capacity": 2500.0,
+   "capacity": 2500.0,
+   "activator": 561,
+   "noruneOption": "Add nature rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 100,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "farming",
+   "tier": 3,
+   "skillId": 19,
+   "rs3Obj": {
+    "unfired": 40820,
+    "cert_unfired": 40821,
+    "norune": 40822,
+    "cert_norune": 40823,
+    "rune": 40824,
+    "started": 40825,
+    "full": 40826,
+    "cert_full": 40827
+   },
+   "obj": {
+    "unfired": 25375,
+    "cert_unfired": 25376,
+    "norune": 25377,
+    "cert_norune": 25378,
+    "rune": 25379,
+    "started": 25380,
+    "full": 25381,
+    "cert_full": 25382
+   },
+   "gameval": {
+    "unfired": "urns_farming3_unfired",
+    "cert_unfired": "cert_urns_farming3_unfired",
+    "norune": "urns_farming3_norune",
+    "cert_norune": "cert_urns_farming3_norune",
+    "rune": "urns_farming3_rune",
+    "started": "urns_farming3_started",
+    "full": "urns_farming3_full",
+    "cert_full": "cert_urns_farming3_full"
+   },
+   "name": {
+    "unfired": "Plain farming urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Plain farming urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Plain farming urn (empty)",
+    "started": "Plain farming urn",
+    "full": "Plain farming urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119889": 73427,
+    "119887": 73428,
+    "119845": 73429,
+    "119888": 73430,
+    "119886": 73431
+   },
+   "modelNames": {
+    "119889": "urns_farming3_unfired",
+    "119887": "urns_farming3_norune",
+    "119845": "urns_farming_03",
+    "119888": "urns_farming3_rune",
+    "119886": "urns_farming3_full"
+   },
+   "seq": {
+    "teleport": 17190,
+    "runeIn": 17191
+   },
+   "rs3Seq": {
+    "teleport": 30961,
+    "runeIn": 30966
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_farming_03",
+    "runeIn": "human_rune_in_urn_farming_03"
+   },
+   "cloneSeq": {
+    "teleport": 10831,
+    "runeIn": 11425
+   },
+   "struct": 11391,
+   "enumRow": 292,
+   "structName": "skillguide_crafting_farming3_urn",
+   "rs3Struct": 37725,
+   "structLabel": "Plain farming urn",
+   "level": 40,
+   "wheelXp": 32.0,
+   "fireXp": 42.9,
+   "rs3Capacity": 4500.0,
+   "capacity": 4500.0,
+   "activator": 561,
+   "noruneOption": "Add nature rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 220,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "farming",
+   "tier": 4,
+   "skillId": 19,
+   "rs3Obj": {
+    "unfired": 40828,
+    "cert_unfired": 40829,
+    "norune": 40830,
+    "cert_norune": 40831,
+    "rune": 40832,
+    "started": 40833,
+    "full": 40834,
+    "cert_full": 40835
+   },
+   "obj": {
+    "unfired": 25383,
+    "cert_unfired": 25384,
+    "norune": 25385,
+    "cert_norune": 25386,
+    "rune": 25387,
+    "started": 25388,
+    "full": 25389,
+    "cert_full": 25390
+   },
+   "gameval": {
+    "unfired": "urns_farming4_unfired",
+    "cert_unfired": "cert_urns_farming4_unfired",
+    "norune": "urns_farming4_norune",
+    "cert_norune": "cert_urns_farming4_norune",
+    "rune": "urns_farming4_rune",
+    "started": "urns_farming4_started",
+    "full": "urns_farming4_full",
+    "cert_full": "cert_urns_farming4_full"
+   },
+   "name": {
+    "unfired": "Strong farming urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Strong farming urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Strong farming urn (empty)",
+    "started": "Strong farming urn",
+    "full": "Strong farming urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119893": 73432,
+    "119891": 73433,
+    "119846": 73434,
+    "119892": 73435,
+    "119890": 73436
+   },
+   "modelNames": {
+    "119893": "urns_farming4_unfired",
+    "119891": "urns_farming4_norune",
+    "119846": "urns_farming_04",
+    "119892": "urns_farming4_rune",
+    "119890": "urns_farming4_full"
+   },
+   "seq": {
+    "teleport": 17192,
+    "runeIn": 17193
+   },
+   "rs3Seq": {
+    "teleport": 30962,
+    "runeIn": 30967
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_farming_04",
+    "runeIn": "human_rune_in_urn_farming_04"
+   },
+   "cloneSeq": {
+    "teleport": 10947,
+    "runeIn": 11447
+   },
+   "struct": 11392,
+   "enumRow": 293,
+   "structName": "skillguide_crafting_farming4_urn",
+   "rs3Struct": 37729,
+   "structLabel": "Strong farming urn",
+   "level": 58,
+   "wheelXp": 41.0,
+   "fireXp": 52.5,
+   "rs3Capacity": 5500.0,
+   "capacity": 5500.0,
+   "activator": 561,
+   "noruneOption": "Add nature rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 290,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "farming",
+   "tier": 5,
+   "skillId": 19,
+   "rs3Obj": {
+    "unfired": 40836,
+    "cert_unfired": 40837,
+    "norune": 40838,
+    "cert_norune": 40839,
+    "rune": 40840,
+    "started": 40841,
+    "full": 40842,
+    "cert_full": 40843
+   },
+   "obj": {
+    "unfired": 25391,
+    "cert_unfired": 25392,
+    "norune": 25393,
+    "cert_norune": 25394,
+    "rune": 25395,
+    "started": 25396,
+    "full": 25397,
+    "cert_full": 25398
+   },
+   "gameval": {
+    "unfired": "urns_farming5_unfired",
+    "cert_unfired": "cert_urns_farming5_unfired",
+    "norune": "urns_farming5_norune",
+    "cert_norune": "cert_urns_farming5_norune",
+    "rune": "urns_farming5_rune",
+    "started": "urns_farming5_started",
+    "full": "urns_farming5_full",
+    "cert_full": "cert_urns_farming5_full"
+   },
+   "name": {
+    "unfired": "Decorated farming urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Decorated farming urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Decorated farming urn (empty)",
+    "started": "Decorated farming urn",
+    "full": "Decorated farming urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119897": 73437,
+    "119895": 73438,
+    "119847": 73439,
+    "119896": 73440,
+    "119894": 73441
+   },
+   "modelNames": {
+    "119897": "urns_farming5_unfired",
+    "119895": "urns_farming5_norune",
+    "119847": "urns_farming_05",
+    "119896": "urns_farming5_rune",
+    "119894": "urns_farming5_full"
+   },
+   "seq": {
+    "teleport": 17194,
+    "runeIn": 17195
+   },
+   "rs3Seq": {
+    "teleport": 30963,
+    "runeIn": 30968
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_farming_05",
+    "runeIn": "human_rune_in_urn_farming_05"
+   },
+   "cloneSeq": {
+    "teleport": 11419,
+    "runeIn": 11448
+   },
+   "struct": 11393,
+   "enumRow": 294,
+   "structName": "skillguide_crafting_farming5_urn",
+   "rs3Struct": 37733,
+   "structLabel": "Decorated farming urn",
+   "level": 84,
+   "wheelXp": 54.0,
+   "fireXp": 78.0,
+   "rs3Capacity": 7000.0,
+   "capacity": 7000.0,
+   "activator": 561,
+   "noruneOption": "Add nature rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 390,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "hunter",
+   "tier": 1,
+   "skillId": 21,
+   "rs3Obj": {
+    "unfired": 40844,
+    "cert_unfired": 40845,
+    "norune": 40846,
+    "cert_norune": 40847,
+    "rune": 40848,
+    "started": 40849,
+    "full": 40850,
+    "cert_full": 40851
+   },
+   "obj": {
+    "unfired": 25399,
+    "cert_unfired": 25400,
+    "norune": 25401,
+    "cert_norune": 25402,
+    "rune": 25403,
+    "started": 25404,
+    "full": 25405,
+    "cert_full": 25406
+   },
+   "gameval": {
+    "unfired": "urns_hunter1_unfired",
+    "cert_unfired": "cert_urns_hunter1_unfired",
+    "norune": "urns_hunter1_norune",
+    "cert_norune": "cert_urns_hunter1_norune",
+    "rune": "urns_hunter1_rune",
+    "started": "urns_hunter1_started",
+    "full": "urns_hunter1_full",
+    "cert_full": "cert_urns_hunter1_full"
+   },
+   "name": {
+    "unfired": "Cracked hunter urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Cracked hunter urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Cracked hunter urn (empty)",
+    "started": "Cracked hunter urn",
+    "full": "Cracked hunter urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119901": 73442,
+    "119899": 73443,
+    "119848": 73444,
+    "119900": 73445,
+    "119898": 73446
+   },
+   "modelNames": {
+    "119901": "urns_hunting1_unfired",
+    "119899": "urns_hunting1_norune",
+    "119848": "urns_hunting_01",
+    "119900": "urns_hunting1_rune",
+    "119898": "urns_hunting1_full"
+   },
+   "seq": {
+    "teleport": 17196,
+    "runeIn": 17197
+   },
+   "rs3Seq": {
+    "teleport": 30969,
+    "runeIn": 30974
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_hunter_01",
+    "runeIn": "human_rune_in_urn_hunter_01"
+   },
+   "cloneSeq": {
+    "teleport": 10829,
+    "runeIn": 11420
+   },
+   "struct": 11394,
+   "enumRow": 295,
+   "structName": "skillguide_crafting_hunter1_urn",
+   "rs3Struct": 37686,
+   "structLabel": "Cracked hunter urn",
+   "level": 3,
+   "wheelXp": 13.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 1100.0,
+   "capacity": 1100.0,
+   "activator": 4698,
+   "noruneOption": "Add mud rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 40,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": false,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "hunter",
+   "tier": 2,
+   "skillId": 21,
+   "rs3Obj": {
+    "unfired": 40852,
+    "cert_unfired": 40853,
+    "norune": 40854,
+    "cert_norune": 40855,
+    "rune": 40856,
+    "started": 40857,
+    "full": 40858,
+    "cert_full": 40859
+   },
+   "obj": {
+    "unfired": 25407,
+    "cert_unfired": 25408,
+    "norune": 25409,
+    "cert_norune": 25410,
+    "rune": 25411,
+    "started": 25412,
+    "full": 25413,
+    "cert_full": 25414
+   },
+   "gameval": {
+    "unfired": "urns_hunter2_unfired",
+    "cert_unfired": "cert_urns_hunter2_unfired",
+    "norune": "urns_hunter2_norune",
+    "cert_norune": "cert_urns_hunter2_norune",
+    "rune": "urns_hunter2_rune",
+    "started": "urns_hunter2_started",
+    "full": "urns_hunter2_full",
+    "cert_full": "cert_urns_hunter2_full"
+   },
+   "name": {
+    "unfired": "Fragile hunter urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Fragile hunter urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Fragile hunter urn (empty)",
+    "started": "Fragile hunter urn",
+    "full": "Fragile hunter urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119905": 73447,
+    "119903": 73448,
+    "119849": 73449,
+    "119904": 73450,
+    "119902": 73451
+   },
+   "modelNames": {
+    "119905": "urns_hunting2_unfired",
+    "119903": "urns_hunting2_norune",
+    "119849": "urns_hunting_02",
+    "119904": "urns_hunting2_rune",
+    "119902": "urns_hunting2_full"
+   },
+   "seq": {
+    "teleport": 17198,
+    "runeIn": 17199
+   },
+   "rs3Seq": {
+    "teleport": 30970,
+    "runeIn": 30975
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_hunter_02",
+    "runeIn": "human_rune_in_urn_hunter_02"
+   },
+   "cloneSeq": {
+    "teleport": 10830,
+    "runeIn": 11421
+   },
+   "struct": 11395,
+   "enumRow": 296,
+   "structName": "skillguide_crafting_hunter2_urn",
+   "rs3Struct": 37690,
+   "structLabel": "Fragile hunter urn",
+   "level": 17,
+   "wheelXp": 20.0,
+   "fireXp": 24.0,
+   "rs3Capacity": 2500.0,
+   "capacity": 2500.0,
+   "activator": 4698,
+   "noruneOption": "Add mud rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 100,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "hunter",
+   "tier": 3,
+   "skillId": 21,
+   "rs3Obj": {
+    "unfired": 40860,
+    "cert_unfired": 40861,
+    "norune": 40862,
+    "cert_norune": 40863,
+    "rune": 40864,
+    "started": 40865,
+    "full": 40866,
+    "cert_full": 40867
+   },
+   "obj": {
+    "unfired": 25415,
+    "cert_unfired": 25416,
+    "norune": 25417,
+    "cert_norune": 25418,
+    "rune": 25419,
+    "started": 25420,
+    "full": 25421,
+    "cert_full": 25422
+   },
+   "gameval": {
+    "unfired": "urns_hunter3_unfired",
+    "cert_unfired": "cert_urns_hunter3_unfired",
+    "norune": "urns_hunter3_norune",
+    "cert_norune": "cert_urns_hunter3_norune",
+    "rune": "urns_hunter3_rune",
+    "started": "urns_hunter3_started",
+    "full": "urns_hunter3_full",
+    "cert_full": "cert_urns_hunter3_full"
+   },
+   "name": {
+    "unfired": "Plain hunter urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Plain hunter urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Plain hunter urn (empty)",
+    "started": "Plain hunter urn",
+    "full": "Plain hunter urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119909": 73452,
+    "119907": 73453,
+    "119850": 73454,
+    "119908": 73455,
+    "119906": 73456
+   },
+   "modelNames": {
+    "119909": "urns_hunting3_unfired",
+    "119907": "urns_hunting3_norune",
+    "119850": "urns_hunting_03",
+    "119908": "urns_hunting3_rune",
+    "119906": "urns_hunting3_full"
+   },
+   "seq": {
+    "teleport": 17200,
+    "runeIn": 17201
+   },
+   "rs3Seq": {
+    "teleport": 30971,
+    "runeIn": 30976
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_hunter_03",
+    "runeIn": "human_rune_in_urn_hunter_03"
+   },
+   "cloneSeq": {
+    "teleport": 10831,
+    "runeIn": 11425
+   },
+   "struct": 11396,
+   "enumRow": 297,
+   "structName": "skillguide_crafting_hunter3_urn",
+   "rs3Struct": 37726,
+   "structLabel": "Plain hunter urn",
+   "level": 34,
+   "wheelXp": 29.0,
+   "fireXp": 42.9,
+   "rs3Capacity": 5000.0,
+   "capacity": 5000.0,
+   "activator": 4698,
+   "noruneOption": "Add mud rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 220,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "hunter",
+   "tier": 4,
+   "skillId": 21,
+   "rs3Obj": {
+    "unfired": 40868,
+    "cert_unfired": 40869,
+    "norune": 40870,
+    "cert_norune": 40871,
+    "rune": 40872,
+    "started": 40873,
+    "full": 40874,
+    "cert_full": 40875
+   },
+   "obj": {
+    "unfired": 25423,
+    "cert_unfired": 25424,
+    "norune": 25425,
+    "cert_norune": 25426,
+    "rune": 25427,
+    "started": 25428,
+    "full": 25429,
+    "cert_full": 25430
+   },
+   "gameval": {
+    "unfired": "urns_hunter4_unfired",
+    "cert_unfired": "cert_urns_hunter4_unfired",
+    "norune": "urns_hunter4_norune",
+    "cert_norune": "cert_urns_hunter4_norune",
+    "rune": "urns_hunter4_rune",
+    "started": "urns_hunter4_started",
+    "full": "urns_hunter4_full",
+    "cert_full": "cert_urns_hunter4_full"
+   },
+   "name": {
+    "unfired": "Strong hunter urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Strong hunter urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Strong hunter urn (empty)",
+    "started": "Strong hunter urn",
+    "full": "Strong hunter urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119913": 73457,
+    "119911": 73458,
+    "119851": 73459,
+    "119912": 73460,
+    "119910": 73461
+   },
+   "modelNames": {
+    "119913": "urns_hunting4_unfired",
+    "119911": "urns_hunting4_norune",
+    "119851": "urns_hunting_04",
+    "119912": "urns_hunting4_rune",
+    "119910": "urns_hunting4_full"
+   },
+   "seq": {
+    "teleport": 17202,
+    "runeIn": 17203
+   },
+   "rs3Seq": {
+    "teleport": 30972,
+    "runeIn": 30977
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_hunter_04",
+    "runeIn": "human_rune_in_urn_hunter_04"
+   },
+   "cloneSeq": {
+    "teleport": 10947,
+    "runeIn": 11447
+   },
+   "struct": 11397,
+   "enumRow": 298,
+   "structName": "skillguide_crafting_hunter4_urn",
+   "rs3Struct": 37730,
+   "structLabel": "Strong hunter urn",
+   "level": 55,
+   "wheelXp": 39.0,
+   "fireXp": 52.5,
+   "rs3Capacity": 7000.0,
+   "capacity": 7000.0,
+   "activator": 4698,
+   "noruneOption": "Add mud rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 290,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "hunter",
+   "tier": 5,
+   "skillId": 21,
+   "rs3Obj": {
+    "unfired": 40876,
+    "cert_unfired": 40877,
+    "norune": 40878,
+    "cert_norune": 40879,
+    "rune": 40880,
+    "started": 40881,
+    "full": 40882,
+    "cert_full": 40883
+   },
+   "obj": {
+    "unfired": 25431,
+    "cert_unfired": 25432,
+    "norune": 25433,
+    "cert_norune": 25434,
+    "rune": 25435,
+    "started": 25436,
+    "full": 25437,
+    "cert_full": 25438
+   },
+   "gameval": {
+    "unfired": "urns_hunter5_unfired",
+    "cert_unfired": "cert_urns_hunter5_unfired",
+    "norune": "urns_hunter5_norune",
+    "cert_norune": "cert_urns_hunter5_norune",
+    "rune": "urns_hunter5_rune",
+    "started": "urns_hunter5_started",
+    "full": "urns_hunter5_full",
+    "cert_full": "cert_urns_hunter5_full"
+   },
+   "name": {
+    "unfired": "Decorated hunter urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Decorated hunter urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Decorated hunter urn (empty)",
+    "started": "Decorated hunter urn",
+    "full": "Decorated hunter urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119917": 73462,
+    "119915": 73463,
+    "119852": 73464,
+    "119916": 73465,
+    "119914": 73466
+   },
+   "modelNames": {
+    "119917": "urns_hunting5_unfired",
+    "119915": "urns_hunting5_norune",
+    "119852": "urns_hunting_05",
+    "119916": "urns_hunting5_rune",
+    "119914": "urns_hunting5_full"
+   },
+   "seq": {
+    "teleport": 17204,
+    "runeIn": 17205
+   },
+   "rs3Seq": {
+    "teleport": 30973,
+    "runeIn": 30978
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_hunter_05",
+    "runeIn": "human_rune_in_urn_hunter_05"
+   },
+   "cloneSeq": {
+    "teleport": 11419,
+    "runeIn": 11448
+   },
+   "struct": 11398,
+   "enumRow": 299,
+   "structName": "skillguide_crafting_hunter5_urn",
+   "rs3Struct": 37734,
+   "structLabel": "Decorated hunter urn",
+   "level": 79,
+   "wheelXp": 51.0,
+   "fireXp": 78.0,
+   "rs3Capacity": 8000.0,
+   "capacity": 8000.0,
+   "activator": 4698,
+   "noruneOption": "Add mud rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 390,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "runecrafting",
+   "tier": 1,
+   "skillId": 20,
+   "rs3Obj": {
+    "unfired": 40884,
+    "cert_unfired": 40885,
+    "norune": 40886,
+    "cert_norune": 40887,
+    "rune": 40888,
+    "started": 40889,
+    "full": 40890,
+    "cert_full": 40891
+   },
+   "obj": {
+    "unfired": 25439,
+    "cert_unfired": 25440,
+    "norune": 25441,
+    "cert_norune": 25442,
+    "rune": 25443,
+    "started": 25444,
+    "full": 25445,
+    "cert_full": 25446
+   },
+   "gameval": {
+    "unfired": "urns_runecrafting1_unfired",
+    "cert_unfired": "cert_urns_runecrafting1_unfired",
+    "norune": "urns_runecrafting1_norune",
+    "cert_norune": "cert_urns_runecrafting1_norune",
+    "rune": "urns_runecrafting1_rune",
+    "started": "urns_runecrafting1_started",
+    "full": "urns_runecrafting1_full",
+    "cert_full": "cert_urns_runecrafting1_full"
+   },
+   "name": {
+    "unfired": "Cracked runecrafting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Cracked runecrafting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Cracked runecrafting urn (empty)",
+    "started": "Cracked runecrafting urn",
+    "full": "Cracked runecrafting urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119921": 73467,
+    "119919": 73468,
+    "119853": 73469,
+    "119920": 73470,
+    "119918": 73471
+   },
+   "modelNames": {
+    "119921": "urns_runecrafting1_unfired",
+    "119919": "urns_runecrafting1_norune",
+    "119853": "urns_runecrafting_01",
+    "119920": "urns_runecrafting1_rune",
+    "119918": "urns_runecrafting1_full"
+   },
+   "seq": {
+    "teleport": 17206,
+    "runeIn": 17207
+   },
+   "rs3Seq": {
+    "teleport": 30979,
+    "runeIn": 30984
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_runecrafting_01",
+    "runeIn": "human_rune_in_urn_runecrafting_01"
+   },
+   "cloneSeq": {
+    "teleport": 10829,
+    "runeIn": 11420
+   },
+   "struct": 11399,
+   "enumRow": 300,
+   "structName": "skillguide_crafting_runecrafting1_urn",
+   "rs3Struct": 37687,
+   "structLabel": "Cracked runecrafting urn",
+   "level": 4,
+   "wheelXp": 14.0,
+   "fireXp": 18.0,
+   "rs3Capacity": 1050.0,
+   "capacity": 1050.0,
+   "activator": 7936,
+   "noruneOption": "Add pure essence",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 40,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": false,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "runecrafting",
+   "tier": 2,
+   "skillId": 20,
+   "rs3Obj": {
+    "unfired": 40892,
+    "cert_unfired": 40893,
+    "norune": 40894,
+    "cert_norune": 40895,
+    "rune": 40896,
+    "started": 40897,
+    "full": 40898,
+    "cert_full": 40899
+   },
+   "obj": {
+    "unfired": 25447,
+    "cert_unfired": 25448,
+    "norune": 25449,
+    "cert_norune": 25450,
+    "rune": 25451,
+    "started": 25452,
+    "full": 25453,
+    "cert_full": 25454
+   },
+   "gameval": {
+    "unfired": "urns_runecrafting2_unfired",
+    "cert_unfired": "cert_urns_runecrafting2_unfired",
+    "norune": "urns_runecrafting2_norune",
+    "cert_norune": "cert_urns_runecrafting2_norune",
+    "rune": "urns_runecrafting2_rune",
+    "started": "urns_runecrafting2_started",
+    "full": "urns_runecrafting2_full",
+    "cert_full": "cert_urns_runecrafting2_full"
+   },
+   "name": {
+    "unfired": "Fragile runecrafting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Fragile runecrafting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Fragile runecrafting urn (empty)",
+    "started": "Fragile runecrafting urn",
+    "full": "Fragile runecrafting urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119925": 73472,
+    "119923": 73473,
+    "119854": 73474,
+    "119924": 73475,
+    "119922": 73476
+   },
+   "modelNames": {
+    "119925": "urns_runecrafting2_unfired",
+    "119923": "urns_runecrafting2_norune",
+    "119854": "urns_runecrafting_02",
+    "119924": "urns_runecrafting2_rune",
+    "119922": "urns_runecrafting2_full"
+   },
+   "seq": {
+    "teleport": 17208,
+    "runeIn": 17209
+   },
+   "rs3Seq": {
+    "teleport": 30980,
+    "runeIn": 30985
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_runecrafting_02",
+    "runeIn": "human_rune_in_urn_runecrafting_02"
+   },
+   "cloneSeq": {
+    "teleport": 10830,
+    "runeIn": 11421
+   },
+   "struct": 11400,
+   "enumRow": 301,
+   "structName": "skillguide_crafting_runecrafting2_urn",
+   "rs3Struct": 37691,
+   "structLabel": "Fragile runecrafting urn",
+   "level": 18,
+   "wheelXp": 21.0,
+   "fireXp": 24.0,
+   "rs3Capacity": 1750.0,
+   "capacity": 1750.0,
+   "activator": 7936,
+   "noruneOption": "Add pure essence",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 100,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": false,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "runecrafting",
+   "tier": 3,
+   "skillId": 20,
+   "rs3Obj": {
+    "unfired": 40900,
+    "cert_unfired": 40901,
+    "norune": 40902,
+    "cert_norune": 40903,
+    "rune": 40904,
+    "started": 40905,
+    "full": 40906,
+    "cert_full": 40907
+   },
+   "obj": {
+    "unfired": 25455,
+    "cert_unfired": 25456,
+    "norune": 25457,
+    "cert_norune": 25458,
+    "rune": 25459,
+    "started": 25460,
+    "full": 25461,
+    "cert_full": 25462
+   },
+   "gameval": {
+    "unfired": "urns_runecrafting3_unfired",
+    "cert_unfired": "cert_urns_runecrafting3_unfired",
+    "norune": "urns_runecrafting3_norune",
+    "cert_norune": "cert_urns_runecrafting3_norune",
+    "rune": "urns_runecrafting3_rune",
+    "started": "urns_runecrafting3_started",
+    "full": "urns_runecrafting3_full",
+    "cert_full": "cert_urns_runecrafting3_full"
+   },
+   "name": {
+    "unfired": "Plain runecrafting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Plain runecrafting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Plain runecrafting urn (empty)",
+    "started": "Plain runecrafting urn",
+    "full": "Plain runecrafting urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119929": 73477,
+    "119927": 73478,
+    "119855": 73479,
+    "119928": 73480,
+    "119926": 73481
+   },
+   "modelNames": {
+    "119929": "urns_runecrafting3_unfired",
+    "119927": "urns_runecrafting3_norune",
+    "119855": "urns_runecrafting_03",
+    "119928": "urns_runecrafting3_rune",
+    "119926": "urns_runecrafting3_full"
+   },
+   "seq": {
+    "teleport": 17210,
+    "runeIn": 17211
+   },
+   "rs3Seq": {
+    "teleport": 30981,
+    "runeIn": 30986
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_runecrafting_03",
+    "runeIn": "human_rune_in_urn_runecrafting_03"
+   },
+   "cloneSeq": {
+    "teleport": 10831,
+    "runeIn": 11425
+   },
+   "struct": 11401,
+   "enumRow": 302,
+   "structName": "skillguide_crafting_runecrafting3_urn",
+   "rs3Struct": 37727,
+   "structLabel": "Plain runecrafting urn",
+   "level": 33,
+   "wheelXp": 28.0,
+   "fireXp": 42.9,
+   "rs3Capacity": 3500.0,
+   "capacity": 3500.0,
+   "activator": 7936,
+   "noruneOption": "Add pure essence",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 220,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": false,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "runecrafting",
+   "tier": 4,
+   "skillId": 20,
+   "rs3Obj": {
+    "unfired": 40908,
+    "cert_unfired": 40909,
+    "norune": 40910,
+    "cert_norune": 40911,
+    "rune": 40912,
+    "started": 40913,
+    "full": 40914,
+    "cert_full": 40915
+   },
+   "obj": {
+    "unfired": 25463,
+    "cert_unfired": 25464,
+    "norune": 25465,
+    "cert_norune": 25466,
+    "rune": 25467,
+    "started": 25468,
+    "full": 25469,
+    "cert_full": 25470
+   },
+   "gameval": {
+    "unfired": "urns_runecrafting4_unfired",
+    "cert_unfired": "cert_urns_runecrafting4_unfired",
+    "norune": "urns_runecrafting4_norune",
+    "cert_norune": "cert_urns_runecrafting4_norune",
+    "rune": "urns_runecrafting4_rune",
+    "started": "urns_runecrafting4_started",
+    "full": "urns_runecrafting4_full",
+    "cert_full": "cert_urns_runecrafting4_full"
+   },
+   "name": {
+    "unfired": "Strong runecrafting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Strong runecrafting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Strong runecrafting urn (empty)",
+    "started": "Strong runecrafting urn",
+    "full": "Strong runecrafting urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119933": 73482,
+    "119931": 73483,
+    "119856": 73484,
+    "119932": 73485,
+    "119930": 73486
+   },
+   "modelNames": {
+    "119933": "urns_runecrafting4_unfired",
+    "119931": "urns_runecrafting4_norune",
+    "119856": "urns_runecrafting_04",
+    "119932": "urns_runecrafting4_rune",
+    "119930": "urns_runecrafting4_full"
+   },
+   "seq": {
+    "teleport": 17212,
+    "runeIn": 17213
+   },
+   "rs3Seq": {
+    "teleport": 30982,
+    "runeIn": 30987
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_runecrafting_04",
+    "runeIn": "human_rune_in_urn_runecrafting_04"
+   },
+   "cloneSeq": {
+    "teleport": 10947,
+    "runeIn": 11447
+   },
+   "struct": 11402,
+   "enumRow": 303,
+   "structName": "skillguide_crafting_runecrafting4_urn",
+   "rs3Struct": 37731,
+   "structLabel": "Strong runecrafting urn",
+   "level": 52,
+   "wheelXp": 38.0,
+   "fireXp": 52.5,
+   "rs3Capacity": 5000.0,
+   "capacity": 5000.0,
+   "activator": 7936,
+   "noruneOption": "Add pure essence",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 290,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "runecrafting",
+   "tier": 5,
+   "skillId": 20,
+   "rs3Obj": {
+    "unfired": 40916,
+    "cert_unfired": 40917,
+    "norune": 40918,
+    "cert_norune": 40919,
+    "rune": 40920,
+    "started": 40921,
+    "full": 40922,
+    "cert_full": 40923
+   },
+   "obj": {
+    "unfired": 25471,
+    "cert_unfired": 25472,
+    "norune": 25473,
+    "cert_norune": 25474,
+    "rune": 25475,
+    "started": 25476,
+    "full": 25477,
+    "cert_full": 25478
+   },
+   "gameval": {
+    "unfired": "urns_runecrafting5_unfired",
+    "cert_unfired": "cert_urns_runecrafting5_unfired",
+    "norune": "urns_runecrafting5_norune",
+    "cert_norune": "cert_urns_runecrafting5_norune",
+    "rune": "urns_runecrafting5_rune",
+    "started": "urns_runecrafting5_started",
+    "full": "urns_runecrafting5_full",
+    "cert_full": "cert_urns_runecrafting5_full"
+   },
+   "name": {
+    "unfired": "Decorated runecrafting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Decorated runecrafting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Decorated runecrafting urn (empty)",
+    "started": "Decorated runecrafting urn",
+    "full": "Decorated runecrafting urn (full)",
+    "cert_full": "null"
+   },
+   "models": {
+    "119937": 73487,
+    "119935": 73488,
+    "119857": 73489,
+    "119936": 73490,
+    "119934": 73491
+   },
+   "modelNames": {
+    "119937": "urns_runecrafting5_unfired",
+    "119935": "urns_runecrafting5_norune",
+    "119857": "urns_runecrafting_05",
+    "119936": "urns_runecrafting5_rune",
+    "119934": "urns_runecrafting5_full"
+   },
+   "seq": {
+    "teleport": 17214,
+    "runeIn": 17215
+   },
+   "rs3Seq": {
+    "teleport": 30983,
+    "runeIn": 30988
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_runecrafting_05",
+    "runeIn": "human_rune_in_urn_runecrafting_05"
+   },
+   "cloneSeq": {
+    "teleport": 11419,
+    "runeIn": 11448
+   },
+   "struct": 11403,
+   "enumRow": 304,
+   "structName": "skillguide_crafting_runecrafting5_urn",
+   "rs3Struct": 37735,
+   "structLabel": "Decorated runecrafting urn",
+   "level": 77,
+   "wheelXp": 50.0,
+   "fireXp": 78.0,
+   "rs3Capacity": 7000.0,
+   "capacity": 7000.0,
+   "activator": 7936,
+   "noruneOption": "Add pure essence",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 13,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 390,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1,
+    "cert_full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "woodcutting",
+   "tier": 5,
+   "skillId": 8,
+   "rs3Obj": {
+    "unfired": 39008,
+    "cert_unfired": 39009,
+    "norune": 39010,
+    "cert_norune": 39011,
+    "rune": 39012,
+    "started": 39014,
+    "full": 39015
+   },
+   "obj": {
+    "unfired": 25479,
+    "cert_unfired": 25480,
+    "norune": 25481,
+    "cert_norune": 25482,
+    "rune": 25483,
+    "started": 25484,
+    "full": 25485
+   },
+   "gameval": {
+    "unfired": "urns_woodcutting5_unfired",
+    "cert_unfired": "cert_urns_woodcutting5_unfired",
+    "norune": "urns_woodcutting5_norune",
+    "cert_norune": "cert_urns_woodcutting5_norune",
+    "rune": "urns_woodcutting5_rune",
+    "started": "urns_woodcutting5_started",
+    "full": "urns_woodcutting5_full"
+   },
+   "name": {
+    "unfired": "Decorated woodcutting urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Decorated woodcutting urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Decorated woodcutting urn (empty)",
+    "started": "Decorated woodcutting urn",
+    "full": "Decorated woodcutting urn (full)"
+   },
+   "models": {
+    "115424": 73492,
+    "115422": 73493,
+    "63426": 63426,
+    "115423": 73494,
+    "115421": 73495,
+    "115419": 73496
+   },
+   "modelNames": {
+    "115424": "urns_woodcutting5_unfired",
+    "115422": "urns_woodcutting5_norune",
+    "63426": "urns_kit_norune_05",
+    "115423": "urns_woodcutting5_rune",
+    "115421": "urns_woodcutting5_full",
+    "115419": "urns_kit_woodcutting_05"
+   },
+   "seq": {
+    "teleport": 17216,
+    "runeIn": 17217
+   },
+   "rs3Seq": {
+    "teleport": 29602,
+    "runeIn": 29603
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_woodcutting_05",
+    "runeIn": "human_rune_in_urn_woodcutting_05"
+   },
+   "cloneSeq": {
+    "teleport": 11419,
+    "runeIn": 11448
+   },
+   "struct": 11404,
+   "enumRow": 305,
+   "structName": "skillguide_crafting_urns_woodcutting5",
+   "rs3Struct": 34849,
+   "structLabel": "Decorated woodcutting urn",
+   "level": 76,
+   "wheelXp": 50.0,
+   "fireXp": 72.0,
+   "rs3Capacity": 9500.0,
+   "capacity": 9500.0,
+   "activator": 557,
+   "noruneOption": "Add earth rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 60,
+    "graphicCameraRoll": 25,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 410,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  },
+  {
+   "skill": "smithing",
+   "tier": 5,
+   "skillId": 13,
+   "rs3Obj": {
+    "unfired": 44766,
+    "cert_unfired": 44767,
+    "norune": 44768,
+    "cert_norune": 44769,
+    "rune": 44770,
+    "started": 44771,
+    "full": 44772
+   },
+   "obj": {
+    "unfired": 25486,
+    "cert_unfired": 25487,
+    "norune": 25488,
+    "cert_norune": 25489,
+    "rune": 25490,
+    "started": 25491,
+    "full": 25492
+   },
+   "gameval": {
+    "unfired": "urns_smithing5_unfired",
+    "cert_unfired": "cert_urns_smithing5_unfired",
+    "norune": "urns_smithing5_norune",
+    "cert_norune": "cert_urns_smithing5_norune",
+    "rune": "urns_smithing5_rune",
+    "started": "urns_smithing5_started",
+    "full": "urns_smithing5_full"
+   },
+   "name": {
+    "unfired": "Decorated smithing urn (unfired)",
+    "cert_unfired": "null",
+    "norune": "Decorated smithing urn (no rune)",
+    "cert_norune": "null",
+    "rune": "Decorated smithing urn (empty)",
+    "started": "Decorated smithing urn",
+    "full": "Decorated smithing urn (full)"
+   },
+   "models": {
+    "73938": 73497,
+    "73933": 73498,
+    "63426": 63426,
+    "73936": 73499,
+    "73931": 73500,
+    "73347": 73501
+   },
+   "modelNames": {
+    "73938": "urns_smithing5_unfired",
+    "73933": "urns_smithing5_norune",
+    "63426": "urns_kit_norune_05",
+    "73936": "urns_smithing5_rune",
+    "73931": "urns_smithing5_full",
+    "73347": "urns_kit_smithing_05"
+   },
+   "seq": {
+    "teleport": 17218,
+    "runeIn": 17219
+   },
+   "rs3Seq": {
+    "teleport": 32524,
+    "runeIn": 32525
+   },
+   "seqName": {
+    "teleport": "human_urn_teleport_smithing_05",
+    "runeIn": "human_rune_in_urn_smithing_05"
+   },
+   "cloneSeq": {
+    "teleport": 11419,
+    "runeIn": 11448
+   },
+   "struct": 11405,
+   "enumRow": 306,
+   "structName": "skillguide_crafting_smithing_urn_5",
+   "rs3Struct": 42852,
+   "structLabel": "Decorated smithing urn",
+   "level": 80,
+   "wheelXp": 52.0,
+   "fireXp": 78.0,
+   "rs3Capacity": 9470.0,
+   "capacity": 1625,
+   "activator": 554,
+   "noruneOption": "Add fire rune",
+   "obj2d": {
+    "graphicScale": 848,
+    "graphicPitch": 67,
+    "graphicCameraRoll": 27,
+    "graphicCameraYaw": 0,
+    "graphicTranslateX": 0,
+    "graphicTranslateY": 0
+   },
+   "cost": {
+    "unfired": 1,
+    "cert_unfired": 1,
+    "norune": 280,
+    "cert_norune": 1,
+    "rune": 1,
+    "started": 1,
+    "full": 1
+   },
+   "members": true,
+   "geCategory": {
+    "norune": 35
+   }
+  }
+ ],
+ "next": {
+  "obj": 25493,
+  "model": 73502,
+  "seq": 17220,
+  "struct": 11406,
+  "enum_5465_length": 307
+ }
+}

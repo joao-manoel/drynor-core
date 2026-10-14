@@ -1,0 +1,41 @@
+#version 430 core
+
+// Zero the per-command instance counts (and this frame's debug counters) ahead of
+// cull_instances.comp.
+//
+// The counts cannot be cleared with glClearBufferSubData because instanceCount is one
+// field inside a 20-byte DrawElementsIndirectCommand: clearing the buffer would wipe the
+// index count, offsets and base instance the commands were built with. A dispatch of a
+// couple of thousand invocations is cheaper than rebuilding those every frame.
+
+layout(local_size_x = 64) in;
+
+struct DrawCommand {
+    uint count;
+    uint instanceCount;
+    uint firstIndex;
+    uint baseVertex;
+    uint baseInstance;
+};
+
+layout(std430, binding = 5) buffer CommandBlock {
+    DrawCommand commands[];
+};
+
+layout(std430, binding = 6) buffer StatsBlock {
+    uint counters[];
+};
+
+uniform uint commandCount;
+uniform uint statsIndex;
+
+void main() {
+    uint i = gl_GlobalInvocationID.x;
+    if (i < commandCount) {
+        commands[i].instanceCount = 0u;
+    }
+    if (i == 0u) {
+        counters[statsIndex] = 0u;
+        counters[statsIndex + 1u] = 0u;
+    }
+}

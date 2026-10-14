@@ -9,7 +9,7 @@ name: Java CI with Gradle
 
 on:
   pull_request:
-    branches: [ master, dev ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,10 +18,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 24
+    - name: Fetch pinned gameval catalogs
+      run: |
+        mkdir -p ../cache-unpacked
+        curl --fail --location 'https://gitlab.com/api/v4/projects/86047720/repository/archive.tar.gz?sha=faf21332c82ec2540897cebc8041f6fedaced162&path=gamevals' -o "$RUNNER_TEMP/gamevals.tar.gz"
+        tar -xzf "$RUNNER_TEMP/gamevals.tar.gz" --strip-components=1 -C ../cache-unpacked
+    - name: Set up JDK 26
       uses: actions/setup-java@v4
       with:
-        java-version: '24'
+        java-version: '26'
         distribution: 'temurin'
         cache: gradle
     - name: Build with Gradle

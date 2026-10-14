@@ -1,0 +1,13 @@
+{
+  "source": "hand decisions for the RS3 materials the shipped 727 urns give no precedent for, keyed by RS3 material id (the glb submesh field minus one)",
+  "materials": {
+    "898": {
+      "material": -1,
+      "reason": "shadow_09 is a flat pale-grey image used only on the flat hunter and runecrafting emblem decals, whose own HSL is black or dark grey; 727 has no flat-grey material and an untextured face renders exactly the authored colour"
+    },
+    "2314": {
+      "material": 87,
+      "reason": "stone_column is the fired-urn body texture of every farming, hunter and runecrafting urn, which is the role 727 material 87 fills on every fired urn body already in the cache, and the two images are both smooth pale stone"
+    }
+  }
+}

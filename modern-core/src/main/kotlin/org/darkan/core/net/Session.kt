@@ -1,0 +1,42 @@
+package org.darkan.core.net
+
+import io.ktor.utils.io.*
+import org.darkan.core.EnvVars
+import org.darkan.core.Logger.logTrace
+import org.darkan.core.net.prot.ClientProt
+import org.darkan.core.net.prot.Codec
+import org.darkan.core.net.prot.ServerProt
+import org.darkan.core.net.prot.packet.FriendStatus
+import org.darkan.core.net.prot.packet.FriendlistLoaded
+import org.darkan.core.net.prot.packet.UpdateIgnoreList
+
+open class Session(
+    write: ByteWriteChannel,
+    isaacIn: Isaac,
+    isaacOut: Isaac?,
+    ip: String,
+    codec: Codec,
+    inboundIdleTimeoutMs: Long? = EnvVars.sessionIdleTimeoutMillis,
+) : ProtSession<ClientProt, ServerProt>(write, isaacIn, isaacOut, ip, codec, EnvVars.packetQueueCapacity, EnvVars.outboundQueueCapacity, inboundIdleTimeoutMs) {
+
+    @JvmName("getIP")
+    fun getIPAddress(): String = ip
+
+    fun isClosed(): Boolean = disconnected
+
+    @Suppress("UNUSED_PARAMETER")
+    fun setDecoder(decoder: Any?) {}
+
+    override fun inboundCodec(opcode: Int) = codec.clientProtsByOpcode[opcode]
+
+    override fun outboundCodec(prot: ServerProt) = codec.serverProts[prot::class]
+
+    override fun onWrite(prot: ServerProt, opcode: Int) {
+        if (prot is FriendStatus || prot is FriendlistLoaded || prot is UpdateIgnoreList)
+            logTrace("Session.send SOCIAL: ${prot::class.simpleName} opcode=$opcode ip=$ip")
+    }
+
+    companion object {
+        fun isExpectedDisconnect(e: Throwable): Boolean = ProtSession.isExpectedDisconnect(e)
+    }
+}

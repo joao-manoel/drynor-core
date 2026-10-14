@@ -1,0 +1,178 @@
+{
+  "source": "learned by matching the faces of every urn model present in both the 727 and the RS3 949 tree; keyed by RS3 material id, which is the glb submesh material field minus one",
+  "corpus": {
+    "models": 135,
+    "matchedFaces": 33463
+  },
+  "materials": {
+    "898": {
+      "material": -1,
+      "source": "override",
+      "counts": {}
+    },
+    "1585": {
+      "material": 213,
+      "source": "learned",
+      "counts": {
+        "213": 284
+      }
+    },
+    "1879": {
+      "material": 518,
+      "source": "learned",
+      "counts": {
+        "518": 1860
+      }
+    },
+    "2312": {
+      "material": 200,
+      "source": "learned",
+      "counts": {
+        "200": 6486
+      }
+    },
+    "2314": {
+      "material": 87,
+      "source": "override",
+      "counts": {}
+    },
+    "2315": {
+      "material": 96,
+      "source": "learned",
+      "counts": {
+        "96": 24
+      }
+    },
+    "2324": {
+      "material": 87,
+      "source": "learned",
+      "counts": {
+        "87": 24085
+      }
+    }
+  },
+  "projections": {
+    "inventory:200": {
+      "mapping": 1,
+      "triangle": [
+        0,
+        32767,
+        0
+      ],
+      "scale": [
+        0,
+        12699,
+        1024
+      ],
+      "rotation": -16,
+      "direction": 0,
+      "speed": 4
+    },
+    "inventory:213": {
+      "mapping": 1,
+      "triangle": [
+        0,
+        32767,
+        0
+      ],
+      "scale": [
+        0,
+        16376,
+        1024
+      ],
+      "rotation": 0,
+      "direction": 0,
+      "speed": -2
+    },
+    "inventory:518": {
+      "mapping": 0,
+      "corners": [
+        -67,
+        -158,
+        1,
+        -2,
+        -158,
+        -67,
+        1,
+        -158,
+        66
+      ]
+    },
+    "inventory:87": {
+      "mapping": 1,
+      "triangle": [
+        0,
+        32767,
+        0
+      ],
+      "scale": [
+        0,
+        12699,
+        1024
+      ],
+      "rotation": -16,
+      "direction": 0,
+      "speed": 4
+    },
+    "worn:213": {
+      "mapping": 1,
+      "triangle": [
+        0,
+        0,
+        32767
+      ],
+      "scale": [
+        0,
+        16376,
+        1024
+      ],
+      "rotation": 0,
+      "direction": 0,
+      "speed": -2
+    },
+    "worn:518": {
+      "mapping": 0,
+      "corners": [
+        -201,
+        -468,
+        -106,
+        -136,
+        -400,
+        -106,
+        -133,
+        -533,
+        -106
+      ]
+    },
+    "worn:87": {
+      "mapping": 1,
+      "triangle": [
+        0,
+        0,
+        32767
+      ],
+      "scale": [
+        0,
+        12699,
+        1024
+      ],
+      "rotation": -37,
+      "direction": 0,
+      "speed": 4
+    },
+    "worn:96": {
+      "mapping": 0,
+      "corners": [
+        -53,
+        -501,
+        53,
+        -100,
+        -382,
+        50,
+        -173,
+        -548,
+        54
+      ]
+    }
+  }
+}

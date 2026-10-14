@@ -1,1 +1,3 @@
-rootProject.name = 'core'
+rootProject.name = 'drynor-core'
+include 'core', 'cs2', 'tools', 'legacy-compat'
+project(':core').projectDir = file('modern-core')
