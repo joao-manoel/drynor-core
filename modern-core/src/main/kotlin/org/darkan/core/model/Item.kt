@@ -1,5 +1,6 @@
 package org.darkan.core.model
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -47,6 +48,7 @@ data class Item @JvmOverloads constructor(
      * and leaves the field null - Java callers pass `item.getMetaData()` straight through when
      * merging stacks (`ItemsContainer.add`), which is null for every ordinary item.
      */
+    @field:SerializedName(value = "metaData", alternate = ["metadata"])
     var metadata: MutableMap<String, @Contextual Any>? = null
 ) : Cloneable {
 

@@ -28,10 +28,23 @@ checkpoint jogável até a conclusão dos gates abaixo.
 - O client/RuneLite não foi substituído. O usuário confirmou login jogável,
   criação do clã, entrada automática e abertura das configurações.
 
-Validação: core 378 testes, CS2 14, lobby 93 e world 2, todos sem falhas/erros.
+Validação: core 380 testes, CS2 14, lobby 93 e world 4, todos sem falhas/erros.
 As probes `verifyClanCacheMigration`, `verifyClanCommandHttp` e
 `verifyNativeClanMigration` passaram com cache/Mongo/HTTP locais. A comparação
 opcional com `/usr/bin/bzip2` continua indisponível no Windows.
+
+## Próxima etapa em andamento
+
+- Interfaces, scripts CS2, variáveis e snapshots de inventário do world usam
+  DTOs/codec nativos. Testes diferenciais verificam framing e avanço do ISAAC,
+  slots vazios, stacks grandes e flags de contêiner. Sessão e framing continuam
+  no adaptador de compatibilidade até a migração do transporte.
+- O modelo nativo de Item lê `metaData` histórico e `metadata` atual no Gson,
+  preservando cargas, propriedades personalizadas e mapas vazios distintos de
+  metadados ausentes. Essa preparação ainda não troca os consumidores do world.
+- Builds locais validados podem ser executados a partir de snapshots compilados
+  ignorados pelo Git, evitando mudanças de classes durante os testes manuais.
+  Código-fonte continua nos checkouts originais da branch.
 
 ## Gates ainda abertos
 
