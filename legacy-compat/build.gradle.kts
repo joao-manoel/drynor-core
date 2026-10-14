@@ -50,3 +50,13 @@ tasks.register<JavaExec>("verifyPackedCache") {
     mainClass.set("com.rs.cache.CacheCompatibilityProbe")
     args(providers.gradleProperty("cachePath").getOrElse("../cache/"))
 }
+
+tasks.register<JavaExec>("exportClientScriptFixtures") {
+    group = "verification"
+    dependsOn(tasks.named("classes"))
+    workingDir = rootDir
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("com.rs.cache.ClientScriptFixtures")
+    environment("DRYNOR_CACHE_BUILD", "false")
+    args(providers.gradleProperty("cachePath").getOrElse("../cache/"), rootDir.resolve("build/client-script-fixtures").absolutePath)
+}
