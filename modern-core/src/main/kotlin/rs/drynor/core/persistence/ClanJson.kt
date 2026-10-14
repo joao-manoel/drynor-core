@@ -78,6 +78,9 @@ class ClanJson(
         id to typed
     }.toMap()
 
+    /** Only cache-defined ids can be sent to the client; unknown persisted fields stay in storage. */
+    fun wireSettings(clan: Clan): Map<Int, Any> = legacySettings(clan).filterKeys { definition(it) != null }
+
     private fun values(objectValue: JsonObject?, settings: Boolean): MutableMap<String, Any> =
         objectValue?.entrySet()?.associate { (key, json) ->
             require(json.isJsonPrimitive) { "Clan values must be scalar" }

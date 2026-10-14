@@ -4,6 +4,19 @@ import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 
 object Logger {
+    fun interface ErrorRecorder {
+        fun record(origin: String, message: String?, throwable: Throwable?)
+    }
+
+    @Volatile private var errorRecorder: ErrorRecorder? = null
+
+    @JvmStatic fun setErrorRecorder(recorder: ErrorRecorder?) { errorRecorder = recorder }
+
+    private fun recordError(origin: String, message: String?, throwable: Throwable?) {
+        runCatching { errorRecorder?.record(origin, message, throwable) }.onFailure {
+            DARKAN_ROOT_LOGGER.log(Level.SEVERE, "Error persistence failed", it)
+        }
+    }
     private const val ROOT_KEY = "DarkanRS"
     private val DARKAN_ROOT_LOGGER = java.util.logging.Logger.getLogger(ROOT_KEY);
 
@@ -37,13 +50,7 @@ object Logger {
     private fun formatMessage(className: String, methodName: String, msg: Any): String = "[$className.$methodName] $msg"
 
     private fun logToDB(className: String, methodName: String, message: String, throwable: Throwable? = null) {
-        //TODO
-//        DBConnection.getErrors()?.docs?.let {
-//            when (throwable) {
-//                null -> DBConnection.getErrors().logError("$className.$methodName", message)
-//                else -> DBConnection.getErrors().logError("$className.$methodName", message, throwable)
-//            }
-//        }
+        recordError("$className.$methodName", message, throwable)
     }
 
     fun Any.logErrorToDatabase(message: String, throwable: Throwable? = null) {
@@ -98,12 +105,14 @@ object Logger {
 
     @JvmStatic
     fun handle(source: Class<*>, method: String, e: Throwable) {
+        recordError(method, null, e)
         DARKAN_ROOT_LOGGER.log(Level.SEVERE, formatMessage(source.simpleName, method, e.message ?: "Exception"), e)
         if (EnvVars.debug) e.printStackTrace()
     }
 
     @JvmStatic
     fun handle(source: Class<*>, method: String, message: String, e: Throwable) {
+        recordError(method, message, e)
         DARKAN_ROOT_LOGGER.log(Level.SEVERE, formatMessage(source.simpleName, method, message), e)
         if (EnvVars.debug) e.printStackTrace()
     }
