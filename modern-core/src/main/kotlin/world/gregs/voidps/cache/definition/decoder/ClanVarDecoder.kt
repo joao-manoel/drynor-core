@@ -17,18 +17,18 @@ import world.gregs.voidps.cache.definition.encoder.ClanVarEncoder
  * - 1: single cp1252 byte encoding the CS2Type descriptor (i/s/long/etc.)
  * - 3: basevar (ushort) + startBit (ubyte) + endBit (ubyte) for bitpacked vars
  */
-class ClanVarDecoder : DefinitionDecoder<ClanVarDefinition>(Index.CONFIGS) {
+class ClanVarDecoder(private val archive: Int = VAR_CLAN, private val bitOpcode: Int = 3) : DefinitionDecoder<ClanVarDefinition>(Index.CONFIGS) {
 
-    private val encoder = ClanVarEncoder()
+    private val encoder = ClanVarEncoder(bitOpcode)
 
     override fun create(size: Int) = Array(size) { ClanVarDefinition(it) }
 
     override fun canonicalOpcodes(definition: ClanVarDefinition): IntArray = encoder.opcodes(definition)
 
-    override fun getArchive(id: Int) = VAR_CLAN
+    override fun getArchive(id: Int) = archive
 
     override fun size(cache: Cache): Int {
-        return cache.lastFileId(Index.CONFIGS, VAR_CLAN)
+        return cache.lastFileId(Index.CONFIGS, archive)
     }
 
     override fun ClanVarDefinition.read(opcode: Int, buffer: Reader) {
@@ -38,7 +38,7 @@ class ClanVarDecoder : DefinitionDecoder<ClanVarDefinition>(Index.CONFIGS) {
                 typeChar = byteToChar(buffer.readByte().toByte())
                 type = CS2Type.forJagexDesc(typeChar)
             }
-            3 -> {
+            bitOpcode -> {
                 baseVar = buffer.readUnsignedShort()
                 startBit = buffer.readUnsignedByte()
                 endBit = buffer.readUnsignedByte()

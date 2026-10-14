@@ -202,6 +202,10 @@ interface Cache : Closeable {
             ClanVarDecoder().load(singleton)
         }
 
+        @JvmStatic val clanVarSettings: Array<ClanVarDefinition> by lazy {
+            ClanVarDecoder(Config.VAR_CLAN_SETTINGS, 2).load(singleton)
+        }
+
         @JvmStatic val interfaces: Array<InterfaceDefinition> by lazy {
             InterfaceDecoder().load(singleton)
         }
