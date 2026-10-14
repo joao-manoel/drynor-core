@@ -87,8 +87,8 @@ class Tile(val id: Int) : Coordinate3D<Tile> {
     /** Returns the local Y coordinate within this tile's chunk/zone (0-7). */
     fun getYInChunk() = y and 7
 
-    /** Returns the local hash within the chunk (encodes localX, localY, and plane). */
-    fun getChunkLocalHash() = (x and 7) or ((y and 7) shl 4) or (level shl 8)
+    /** Revision 727 zone coordinate: local X in the high nibble, local Y in the low nibble. */
+    fun getChunkLocalHash() = ((x and 7) shl 4) or (y and 7)
 
     /** Equality check comparing packed ids. */
     fun matches(other: Tile) = id == other.id

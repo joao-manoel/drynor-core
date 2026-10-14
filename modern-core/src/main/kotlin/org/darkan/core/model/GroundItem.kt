@@ -26,7 +26,7 @@ enum class GroundItemType {
  *    `Chunk.groundItemList`/the owner mappings remove *this* instance; `World.addGroundItem` drops N
  *    structurally identical singles for a non-stackable stack, which a data class would collapse.
  */
-class GroundItem @JvmOverloads constructor(
+open class GroundItem @JvmOverloads constructor(
     item: Item,
     val tile: Tile,
     /** Legacy `creatorUsername`. Permanent: see the class comment. */
@@ -89,7 +89,7 @@ class GroundItem @JvmOverloads constructor(
     var ticks: Int = 0
         private set
 
-    fun tick() { ticks++ }
+    open fun tick() { ticks++ }
 
     /**
      * Legacy `setHiddenTime(int)`: schedules the reveal that many ticks from **now**, i.e. relative

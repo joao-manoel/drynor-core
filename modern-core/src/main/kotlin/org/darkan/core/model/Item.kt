@@ -60,6 +60,7 @@ data class Item @JvmOverloads constructor(
      * `refresh(item.getSlot())` sites depend on that.
      */
     @Transient
+    @JvmTransient
     var slot: Int = 0
 
     @Transient
@@ -82,6 +83,9 @@ data class Item @JvmOverloads constructor(
     constructor(id: Int, amount: Int, amt0: Boolean) : this(id, amount) {
         if (amt0) this.amount = amount
     }
+
+    /** An independent stack with an independent metadata map. */
+    constructor(item: Item) : this(item.id, item.amount, item.metadata?.toMutableMap())
 
     fun withSlot(slot: Int): Item {
         this.slot = slot

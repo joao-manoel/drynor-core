@@ -32,6 +32,14 @@ class ItemSaveMigrationTest {
         }
     }
 
+    @Test fun `runtime inventory slot is excluded from saved item data`() {
+        val item = Item(995, 100000).withSlot(27)
+        val saved = JsonParser.parseString(gson.toJson(item)).asJsonObject
+        assertFalse(saved.has("slot"))
+        assertFalse(saved.has("owner"))
+        assertEquals(0, gson.fromJson(saved, Item::class.java).slot)
+    }
+
     @Test fun `absent and empty metadata retain distinct stack semantics`() {
         val plain = gson.fromJson("""{"id":995,"amount":100000}""", Item::class.java)
         assertNull(plain.getMetaData())
