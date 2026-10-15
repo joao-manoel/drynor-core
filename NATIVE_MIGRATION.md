@@ -84,7 +84,8 @@ build usam o nome Drynor. Core, CS2, tools, lobby e world foram recompilados com
 essa identidade. O cliente mantém seu código funcional e a integração RuneLite.
 
 A contagem de arquivos de produção do world com referências antigas caiu para
-200; isso não substitui os gates abaixo. A etapa precisa de teste no cliente.
+200; isso não substitui os gates abaixo. Após a troca do namespace e o batching
+de zonas, o usuário confirmou login, banco, drop/coleta, combate e aba de clãs.
 
 ## Gates ainda abertos
 
