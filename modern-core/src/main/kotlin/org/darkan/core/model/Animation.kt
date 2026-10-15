@@ -9,6 +9,7 @@ data class Animation(val ids: IntArray, val speed: Int = 0) {
     constructor(id1: Int, id2: Int, id3: Int, id4: Int, speed: Int = 0) : this(intArrayOf(id1, id2, id3, id4), speed)
 
     val primaryId get() = ids[0]
+    val defs get() = org.darkan.core.cache.AnimationDefinitions.getDefs(primaryId)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -526,6 +526,7 @@ object Utils {
     @JvmStatic fun getItemDefinitionsSize(): Int = Cache.items.size
 
     @JvmStatic fun getNPCDefinitionsSize(): Int = Cache.npcs.size
+    @JvmStatic fun isQCValid(id: Int): Boolean = id >= 0 && Cache.get().files(24, 1).contains(id)
 
     @JvmStatic fun getObjectDefinitionsSize(): Int = Cache.objects.size
 
@@ -604,6 +605,23 @@ object Utils {
             }
         return classes
     }
+
+    @JvmStatic
+    @Throws(ClassNotFoundException::class, java.io.IOException::class)
+    fun getClasses(packageName: String): List<Class<*>> =
+        io.github.classgraph.ClassGraph().enableClassInfo().acceptPackages(packageName).scan().use { scan ->
+            scan.allClasses.map { it.loadClass() }
+        }
+
+    @JvmStatic
+    @Throws(ClassNotFoundException::class, java.io.IOException::class)
+    fun getMethodsWithAnnotation(packageName: String, annotation: Class<out Annotation>): List<java.lang.reflect.Method> =
+        io.github.classgraph.ClassGraph().enableClassInfo().enableMethodInfo().enableAnnotationInfo()
+            .acceptPackages(packageName).scan().use { scan ->
+                scan.getClassesWithMethodAnnotation(annotation.name).flatMap { info ->
+                    info.loadClass().declaredMethods.filter { it.isAnnotationPresent(annotation) }
+                }
+            }
 
     @JvmStatic
     fun splitTextIntoLines(text: String, fontId: Int, width: Int): Array<String> {

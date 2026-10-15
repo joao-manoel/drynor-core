@@ -121,6 +121,14 @@ data class ObjectDefinition(
 
     var block: Int = PROJECTILE or ROUTE
 
+    val blocksProjectiles: Boolean get() = (block and PROJECTILE) != 0
+    val interactionType: Int get() = if (interactive != -1) interactive else
+        if ((modelTypes?.size == 1 && modelTypes?.firstOrNull()?.toInt() == 10) ||
+            options?.take(5)?.any { it != null } == true) 1 else 0
+    val shapes: Array<org.darkan.core.model.ObjectShape> get() = modelTypes?.map {
+        org.darkan.core.model.ObjectShape.forId(it.toInt())
+    }?.filterNotNull()?.toTypedArray() ?: emptyArray()
+
     /** The op number of [option], 1-based - op1 is 1 - or -1 when absent. */
     fun optionsIndex(option: String): Int {
         val index = options?.indexOf(option) ?: return -1

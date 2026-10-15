@@ -62,6 +62,24 @@ opcional com `/usr/bin/bzip2` continua indisponível no Windows.
   ignorados pelo Git, evitando mudanças de classes durante os testes manuais.
   Código-fonte continua nos checkouts originais da branch.
 
+## Modelos e mapa: etapa de 15/10/2026 em validação
+
+World usa Tile, Animation, SpotAnim, Projectile, WorldObject, ObjectShape,
+MapRegion, RegionSize, Vec2 e Vars atuais. NPC/Object/Enum/Struct/VarBit/Animation/
+BAS são lidos pelos decoders atuais; a ponte GroundItemRuntime foi removida.
+Objetos, efeitos, projéteis e construção de cenas usam codecs atuais, com
+transporte ainda intermediado por NativePacket/NativeZonePacket. O serviço
+MapXteas do core fornece chaves para mapas e pacotes.
+
+Foram comparados 15.663 NPCs, 73.903 objetos e 17.225 animações no cache real.
+Regras de portas de dungeoneering e classificação de mortos-vivos continuam no
+world. Durações de animação são lidas sem sinal; TileJson lê coordenadas do
+conteúdo e grava o formato atual. Testes: core 384, CS2 14 e world 11 passaram
+antes dos ajustes finais de inicialização de quests/achievements.
+
+A contagem de arquivos de produção do world com referências antigas caiu para
+200; isso não substitui os gates abaixo. A etapa precisa de teste no cliente.
+
 ## Gates ainda abertos
 
 1. Migrar os demais comandos de clã, contas/social e contratos de gateway.

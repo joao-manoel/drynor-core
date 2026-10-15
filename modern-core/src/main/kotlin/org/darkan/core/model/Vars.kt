@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.jvm.Transient as JvmTransient
 import org.darkan.core.net.Session
+import org.darkan.core.net.prot.ServerProt
+import java.util.function.Consumer
 import org.darkan.core.net.prot.packet.ClearVarps
 import org.darkan.core.net.prot.packet.setVarcPacket
 import org.darkan.core.net.prot.packet.setVarcStrPacket
@@ -36,7 +38,18 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
     @JvmTransient
     private lateinit var session: Session
 
+    @Transient
+    @JvmTransient
+    private var packetSink: Consumer<ServerProt>? = null
+
+    /** Bind an application-owned writer without depending on its socket implementation. */
+    fun setPacketSink(sink: Consumer<ServerProt>): Vars {
+        packetSink = sink
+        return initWithoutSession()
+    }
+
     fun setSession(session: Session): Vars {
+        packetSink = null
         this.session = session
         varpValues = IntArray(varpTableSize())
         modified = HashSet()
@@ -91,9 +104,10 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
         val defs = VarBitDefinitions.getDefs(id)
         if (defs.index < 0 || defs.index >= varpValues.size) return
         val bitLength = defs.endBit - defs.startBit
+        if (bitLength !in BIT_MASKS.indices || defs.startBit !in 0..31) return
         val mask = BIT_MASKS[bitLength]
 
-        val cappedValue = value.coerceIn(0, mask)
+        val cappedValue = if (mask == -1) value else value.coerceIn(0, mask)
         val shiftedMask = mask shl defs.startBit
         val varpValue = (varpValues[defs.index] and shiftedMask.inv()) or ((cappedValue shl defs.startBit) and shiftedMask)
 
@@ -140,7 +154,8 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
     fun syncVarsToClient() {
         modified.forEach { id ->
             if (id < 0 || id >= varpValues.size) return@forEach
-            session.queuePacket(setVarpPacket(id, varpValues[id]))
+            val packet = setVarpPacket(id, varpValues[id])
+            packetSink?.accept(packet) ?: session.queuePacket(packet)
         }
         modified.clear()
     }

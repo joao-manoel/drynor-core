@@ -185,6 +185,7 @@ object JsonFileManager {
     private var gsonInstance: Gson? = null
 
     private val gson: Gson get() = gsonInstance ?: GsonBuilder()
+        .registerTypeAdapter(world.gregs.voidps.type.Tile::class.java, rs.drynor.core.persistence.TileJson())
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .create().also { gsonInstance = it }
@@ -214,8 +215,7 @@ object JsonFileManager {
         if (!file.exists()) return null
         return try {
             file.reader().use { reader ->
-                @Suppress("UNCHECKED_CAST")
-                gson.fromJson(reader, type) as? T
+                gson.fromJson<T>(reader, type)
             }
         } catch (e: Exception) {
             null
@@ -223,6 +223,7 @@ object JsonFileManager {
     }
 
     @JvmStatic
+    @Throws(JavaIOException::class)
     fun saveJsonFile(data: Any, file: File) {
         file.parentFile?.mkdirs()
         file.writer().use { writer ->
