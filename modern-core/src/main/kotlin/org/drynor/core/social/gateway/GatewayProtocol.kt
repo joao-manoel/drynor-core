@@ -280,6 +280,16 @@ data class PlayerOffline(
 data class SocialCommand(
     val username: String,
     val action: SocialAction,
+    val requestId: Long = 0,
+) : SocialGatewayWireMessage
+
+/** Result of a world-local request; failed connections must never replay mutations. */
+@Serializable
+@SerialName("SocialCommandResult")
+data class SocialCommandResult(
+    val requestId: Long,
+    val success: Boolean,
+    val reason: String? = null,
 ) : SocialGatewayWireMessage
 
 /** Lobby → world: [event] happened to each of [usernames]; the world renders it for each of them. */
