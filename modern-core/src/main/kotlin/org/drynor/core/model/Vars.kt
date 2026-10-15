@@ -43,11 +43,14 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
     private var packetSink: Consumer<ServerProt>? = null
 
     /** Bind an application-owned writer without depending on its socket implementation. */
-    fun setPacketSink(sink: Consumer<ServerProt>): Vars {
+    @Synchronized
+    @JvmOverloads
+    fun setPacketSink(sink: Consumer<ServerProt>, tableSize: Int = varpTableSize()): Vars {
         packetSink = sink
-        return initWithoutSession()
+        return initWithoutSession(tableSize)
     }
 
+    @Synchronized
     fun setSession(session: Session): Vars {
         packetSink = null
         this.session = session
@@ -57,6 +60,7 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
         return this
     }
 
+    @Synchronized
     fun reattach(session: Session) {
         this.session = session
         varpValues.indices.filterTo(modified) { varpValues[it] != 0 }
@@ -66,8 +70,11 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
      * Initialize vars without a session for offline/tool usage.
      * This allows using getVar/setVar/getVarBit/setVarBit without network sync.
      */
-    fun initWithoutSession(): Vars {
-        varpValues = IntArray(varpTableSize())
+    @Synchronized
+    @JvmOverloads
+    fun initWithoutSession(tableSize: Int = varpTableSize()): Vars {
+        require(tableSize >= 0)
+        varpValues = IntArray(tableSize)
         modified = HashSet()
         vars.forEach { (varId, value) -> setVar(varId, value) }
         return this
@@ -84,6 +91,7 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
     }
 
     @JvmOverloads
+    @Synchronized
     fun setVar(id: Int, value: Int, forceSend: Boolean = false, save: Boolean = false) {
         if (forceSend)
             modified.add(id)
@@ -100,6 +108,7 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
     fun saveVar(id: Int, value: Int) = setVar(id, value, forceSend = false, save = true)
 
     @JvmOverloads
+    @Synchronized
     fun setVarBit(id: Int, value: Int, forceSend: Boolean = false, save: Boolean = false) {
         val defs = VarBitDefinitions.getDefs(id)
         if (defs.index < 0 || defs.index >= varpValues.size) return
@@ -122,6 +131,7 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
      * [getVarBit] does: object and NPC transforms name varps straight out of the cache, and one
      * dangling reference coming into view would otherwise take region loading down with it.
      */
+    @Synchronized
     fun getVar(id: Int): Int {
         if (id < 0 || id >= varpValues.size) return 0
         return varpValues[id]
@@ -141,6 +151,7 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
      * 0 is the right answer rather than merely a safe one: it is what an unset var
      * reads as, so an unresolvable varbit selects the transform's default.
      */
+    @Synchronized
     fun getVarBit(id: Int): Int {
         val defs = VarBitDefinitions.getDefs(id)
         if (defs.index < 0 || defs.index >= varpValues.size) return 0
@@ -149,15 +160,22 @@ class Vars(val vars: MutableMap<Int, Int> = HashMap()) {
         return (varpValues[defs.index] shr defs.startBit) and BIT_MASKS[bitLength]
     }
 
+    @Synchronized
     fun bitFlagged(id: Int, bit: Int) = (varpValues[id] and (1 shl bit)) != 0
 
     fun syncVarsToClient() {
-        modified.forEach { id ->
-            if (id < 0 || id >= varpValues.size) return@forEach
-            val packet = setVarpPacket(id, varpValues[id])
-            packetSink?.accept(packet) ?: session.queuePacket(packet)
+        val pending = synchronized(this) {
+            modified.filter { it in varpValues.indices }.map { it to varpValues[it] }.also { modified.clear() }
         }
-        modified.clear()
+        pending.forEachIndexed { index, (id, value) ->
+            try {
+                val packet = setVarpPacket(id, value)
+                packetSink?.accept(packet) ?: session.queuePacket(packet)
+            } catch (failure: Exception) {
+                synchronized(this) { pending.drop(index).forEach { modified.add(it.first) } }
+                throw failure
+            }
+        }
     }
 
     suspend fun clearVars() {

@@ -114,3 +114,5 @@ A migração completa não está concluída. As branches ainda dependem de
 `legacy-compat` para os consumidores não portados. Os leitores dos formatos
 históricos de dados são necessários para preservar os saves e não autorizam
 manter o runtime antigo como substituto do core atual.
+
+AccountView/Rights/Social/FriendsChat agora substituem os modelos antigos no gameplay do world; o lobby ainda possui sua migração interna pendente. AccountViewJson limita a projeção aos dados públicos e usa construção normal. Vars sincroniza mudanças por snapshot atômico, com preservação das alterações durante entrega e reenvio após falha. LoginCacheChecksums e InventoryDefinitions leem o backend atual. Login/corrida foram confirmados manualmente após serializar a inicialização do jogador na thread do world. A identificação de processos no HTTP trata sessões órfãs após reinício. Os gates de transporte, persistência e remoção de legacy-compat continuam abertos.

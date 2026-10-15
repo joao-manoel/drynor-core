@@ -185,6 +185,7 @@ object JsonFileManager {
     private var gsonInstance: Gson? = null
 
     private val gson: Gson get() = gsonInstance ?: GsonBuilder()
+        .registerTypeAdapter(org.drynor.core.model.AccountView::class.java, rs.drynor.core.persistence.AccountViewJson())
         .registerTypeAdapter(world.gregs.voidps.type.Tile::class.java, rs.drynor.core.persistence.TileJson())
         .setPrettyPrinting()
         .disableHtmlEscaping()
