@@ -54,6 +54,7 @@ sealed interface SocialAction {
     @Serializable @SerialName("AddIgnore") data class AddIgnore(val name: String, val untilLogout: Boolean = false) : SocialAction
     @Serializable @SerialName("RemoveIgnore") data class RemoveIgnore(val name: String) : SocialAction
     @Serializable @SerialName("SetPrivateStatus") data class SetPrivateStatus(val status: Int) : SocialAction
+    @Serializable @SerialName("SetFriendsChatStatus") data class SetFriendsChatStatus(val status: Int) : SocialAction
     @Serializable @SerialName("JoinFriendsChat") data class JoinFriendsChat(val owner: String) : SocialAction
     @Serializable @SerialName("LeaveFriendsChat") data object LeaveFriendsChat : SocialAction
     @Serializable @SerialName("KickFromFriendsChat") data class KickFromFriendsChat(val name: String) : SocialAction

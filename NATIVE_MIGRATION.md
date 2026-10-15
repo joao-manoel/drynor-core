@@ -89,6 +89,14 @@ de zonas, o usuário confirmou login, banco, drop/coleta, combate e aba de clãs
 
 ## Gates ainda abertos
 
+Etapa seguinte: world/lobby compartilham comandos tipados de social e clãs,
+incluindo mensagens polimórficas fechadas. O world não encaminha mais objetos
+de decoder pelo HTTP; settings de clã são deltas e o write integral foi retirado.
+O leitor de frases quick-chat usa o cache atual. Foram validados 386 testes do
+core, 94 do lobby e 18 do world, além das probes de cache e HTTP/Mongo isolado.
+O transporte HTTP de saída do world usa HttpClient do JDK com limites e timeout.
+Isso não conclui a migração de Account/Rights/FC, sessão, JS5 ou persistência.
+
 1. Migrar os demais comandos de clã, contas/social e contratos de gateway.
 2. Migrar consumidores de definições/modelos, JS5, Huffman e cache para o backend atual.
 3. Migrar encoders/decoders, sessão, login e entity updates para protocolos tipados.
