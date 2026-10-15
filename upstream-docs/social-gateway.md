@@ -2,7 +2,7 @@
 
 ### Overview
 
-`SocialGateway` (`lobby/src/main/kotlin/org/darkan/lobby/social/SocialGateway.kt`) is the lobby's
+`SocialGateway` (`lobby/src/main/kotlin/org/drynor/lobby/social/SocialGateway.kt`) is the lobby's
 social service. It is authoritative for everything social - friends, ignores, private status,
 friends chat, private messages - and every client of it speaks one small, revision-free
 vocabulary:
@@ -16,7 +16,7 @@ vocabulary:
   `FriendsChatChanged`, `FriendsChatLine`, `PrivateMessageReceived`, `PrivateMessageSent`,
   `Notice`.
 
-Both live in `core/src/main/kotlin/org/darkan/core/social/SocialProtocol.kt`. Nothing about the
+Both live in `core/src/main/kotlin/org/drynor/core/social/SocialProtocol.kt`. Nothing about the
 727 client crosses a socket: each side renders the events into client packets itself with
 `SocialPackets` (`core/.../social/SocialPackets.kt`) - the lobby for players on the lobby screen,
 a world for the players on it. Clans have their own typed protocol on the same socket, see
@@ -217,23 +217,23 @@ Clans do not ride on `SocialCommand` / `SocialNotification`. A world turns a but
 with `ClanCommandResult` plus the events every world replicates from: `ClanSnapshot` /
 `ClanDeleted`, `ClanChannelUpdate`, `ClanMembership` and `ClanChatMessage` / `ClanQuickChatMessage`.
 `ClanFetch(clanName)` asks for a snapshot the world does not have. Each side builds its own client
-packets from that state with `org.darkan.core.clan.ClanPackets`. The whole protocol is specified in
+packets from that state with `org.drynor.core.clan.ClanPackets`. The whole protocol is specified in
 [`docs/clans.md`](clans.md).
 
 ### Configuration
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `SOCIAL_GATEWAY_URL` | `ws://dev.darkan.org:4040/social/ws` | Where a world connects |
+| `SOCIAL_GATEWAY_URL` | `ws://127.0.0.1:4040/social/ws` | Where a world connects |
 | `SOCIAL_GATEWAY_TOKEN` | `COMMUNITY_WORLD_TOKEN` | Private secret of the lobby and its official worlds; a world left on the default joins as a community world |
-| `COMMUNITY_WORLD_TOKEN` | `darkan-community-world` | Public token of community worlds, accepted only while the lobby runs with `DEBUG=true` |
+| `COMMUNITY_WORLD_TOKEN` | `drynor-community-world` | Public token of community worlds, accepted only while the lobby runs with `DEBUG=true` |
 | `OFFICIAL_WORLD_MAX` | `99` | Worlds `1`-`OFFICIAL_WORLD_MAX` are refused to community worlds |
 | `SOCIAL_PRESENCE_RESYNC_SECONDS` | `120` | How often a world re-announces its online list |
 | `API_KEY` | | The website's key for `/social/players/{username}` and the other website endpoints |
 
 ### Testing
 
-`lobby/src/test/kotlin/org/darkan/lobby/harness/` drives the gateway with no Mongo, no socket and no
+`lobby/src/test/kotlin/org/drynor/lobby/harness/` drives the gateway with no Mongo, no socket and no
 client: `InMemoryAccounts` is installed as `Accounts.store`, `LobbyHarness.FakeWorld` builds a
 `WorldSession` over a lambda and feeds it `SocialGateway.handleWorldMessage` - the same entry point
 the real socket's inbox calls - and `LobbyHarness.listen(account)` attaches a recording website-style

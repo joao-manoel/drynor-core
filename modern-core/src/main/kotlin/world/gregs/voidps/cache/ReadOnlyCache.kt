@@ -2,7 +2,7 @@ package world.gregs.voidps.cache
 
 import it.unimi.dsi.fastutil.ints.Int2IntMaps
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
-import org.darkan.core.Logger.logTrace
+import org.drynor.core.Logger.logTrace
 import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.cache.compress.DecompressionContext
 import world.gregs.voidps.cache.secure.VersionTableBuilder

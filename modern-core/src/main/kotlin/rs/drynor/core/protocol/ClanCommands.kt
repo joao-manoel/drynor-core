@@ -2,7 +2,7 @@ package rs.drynor.core.protocol
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.darkan.core.clan.ClanAction
+import org.drynor.core.clan.ClanAction
 
 @Serializable data class ClanCommandRequest(val username: String, val action: ClanAction)
 data class ClanCommandResponse(val success: Boolean, val reason: String)

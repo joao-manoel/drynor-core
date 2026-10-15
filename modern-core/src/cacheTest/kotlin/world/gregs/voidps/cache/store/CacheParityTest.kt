@@ -5,8 +5,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.supervisorScope
-import org.darkan.core.EnvVars
-import org.darkan.core.map.MapXteas
+import org.drynor.core.EnvVars
+import org.drynor.core.map.MapXteas
 import world.gregs.voidps.cache.FileCache
 import world.gregs.voidps.cache.Index
 import java.io.File

@@ -17,7 +17,7 @@ import world.gregs.voidps.cache.definition.data.MapTile
  * 82..255       underlay id = opcode - 81
  * ```
  *
- * Both 0 and 1 terminate the record - 1 is *not* a plain field opcode. See darkan-bot
+ * Both 0 and 1 terminate the record - 1 is *not* a plain field opcode. See drynor-bot
  * `MapLoader.kt` (the `opcode == 1` branch reads one byte and breaks) and `MapTileEncoder` for the inverse.
  *
  * A surface square has four levels; an underwater one (`um{regionX}_{regionY}`) has a single level,

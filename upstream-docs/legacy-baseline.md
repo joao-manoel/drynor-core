@@ -8,9 +8,9 @@ replay currently stands so the next batch can be found mechanically.
 
 | Legacy repo | Local path | Feeds |
 |---|---|---|
-| world-server | `~/darkan/world-server` (branch `dev`) | `world/src/main/java/com/rs/**` |
-| lobby-server | `~/darkan/lobby-server` | `lobby/**` |
-| core | `~/darkan/core` | `core/**` |
+| world-server | `~/drynor/world-server` (branch `dev`) | `world/src/main/java/com/rs/**` |
+| lobby-server | `~/drynor/lobby-server` | `lobby/**` |
+| core | `~/drynor/core` | `core/**` |
 
 `world/` keeps the legacy package layout: Java *and* Kotlin both live under
 `world/src/main/java/com/rs/`, path-for-path with legacy `src/main/java/com/rs/`.
@@ -30,11 +30,11 @@ The previous world-server baseline was `effa4b3ba` (2026-05-09).
 ## Finding the next batch
 
 ```bash
-cd ~/darkan/world-server && git fetch && git log --oneline 59155b033..origin/dev
-cd ~/darkan/world-server && git diff --name-only 59155b033..origin/dev -- src/
+cd ~/drynor/world-server && git fetch && git log --oneline 59155b033..origin/dev
+cd ~/drynor/world-server && git diff --name-only 59155b033..origin/dev -- src/
 
-cd ~/darkan/lobby-server && git fetch && git diff --name-only 861a2ad..origin/HEAD -- src/
-cd ~/darkan/core        && git fetch && git diff --name-only 0ba88ac..origin/HEAD -- src/
+cd ~/drynor/lobby-server && git fetch && git diff --name-only 861a2ad..origin/HEAD -- src/
+cd ~/drynor/core        && git fetch && git diff --name-only 0ba88ac..origin/HEAD -- src/
 ```
 
 ## Replay procedure
@@ -45,9 +45,9 @@ from legacy mostly by import rewrites, a three-way merge does the work:
 ```bash
 BASE=59155b033   # the sha in the table above
 HEAD=origin/dev
-cd ~/darkan/world-server
+cd ~/drynor/world-server
 for f in $(git diff --name-only $BASE..$HEAD -- src/); do
-  MOD=~/darkan/server/world/$f
+  MOD=~/drynor/server/world/$f
   [ -f "$MOD" ] || continue                 # new legacy file: port by hand
   git show $BASE:"$f" > /tmp/base; git show $HEAD:"$f" > /tmp/head
   git merge-file -p --diff3 "$MOD" /tmp/base /tmp/head > /tmp/out && cp /tmp/out "$MOD"
@@ -55,16 +55,16 @@ done
 ```
 
 Conflicts are almost always the migrated import block (legacy `com.rs.lib.*` vs modern
-`org.darkan.core.*`): keep the modern side and append the lines the legacy commit added.
+`org.drynor.core.*`): keep the modern side and append the lines the legacy commit added.
 
 Translation conventions when a hunk carries legacy API:
 
-- `com.rs.lib.*` -> `org.darkan.core.*`; `com.rs.lib.util.Utils` -> `org.darkan.core.Utils`;
-  `com.rs.lib.util.Logger` -> `org.darkan.core.Logger`; `com.rs.lib.game.Rights` -> `org.darkan.core.model.Rights`
+- `com.rs.lib.*` -> `org.drynor.core.*`; `com.rs.lib.util.Utils` -> `org.drynor.core.Utils`;
+  `com.rs.lib.util.Logger` -> `org.drynor.core.Logger`; `com.rs.lib.game.Rights` -> `org.drynor.core.model.Rights`
 - `com.rs.lib.game.Tile` / `WorldTile` -> `world.gregs.voidps.type.Tile`
 - `.getPlane()` / `.plane` -> `.level`
 - `player.getPackets().sendFoo(...)` -> `player.queuePacket(Foo(...))`
-- legacy `net/decoders/**` -> `org.darkan.world.server.packet` Kotlin handlers;
+- legacy `net/decoders/**` -> `org.drynor.world.server.packet` Kotlin handlers;
   `net/encoders/WorldEncoder.java` -> `world/src/main/java/com/rs/net/encoders/WorldEncoder.kt`
 - imports always go at the top of the file; never an inline fully-qualified reference
 - Kotlin `shr`/`shl`/`and`/`or` bind *lower* than arithmetic - re-parenthesise ported
@@ -75,5 +75,5 @@ See `tools/migration/migrate.sh` and `.claude/agents/legacy-migration-engineer.m
 ## Verify
 
 ```bash
-cd ~/darkan/server && ./gradlew :world:compileJava :world:compileKotlin
+cd ~/drynor/server && ./gradlew :world:compileJava :world:compileKotlin
 ```

@@ -1,6 +1,6 @@
 package rs.drynor.core.protocol
 
-import org.darkan.core.Logger
+import org.drynor.core.Logger
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertSame

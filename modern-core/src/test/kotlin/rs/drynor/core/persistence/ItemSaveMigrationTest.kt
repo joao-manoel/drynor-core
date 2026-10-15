@@ -2,7 +2,7 @@ package rs.drynor.core.persistence
 
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import org.darkan.core.model.Item
+import org.drynor.core.model.Item
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

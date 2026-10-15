@@ -11,11 +11,11 @@ protocol that rides on it.
 | Clan documents (`clans` collection), membership, bans, settings, vars | **Lobby**, the only writer. Worlds never touch `Clans`. |
 | Clan channels (who is in which channel, temp bans, chat routing) | **Lobby** |
 | Buttons, dialogues, interfaces, and every packet the client sees | **World** for world players, lobby for lobby-screen players |
-| Permission rules | `org.darkan.core.clan.ClanRules`, shared. The world checks first for immediate feedback; the lobby checks again and is the one that counts. |
+| Permission rules | `org.drynor.core.clan.ClanRules`, shared. The world checks first for immediate feedback; the lobby checks again and is the one that counts. |
 
 Nothing clan-related is forwarded as a client packet. The world turns a button into a typed
 `ClanAction`, the lobby answers with typed events, and each side builds its own client packets
-from the shared state with `org.darkan.core.clan.ClanPackets`.
+from the shared state with `org.drynor.core.clan.ClanPackets`.
 
 ## Wire messages (`core/.../social/gateway/GatewayProtocol.kt`)
 
@@ -75,7 +75,7 @@ Notes on the lobby implementation, where it adds to or tightens the contract abo
   create flow did, so the client lands in its clan chat straight after creating it.
 - `AcceptInvite` for a clan that no longer exists is denied with "That clan no longer exists."
   (a lobby-only check; `ClanRules` cannot see the store). Clan names are stored in display form
-  (`formatPlayerNameForDisplay`, "Darkan Devs"); every lookup - name check, create, guest join,
+  (`formatPlayerNameForDisplay`, "Drynor Devs"); every lookup - name check, create, guest join,
   `ClanFetch` - goes through the same canonical form, so uniqueness is case-insensitive and a guest
   name typed in any casing resolves.
 - On login the lobby also sends the **guest** clan's `ClanSnapshot` to the player's world when
@@ -162,7 +162,7 @@ from this server family.
   contract: version byte 3, filler rows, the one-byte leave form), `ClanGatewayProtocolTest` (every
   `ClanAction` and event round-trips through the wire JSON).
 - `lobby`: `ClanServiceTest` on `LobbyHarness` with the in-memory clan store (`Clans.store` seam,
-  `org.darkan.core.clan.InMemoryClanStore`):
+  `org.drynor.core.clan.InMemoryClanStore`):
   every action's allow and deny path, succession, bans, channel routing to lobby and world
   recipients with the right `guest` flag, temp bans, world detach and reconnect resync.
 - `world`: `ClanFlowTest` on `WorldHarness` with the recording gateway seam

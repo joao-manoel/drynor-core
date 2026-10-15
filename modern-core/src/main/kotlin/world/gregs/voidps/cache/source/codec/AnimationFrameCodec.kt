@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.source.codec
 
-import org.darkan.core.Logger.logWarn
+import org.drynor.core.Logger.logWarn
 import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.buffer.write.BufferWriter
 import world.gregs.voidps.cache.Cache

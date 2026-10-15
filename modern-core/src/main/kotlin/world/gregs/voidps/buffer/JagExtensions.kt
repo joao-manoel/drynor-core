@@ -6,8 +6,8 @@ import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.*
 import kotlinx.io.Source
 import kotlinx.io.readUByte
-import org.darkan.core.currentTimeTicks
-import org.darkan.core.hashToShort
+import org.drynor.core.currentTimeTicks
+import org.drynor.core.hashToShort
 import world.gregs.voidps.buffer.write.BufferWriter
 
 suspend fun ByteWriteChannel.writeBoolean(value: Boolean) = writeByte(if (value) 1 else 0)

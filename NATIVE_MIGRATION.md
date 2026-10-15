@@ -6,7 +6,7 @@ checkpoint jogável até a conclusão dos gates abaixo.
 
 ## Etapa validada em 14/10/2026
 
-- Clãs usam `org.darkan.core.model.Clan`, `ClanRank`, `ClanSetting` e
+- Clãs usam `org.drynor.core.model.Clan`, `ClanRank`, `ClanSetting` e
   `ClanMemberData` no domínio/persistência do lobby e no gameplay do world.
 - O decoder nativo distingue configurações de clã do arquivo 54 (opcode 2)
   das variáveis do arquivo 47 (opcode 3).
@@ -56,8 +56,8 @@ opcional com `/usr/bin/bzip2` continua indisponível no Windows.
   pelas ferramentas atuais do core e pela árvore de fontes do cache.
 - A lista de arquivos de produção com referências `com.rs.lib`/`com.rs.cache`
   caiu de 1.328 para 1.078. Isso é somente um indicador de andamento.
-- `GroundItemRuntime`, `NativePacket` e `NativeZonePacket` são limites temporários
-  de coordenadas/transporte. Não representam conclusão do gate de retirada.
+- `NativePacket` ainda conecta os codecs atuais ao transporte anterior.
+  `GroundItemRuntime` e `NativeZonePacket` foram retirados nas etapas seguintes.
 - Builds locais validados podem ser executados a partir de snapshots compilados
   ignorados pelo Git, evitando mudanças de classes durante os testes manuais.
   Código-fonte continua nos checkouts originais da branch.
@@ -68,14 +68,20 @@ World usa Tile, Animation, SpotAnim, Projectile, WorldObject, ObjectShape,
 MapRegion, RegionSize, Vec2 e Vars atuais. NPC/Object/Enum/Struct/VarBit/Animation/
 BAS são lidos pelos decoders atuais; a ponte GroundItemRuntime foi removida.
 Objetos, efeitos, projéteis e construção de cenas usam codecs atuais, com
-transporte ainda intermediado por NativePacket/NativeZonePacket. O serviço
+transporte ainda intermediado por NativePacket. O serviço
 MapXteas do core fornece chaves para mapas e pacotes.
 
 Foram comparados 15.663 NPCs, 73.903 objetos e 17.225 animações no cache real.
 Regras de portas de dungeoneering e classificação de mortos-vivos continuam no
 world. Durações de animação são lidas sem sinal; TileJson lê coordenadas do
-conteúdo e grava o formato atual. Testes: core 384, CS2 14 e world 11 passaram
-antes dos ajustes finais de inicialização de quests/achievements.
+conteúdo e grava o formato atual. Testes atuais: core 384, CS2 14, lobby 93 e
+world 17, sem falhas. A probe inicializa quests/conquistas e verifica as cinco
+opções dos NPCs e a customização/reset de objetos. Login, movimento, portas,
+ataque e dano foram confirmados no cliente antes da etapa de áudio/batching.
+
+Os namespaces do projeto são `org.drynor.*`; propriedades e identificadores de
+build usam o nome Drynor. Core, CS2, tools, lobby e world foram recompilados com
+essa identidade. O cliente mantém seu código funcional e a integração RuneLite.
 
 A contagem de arquivos de produção do world com referências antigas caiu para
 200; isso não substitui os gates abaixo. A etapa precisa de teste no cliente.

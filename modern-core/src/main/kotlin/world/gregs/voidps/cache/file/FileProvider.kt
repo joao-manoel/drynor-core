@@ -1,9 +1,9 @@
 package world.gregs.voidps.cache.file
 
 import io.ktor.utils.io.*
-import org.darkan.core.EnvVars
-import org.darkan.core.Logger.logInfo
-import org.darkan.core.Logger.logWarn
+import org.drynor.core.EnvVars
+import org.drynor.core.Logger.logInfo
+import org.drynor.core.Logger.logWarn
 import world.gregs.voidps.buffer.write.BufferWriter
 import world.gregs.voidps.buffer.writeByte
 import world.gregs.voidps.cache.Cache

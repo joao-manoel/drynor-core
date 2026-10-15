@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.definition.data
 
-import org.darkan.core.model.Vars
+import org.drynor.core.model.Vars
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.Definition
 import world.gregs.voidps.cache.definition.*
@@ -125,8 +125,8 @@ data class ObjectDefinition(
     val interactionType: Int get() = if (interactive != -1) interactive else
         if ((modelTypes?.size == 1 && modelTypes?.firstOrNull()?.toInt() == 10) ||
             options?.take(5)?.any { it != null } == true) 1 else 0
-    val shapes: Array<org.darkan.core.model.ObjectShape> get() = modelTypes?.map {
-        org.darkan.core.model.ObjectShape.forId(it.toInt())
+    val shapes: Array<org.drynor.core.model.ObjectShape> get() = modelTypes?.map {
+        org.drynor.core.model.ObjectShape.forId(it.toInt())
     }?.filterNotNull()?.toTypedArray() ?: emptyArray()
 
     /** The op number of [option], 1-based - op1 is 1 - or -1 when absent. */

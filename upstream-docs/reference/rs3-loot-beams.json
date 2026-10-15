@@ -1,5 +1,5 @@
 {
- "source": "RS3 revision 949 tree ~/darkan/darkan-3-undercut/unpacked-cache; the default (golden) loot beam, varbit bslay_lootbeam_active_default = 1, one spotanim per value tier; 727 ids allocated next-free, contiguously, in this order",
+ "source": "RS3 revision 949 tree ~/drynor/drynor-3-undercut/unpacked-cache; the default (golden) loot beam, varbit bslay_lootbeam_active_default = 1, one spotanim per value tier; 727 ids allocated next-free, contiguously, in this order",
  "ceilings": {
   "graphic": 12418,
   "texture": 2590,

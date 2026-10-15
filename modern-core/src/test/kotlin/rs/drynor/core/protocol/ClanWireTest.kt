@@ -2,11 +2,11 @@ package rs.drynor.core.protocol
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.Buffer
-import org.darkan.core.model.Clan
-import org.darkan.core.model.ClanMemberData
-import org.darkan.core.model.ClanRank
-import org.darkan.core.net.prot.packet.ClanSettingsFull
-import org.darkan.core.net.prot.revision.rev727.register727
+import org.drynor.core.model.Clan
+import org.drynor.core.model.ClanMemberData
+import org.drynor.core.model.ClanRank
+import org.drynor.core.net.prot.packet.ClanSettingsFull
+import org.drynor.core.net.prot.revision.rev727.register727
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

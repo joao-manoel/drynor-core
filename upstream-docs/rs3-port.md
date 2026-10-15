@@ -2,7 +2,7 @@
 
 The skilling urns (`docs/reference/rs3-urns.json`) were the first assets brought across from the
 RS3 revision-949 tree, and the golden loot beam spotanims (`docs/reference/rs3-loot-beams.json`)
-the second. The RS3 tree is `~/darkan/darkan-3-undercut/unpacked-cache`, read-only; everything
+the second. The RS3 tree is `~/drynor/drynor-3-undercut/unpacked-cache`, read-only; everything
 written lands in `cache-source/` under next-free ids.
 
 ## What crosses, and what does not
@@ -99,7 +99,7 @@ Producers and effectors keep their ids across revisions, so every shared id is a
   sizeMultiplier, `vector` = offsets, `unknown8/9/10` = the three flags. 15 of 15 shared effectors
   are exact. **An imported effector never carries opcode 4.** Jagex's files hold opcode 4 as a byte
   and an int, and the server codec reads it so, but the 727 client reads a bare int
-  (`ParticleArchive1Def.java:96-99` in the original decompile; darkan-bot `ParticleType.kt:48`):
+  (`ParticleArchive1Def.java:96-99` in the original decompile; drynor-bot `ParticleType.kt:48`):
   the type is never read and the multiplier's low byte becomes the next opcode. RS3 effector 21
   (type 2, multiplier 1) packed `4, 02, 00 00 00 01, 8, 9, ...`, which the client read as opcode 1
   and a rotation of 0x0809 = 2057, overrunning `COSINE[rotation shl 3]` and crashing tiers 3 and 4.
@@ -170,7 +170,7 @@ model <id> --glb <dir>
   codec (encoded, then `unpack`ed), so it is byte for byte what unpacking a cache holding it would
   write, and a file the codec could not round trip is refused. The server codecs are not the
   client, so every packed record is also re-read with the 727 client's own grammar
-  (`ClientGrammar`, transcribed from darkan-bot: `ParticleType`, `ParticleProducerType`, `SeqType`,
+  (`ClientGrammar`, transcribed from drynor-bot: `ParticleType`, `ParticleProducerType`, `SeqType`,
   `SpotAnimType`, `AnimBase`, `AnimFrame`, `TextureType`, `MaterialTypeList`, `SpriteType`,
   `Mesh.decodeNewFormat`): a record that desyncs, leaves bytes over, reads back a value other than
   the definition's, names an id that does not exist or indexes past a client table fails the

@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.secure
 
-import org.darkan.core.Logger.logInfo
+import org.drynor.core.Logger.logInfo
 import world.gregs.voidps.buffer.read.Reader
 import world.gregs.voidps.buffer.write.BufferWriter
 

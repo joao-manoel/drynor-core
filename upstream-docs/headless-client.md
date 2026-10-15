@@ -1,7 +1,7 @@
 # The headless client side of core
 
 `core` serves both ends of a connection. A server encodes `ServerProt`s and decodes `ClientProt`s; a
-headless client (the Darkan CLI client, test harnesses, load testers) does the reverse against the
+headless client (the Drynor CLI client, test harnesses, load testers) does the reverse against the
 very same registrations. Nothing about the wire format is written down twice.
 
 ## Codec

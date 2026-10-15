@@ -1,6 +1,6 @@
 package rs.drynor.core.protocol
 
-import org.darkan.core.clan.ClanAction
+import org.drynor.core.clan.ClanAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

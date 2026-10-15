@@ -12,7 +12,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //  Copyright (C) 2021 Trenton Kress
-//  This file is part of project: Darkan
+//  This file is part of project: Drynor
 //
 package com.rs.cache.loaders.interfaces;
 
@@ -405,9 +405,9 @@ public class IComponentDefinitions {
 			}
 			this.text = stream.readString();
 			if (this.text.toLowerCase().contains("runescape")) {
-				this.text = this.text.replace("runescape", "Darkan");
-				this.text = this.text.replace("RuneScape", "Darkan");
-				this.text = this.text.replace("Runescape", "Darkan");
+				this.text = this.text.replace("runescape", "Drynor");
+				this.text = this.text.replace("RuneScape", "Drynor");
+				this.text = this.text.replace("Runescape", "Drynor");
 			}
 			this.anInt1358 = stream.readUnsignedByte();
 			this.textHorizontalAli = stream.readUnsignedByte();

@@ -1,6 +1,6 @@
 # Legacy → modern database migration
 
-The modern Kotlin classes (`org.darkan.core.model.Account`, `Clan`, and the world's `Player` save
+The modern Kotlin classes (`org.drynor.core.model.Account`, `Clan`, and the world's `Player` save
 graph) are the canonical schema. Legacy databases written by `../world-server` and `../lobby-server`
 are transformed to fit them; the application code carries no legacy-compatibility paths. The one
 exception is password verification, which falls back from Argon2 to the older SHA-1/AES credentials

@@ -10,7 +10,7 @@ import world.gregs.voidps.cache.definition.data.MapDefinition
  * NOT the object's stored plane. Rendering transformations like "linkBelow" that
  * shift objects for display purposes happen separately after loading.
  *
- * Reference: darkan-bot SceneGraph.decodeLocMapClient - objects are always added
+ * Reference: drynor-bot SceneGraph.decodeLocMapClient - objects are always added
  * at their original plane, with only the collision map reference adjusted for bridges.
  */
 abstract class MapObjectDecoder {

@@ -1,7 +1,7 @@
 package world.gregs.voidps.cache.definition.data
 
-import org.darkan.core.model.Bonus
-import org.darkan.core.model.Vars
+import org.drynor.core.model.Bonus
+import org.drynor.core.model.Vars
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.Definition
 import world.gregs.voidps.cache.definition.*

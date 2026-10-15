@@ -3,8 +3,8 @@ package rs.drynor.core.persistence
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import org.darkan.core.model.Clan
-import org.darkan.core.model.ClanSetting
+import org.drynor.core.model.Clan
+import org.drynor.core.model.ClanSetting
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.definition.data.ClanVarDefinition
 

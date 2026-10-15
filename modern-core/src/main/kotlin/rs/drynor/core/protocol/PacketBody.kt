@@ -6,9 +6,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.readByteArray
 import kotlinx.io.Buffer
-import org.darkan.core.net.prot.Codec
-import org.darkan.core.net.prot.ProtSize
-import org.darkan.core.net.prot.ServerProt
+import org.drynor.core.net.prot.Codec
+import org.drynor.core.net.prot.ProtSize
+import org.drynor.core.net.prot.ServerProt
 
 /** A bounded body for transports which own their own framing and ISAAC writer. */
 data class PacketBody(val opcode: Int, val size: Int, val bytes: ByteArray) {

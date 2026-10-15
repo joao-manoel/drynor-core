@@ -1,6 +1,6 @@
 # Community worlds
 
-Anyone can run their own world against the dev lobby (`dev.darkan.org`) and have it appear in the
+Anyone can run their own world against the dev lobby (`127.0.0.1`) and have it appear in the
 dev lobby's world list. It is a dev-lobby feature only: the lobby accepts community worlds while it
 runs with `DEBUG=true`, and the production lobby never does.
 
@@ -22,8 +22,8 @@ runs with `DEBUG=true`, and the production lobby never does.
 
 4. `./gradlew :world:run`.
 
-Everything else defaults to the dev lobby: `SOCIAL_GATEWAY_URL=ws://dev.darkan.org:4040/social/ws`
-and `SOCIAL_GATEWAY_TOKEN=darkan-community-world`, the public community token. A world whose
+Everything else defaults to the dev lobby: `SOCIAL_GATEWAY_URL=ws://127.0.0.1:4040/social/ws`
+and `SOCIAL_GATEWAY_TOKEN=drynor-community-world`, the public community token. A world whose
 gateway token is that public one is a community world.
 
 ## What the lobby enforces

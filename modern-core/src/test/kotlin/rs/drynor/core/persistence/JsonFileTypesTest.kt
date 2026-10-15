@@ -1,7 +1,7 @@
 package rs.drynor.core.persistence
 
 import com.google.gson.reflect.TypeToken
-import org.darkan.core.JsonFileManager
+import org.drynor.core.JsonFileManager
 import java.nio.file.Files
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

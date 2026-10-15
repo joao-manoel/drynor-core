@@ -1,8 +1,8 @@
 package rs.drynor.core.protocol
 
-import org.darkan.core.net.prot.packet.ClanSettingsFullRaw
-import org.darkan.core.net.prot.packet.PlayerUpdate
-import org.darkan.core.net.prot.revision.rev727.register727
+import org.drynor.core.net.prot.packet.ClanSettingsFullRaw
+import org.drynor.core.net.prot.packet.PlayerUpdate
+import org.drynor.core.net.prot.revision.rev727.register727
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

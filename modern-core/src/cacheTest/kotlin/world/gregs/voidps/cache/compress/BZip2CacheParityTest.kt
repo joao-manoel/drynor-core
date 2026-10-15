@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.compress
 
-import org.darkan.core.EnvVars
+import org.drynor.core.EnvVars
 import world.gregs.voidps.cache.Cache
 import java.io.File
 import java.util.Collections

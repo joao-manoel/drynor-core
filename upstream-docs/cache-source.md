@@ -882,7 +882,7 @@ of them - starts like this. The file itself holds no whitespace at all; the line
 for reading, and `...` is where the real file goes on:
 
 ```json
-{"asset":{"generator":"darkan cache-source","version":"2.0"},"scene":0,"scenes":[{"nodes":[0]}],
+{"asset":{"generator":"drynor cache-source","version":"2.0"},"scene":0,"scenes":[{"nodes":[0]}],
  "nodes":[{"mesh":0,"name":"model_9808","extras":{"rs":{"id":9808,"format":"new","version":15,
    "footer":{"flags":8,"priority":255,"alphas":1,"faceSkins":1,"materials":1,"vertexSkins":1},
    "colours":[4550,4550,4550,4550,4550,...],"priorities":[...],"alphas":[...],"materials":[...],
@@ -1134,7 +1134,7 @@ origins and rotations. Its JSON chunk is 1,664 of those bytes, and this is the w
 holds no whitespace at all; the line breaks below are for reading):
 
 ```json
-{"asset":{"generator":"darkan cache-source","version":"2.0"},"scene":0,
+{"asset":{"generator":"drynor cache-source","version":"2.0"},"scene":0,
  "scenes":[{"nodes":[0,1,2,3,4,5],"extras":{"rs":{"archive":99,"base":100,"groups":6,
    "layout":{"chunks":3,"header":4},
    "frames":[{"file":0,"header":1,"count":6,"transforms":[1,2,3,5],"flags":[4,1,4,1],
@@ -1907,8 +1907,8 @@ included, from the tree alone, with nothing else to read. Nothing has to be hand
 has to be configured for it:
 
 ```
-CACHE_SOURCE_PATH=/srv/darkan/cache-source
-CACHE_BUILD_PATH=/srv/darkan/data/cache
+CACHE_SOURCE_PATH=/srv/drynor/cache-source
+CACHE_BUILD_PATH=/srv/drynor/data/cache
 ```
 
 ## The packed build
@@ -1976,7 +1976,7 @@ table are core's to update. Two consequences worth naming:
 | `GAMEVAL_PATH` | `<CACHE_SOURCE_PATH>/gamevals` when set, else `./cache-source/gamevals` | the catalogs (the only copy) |
 
 The lobby and the worlds use the same switch; a world that needs its own cache in future points
-`CACHE_SOURCE_PATH` at its own tree. The switch lives in `org.darkan.core.cache.CacheSource`:
+`CACHE_SOURCE_PATH` at its own tree. The switch lives in `org.drynor.core.cache.CacheSource`:
 `Cache.get()` calls `CacheSource.ensureBuilt()` before it opens anything, so with a tree configured
 the first thing any server does is build (or incrementally refresh) `CACHE_BUILD_PATH`, and
 `EnvVars.cachePath` then names that directory. `data/cache/manifest.json` records what the build was

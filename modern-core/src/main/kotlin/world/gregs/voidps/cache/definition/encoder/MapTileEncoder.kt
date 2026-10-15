@@ -10,7 +10,7 @@ import world.gregs.voidps.cache.definition.encoder.MapEffectEncoder.writeEffects
  * Encodes the terrain block of a map archive (`m{regionX}_{regionY}`), the inverse of
  * `MapTileDecoder`.
  *
- * Opcode grammar, identical in the decoder and in the client (darkan-bot `MapLoader.kt`):
+ * Opcode grammar, identical in the decoder and in the client (drynor-bot `MapLoader.kt`):
  *
  * ```
  * 0             end of tile, no explicit height

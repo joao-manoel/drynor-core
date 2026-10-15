@@ -16,7 +16,7 @@ val lwjglNatives = Pair(
 }
 
 application {
-    mainClass.set("org.darkan.tools.MainKt")
+    mainClass.set("org.drynor.tools.MainKt")
 }
 
 tasks.named<JavaExec>("run") {

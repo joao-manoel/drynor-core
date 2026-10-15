@@ -1,8 +1,8 @@
 package world.gregs.voidps.cache
 
 import kotlinx.coroutines.*
-import org.darkan.core.Logger.logTrace
-import org.darkan.core.Logger.logWarn
+import org.drynor.core.Logger.logTrace
+import org.drynor.core.Logger.logWarn
 import world.gregs.voidps.cache.compress.DecompressionContext
 import world.gregs.voidps.cache.secure.CRC
 import world.gregs.voidps.cache.secure.VersionTableBuilder

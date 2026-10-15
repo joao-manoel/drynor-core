@@ -1,6 +1,6 @@
 # Drynor Core 3
 
-Core moderno baseado no Darkan `dev` (`b56852003eb02280218757ecfd546d892ca5a25a`),
+Core moderno baseado no Drynor `dev` (`b56852003eb02280218757ecfd546d892ca5a25a`),
 com os módulos `core`, `cs2` e `tools`, licença GPLv3 e fontes upstream preservadas.
 Requer JDK 26. O Gradle wrapper usa 9.7.1.
 
@@ -14,7 +14,7 @@ nenhum cache binário ou segredo é versionado aqui.
 .\gradlew.bat :legacy-compat:verifyPackedCache
 ```
 
-O core principal é o moderno (`modern-core/`, pacote `org.darkan`).
+O core principal é o moderno (`modern-core/`, pacote `org.drynor`).
 Para preservar todo o gameplay Drynor, as APIs `com.rs` ainda consumidas pelos
 servidores foram isoladas em `legacy-compat`. O módulo depende do core moderno
 e CS2 e constrói o cache com `Builder` no mesmo processo. A migração completa
