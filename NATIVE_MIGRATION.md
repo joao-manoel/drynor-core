@@ -219,3 +219,6 @@ NativeGameDecoder adapta esse framing à sessão Netty ainda antiga. O seed inbo
 Launcher/login não usam mais GameDecoder antigo. Isso migra o framing recebido, não a sessão Netty, os codecs de corpo nem os handlers de gameplay. O handler compartilhado antigo ainda tem um retorno com ByteBuf não liberado quando decoder=null; sua substituição é gate explícito da próxima etapa de transporte. Revisão independente conferiu framing, seed, filas e lifecycle. Testes cobrem cada ponto de corte, feeds byte a byte, limites 255/256/65535, 600 opcodes, comparação ISAAC com cipher anterior por 800 valores, walking/social no adaptador, overflow e corpo inválido.
 
 Validação automatizada: core 400 e world 38 testes sem falhas, build/shadowJar passaram. Runtime/validação humana desta versão ainda pendentes. National Flag continua adiada por solicitação do usuário; lista de membros e fechamento do seletor confirmados. Sem merge na main nem alteração no cliente/RuneLite.
+
+Validação humana concluída: o usuário confirmou login, andar/correr, combate com NPC, banco, drop/coleta, amigos/clã e retorno ao lobby com novo login sem desconexão ou travamento na versão de framing nativo. Esse escopo está validado; transporte/sessão, corpos/handlers e os demais gates continuam pendentes. A atualização visual da bandeira permanece adiada por solicitação do usuário.
+
