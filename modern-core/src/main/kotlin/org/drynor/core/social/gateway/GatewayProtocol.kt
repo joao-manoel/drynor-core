@@ -152,6 +152,30 @@ data class WorldLoginAuthResult(val username: String, val requestId: Long, val a
 @Serializable
 enum class WorldLoginStatus { SUCCESS, INVALID_TOKEN, BANNED, UNAVAILABLE }
 
+@Serializable enum class AccountLookupKind { USERNAME, DISPLAY_NAME }
+@Serializable enum class AccountMutationKind { RIGHTS, PUNISHMENTS }
+@Serializable enum class AccountOperationStatus { SUCCESS, NOT_FOUND, INVALID, UNAVAILABLE }
+
+@Serializable @SerialName("AccountLookup")
+data class AccountLookup(val name: String, val kind: AccountLookupKind, val requestId: Long) : SocialGatewayWireMessage
+@Serializable @SerialName("AccountLookupResult")
+data class AccountLookupResult(val name: String, val kind: AccountLookupKind, val requestId: Long,
+    val status: AccountOperationStatus, val account: AccountView? = null) : SocialGatewayWireMessage
+
+@Serializable sealed interface AccountMutation {
+    @Serializable @SerialName("Rights") data class SetRights(val rights: Rights) : AccountMutation
+    @Serializable @SerialName("Punishments") data class Punishments(val banned: Long? = null, val muted: Long? = null) : AccountMutation
+}
+fun AccountMutation.kind() = when (this) {
+    is AccountMutation.SetRights -> AccountMutationKind.RIGHTS
+    is AccountMutation.Punishments -> AccountMutationKind.PUNISHMENTS
+}
+@Serializable @SerialName("AccountMutationRequest")
+data class AccountMutationRequest(val username: String, val mutation: AccountMutation, val requestId: Long) : SocialGatewayWireMessage
+@Serializable @SerialName("AccountMutationResult")
+data class AccountMutationResult(val username: String, val kind: AccountMutationKind, val requestId: Long,
+    val status: AccountOperationStatus, val account: AccountView? = null) : SocialGatewayWireMessage
+
 /** One player a world currently has in game, as the world sees them. */
 @Serializable
 data class GatewayPlayerPresence(
