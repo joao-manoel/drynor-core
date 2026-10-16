@@ -207,3 +207,15 @@ O log do cliente confirmou também underflow em CS2Interpreter.method471: opcode
 
 Verificação final desta correção: core 396, CS2 15 e world 35 testes sem falhas; build e packed readback passaram. Atualizados localmente somente dat2/idx12/idx255, preservando o manifesto e os demais assets. Cliente será reaberto para validar mudança e confirmação sem mudança; ambos ainda pendentes.
 
+
+Retorno do usuário: Save & Quit voltou a fechar a janela e Clanmates está correto, mas a bandeira ainda aparece padrão nas outras interfaces. Por pedido explícito, essa falha visual fica adiada enquanto a migração do core continua; não considerar National Flag integralmente validada.
+
+
+### Framing TCP recebido pelo world no core atual (2026-10-16)
+ClientPacketFramer lê o byte ISAAC de opcode e os tamanhos fixos/VarByte/VarShort a partir do catálogo atual 727. Retém cabeçalho/corpo separados entre feeds, emite pacotes vazios, limita o corpo a 65535 bytes e invalida o estado em erro. O prazo de 30 segundos para um pacote parcial é monotônico e verificado a cada feed; não substitui o timeout autônomo da sessão existente.
+
+NativeGameDecoder adapta esse framing à sessão Netty ainda antiga. O seed inbound é copiado antes do IsaacKeyPair alterar o array em +50; saída/ISAAC outbound permanecem no transporte anterior. A inicialização compara todos os opcodes TCP reais e tamanhos com o catálogo; comandos sintéticos 5000+ não são pacotes de rede. Corpos ainda usam os DTOs/decoders antigos em um registro temporário do world, e pacotes conhecidos sem body adapter mantêm o descarte histórico. Saturação de 100 comandos, lote superior a 1024 frames, corpo malformado e erro de framing encerram a conexão, sem remover comandos anteriores da fila. Fragmentos são liberados ao fechar o canal.
+
+Launcher/login não usam mais GameDecoder antigo. Isso migra o framing recebido, não a sessão Netty, os codecs de corpo nem os handlers de gameplay. O handler compartilhado antigo ainda tem um retorno com ByteBuf não liberado quando decoder=null; sua substituição é gate explícito da próxima etapa de transporte. Revisão independente conferiu framing, seed, filas e lifecycle. Testes cobrem cada ponto de corte, feeds byte a byte, limites 255/256/65535, 600 opcodes, comparação ISAAC com cipher anterior por 800 valores, walking/social no adaptador, overflow e corpo inválido.
+
+Validação automatizada: core 400 e world 38 testes sem falhas, build/shadowJar passaram. Runtime/validação humana desta versão ainda pendentes. National Flag continua adiada por solicitação do usuário; lista de membros e fechamento do seletor confirmados. Sem merge na main nem alteração no cliente/RuneLite.
