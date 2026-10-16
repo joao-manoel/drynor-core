@@ -97,6 +97,8 @@ data class GatewayWorldInfo(
     val country: String = "USA",
     val highlighted: Boolean = false,
     val cacheCrcs: List<Int> = emptyList(),
+    val countryId: Int = 1,
+    val pvp: Boolean = false,
 ) {
     fun toWorldMetadata(): WorldMetadata = WorldMetadata(
         number = worldId,
@@ -135,7 +137,20 @@ data class GatewayWorldInfo(
 data class WorldHello(
     val world: GatewayWorldInfo,
     val token: String,
+    val register: Boolean = false,
 ) : SocialGatewayWireMessage
+
+@Serializable
+@SerialName("WorldLoginAuth")
+data class WorldLoginAuth(val username: String, val token: String, val requestId: Long) : SocialGatewayWireMessage
+
+@Serializable
+@SerialName("WorldLoginAuthResult")
+data class WorldLoginAuthResult(val username: String, val requestId: Long, val account: AccountView? = null,
+    val status: WorldLoginStatus = if (account == null) WorldLoginStatus.INVALID_TOKEN else WorldLoginStatus.SUCCESS) : SocialGatewayWireMessage
+
+@Serializable
+enum class WorldLoginStatus { SUCCESS, INVALID_TOKEN, BANNED, UNAVAILABLE }
 
 /** One player a world currently has in game, as the world sees them. */
 @Serializable
