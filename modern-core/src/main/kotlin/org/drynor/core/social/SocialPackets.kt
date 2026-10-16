@@ -18,20 +18,22 @@ import org.drynor.core.net.prot.packet.MessageQuickChatFriendsChat
 import org.drynor.core.net.prot.packet.MessageQuickChatPrivate
 import org.drynor.core.net.prot.packet.MessageQuickChatPrivateEcho
 import org.drynor.core.net.prot.packet.UpdateIgnoreList
+import org.drynor.core.net.prot.packet.AddIgnore
 
 object SocialPackets {
 
     fun render(viewer: String, event: SocialEvent): List<ServerProt> = when (event) {
-        is SocialEvent.Snapshot -> listOf(
+        is SocialEvent.Snapshot -> listOfNotNull(
             FriendlistLoaded(),
             friendStatus(event.friends),
             ignoreList(event.ignores),
             ChatFilterSettingsPrivateChat(event.privateStatus),
-            friendsChatChannel(viewer, event.friendsChat),
+            if (event.includeFriendsChat) friendsChatChannel(viewer, event.friendsChat) else null,
         )
         is SocialEvent.FriendUpdated -> listOf(friendStatus(listOf(event.friend)))
         is SocialEvent.FriendRemoved -> emptyList()
         is SocialEvent.IgnoresChanged -> listOf(ignoreList(event.ignores))
+        is SocialEvent.TemporaryIgnoreAdded -> listOf(AddIgnore(event.player.displayName, event.player.previousDisplayName, temporary = true))
         is SocialEvent.PrivateStatusChanged -> listOf(ChatFilterSettingsPrivateChat(event.status))
         is SocialEvent.FriendsChatChanged -> listOf(friendsChatChannel(viewer, event.channel))
         is SocialEvent.FriendsChatLine -> listOf(friendsChatLine(event))
@@ -56,7 +58,7 @@ object SocialPackets {
     )
 
     fun ignoreList(ignores: List<IgnoredPlayer>): UpdateIgnoreList =
-        UpdateIgnoreList(ignores.map { IgnoreEntry(username = it.username, displayName = it.displayName) }.toTypedArray())
+        UpdateIgnoreList(ignores.map { IgnoreEntry(username = it.displayName, displayName = it.previousDisplayName) }.toTypedArray())
 
     fun friendsChatChannel(viewer: String, state: FriendsChatState?): FriendsChatChannel {
         if (state == null) return FriendsChatChannel(clear = true)
@@ -64,7 +66,7 @@ object SocialPackets {
             ownerDisplayName = state.ownerDisplayName,
             ownerUsername = state.ownerUsername,
             chatName = state.chatName.formatPlayerNameForProtocol(),
-            minRankCanKick = if (viewer == state.ownerUsername) 0 else state.kickRank.id,
+            minRankCanKick = state.kickRank.id,
             players = state.members.map {
                 FriendsChatPlayer(
                     displayName = it.displayName,

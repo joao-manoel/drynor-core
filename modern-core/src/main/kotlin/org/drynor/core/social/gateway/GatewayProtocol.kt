@@ -10,6 +10,9 @@ import org.drynor.core.clan.ClanChannelState
 import org.drynor.core.model.AccountView
 import org.drynor.core.model.Clan
 import org.drynor.core.model.Rights
+import org.drynor.core.model.FriendsChat
+import org.drynor.core.social.FriendsChatState
+import org.drynor.core.social.IgnoredPlayer
 import org.drynor.core.social.ChatMessage
 import org.drynor.core.social.QuickChatMessage
 import org.drynor.core.social.SocialAction
@@ -17,6 +20,8 @@ import org.drynor.core.social.SocialEvent
 import org.drynor.core.social.SocialJson
 import org.drynor.core.worldlist.Country
 import org.drynor.core.worldlist.WorldMetadata
+
+const val GATEWAY_MAX_MESSAGE_BYTES = 1_048_576L
 
 /**
  * SocialGateway WebSocket wire protocol: the one multiplexed socket between a world and the lobby.
@@ -170,6 +175,30 @@ enum class PresenceSyncReason {
 data class WorldPresenceSnapshot(
     val players: List<GatewayPlayerPresence>,
     val reason: PresenceSyncReason,
+    val requestId: Long = 0,
+) : SocialGatewayWireMessage
+
+@Serializable @SerialName("PresenceSnapshotRequest")
+data class PresenceSnapshotRequest(val requestId: Long, val reason: PresenceSyncReason) : SocialGatewayWireMessage
+
+@Serializable @SerialName("PresenceSnapshotAck")
+data class PresenceSnapshotAck(val requestId: Long, val success: Boolean) : SocialGatewayWireMessage
+
+@Serializable @SerialName("SocialStateUpdate")
+data class SocialStateUpdate(
+    val account: AccountView,
+    val snapshot: SocialEvent.Snapshot,
+    val temporaryIgnores: List<IgnoredPlayer> = emptyList(),
+) : SocialGatewayWireMessage
+
+@Serializable @SerialName("FriendsChatReplica")
+data class FriendsChatReplica(
+    val account: AccountView,
+    val ownerUsername: String,
+    val ownerDisplayName: String,
+    val settings: FriendsChat,
+    val usernames: Set<String>,
+    val channel: FriendsChatState,
 ) : SocialGatewayWireMessage
 
 @Serializable
@@ -266,12 +295,14 @@ data class PlayerOnline(
     val displayName: String,
     val rightsCrown: Int,
     val privateStatus: Int,
+    val requestId: Long = 0,
 ) : SocialGatewayWireMessage
 
 @Serializable
 @SerialName("PlayerOffline")
 data class PlayerOffline(
     val username: String,
+    val requestId: Long = 0,
 ) : SocialGatewayWireMessage
 
 /** World → lobby: the player [username] asks for [action]. */

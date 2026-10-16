@@ -21,7 +21,7 @@ data class FriendEntry(
 }
 
 @Serializable
-data class IgnoredPlayer(val username: String, val displayName: String)
+data class IgnoredPlayer(val username: String, val displayName: String, val previousDisplayName: String = "")
 
 @Serializable
 data class FriendsChatMember(
@@ -79,10 +79,12 @@ sealed interface SocialEvent {
         val ignores: List<IgnoredPlayer>,
         val privateStatus: Int,
         val friendsChat: FriendsChatState? = null,
+        val includeFriendsChat: Boolean = true,
     ) : SocialEvent
     @Serializable @SerialName("FriendUpdated") data class FriendUpdated(val friend: FriendEntry) : SocialEvent
     @Serializable @SerialName("FriendRemoved") data class FriendRemoved(val username: String) : SocialEvent
     @Serializable @SerialName("IgnoresChanged") data class IgnoresChanged(val ignores: List<IgnoredPlayer>) : SocialEvent
+    @Serializable @SerialName("TemporaryIgnoreAdded") data class TemporaryIgnoreAdded(val player: IgnoredPlayer) : SocialEvent
     @Serializable @SerialName("PrivateStatusChanged") data class PrivateStatusChanged(val status: Int) : SocialEvent
     @Serializable @SerialName("FriendsChatChanged") data class FriendsChatChanged(val channel: FriendsChatState? = null) : SocialEvent
     @Serializable @SerialName("FriendsChatLine") data class FriendsChatLine(val chatName: String, val speaker: Speaker, val message: ChatMessage) : SocialEvent
