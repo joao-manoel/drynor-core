@@ -17,6 +17,10 @@ import org.drynor.core.social.gateway.ClanFetch
 import org.drynor.core.social.gateway.ClanMembership
 import org.drynor.core.social.gateway.ClanQuickChatMessage
 import org.drynor.core.social.gateway.ClanSnapshot
+import org.drynor.core.social.gateway.ClanReplica
+import org.drynor.core.social.gateway.ClanNotification
+import org.drynor.core.model.AccountView
+import org.drynor.core.model.Social
 import org.drynor.core.social.gateway.SocialGatewayWireJson
 import org.drynor.core.social.gateway.SocialGatewayWireMessage
 import kotlin.test.Test
@@ -107,6 +111,9 @@ class ClanGatewayProtocolTest {
             ClanMembership("bob", clanName = null, inChannel = false, guestChannel = "Other"),
             ClanChatMessage("Drynor", "Owner", rights = 2, message = PublicChatMessage("hi", effects = 1)),
             ClanQuickChatMessage("Drynor", "Owner", rights = 0, message = QuickChatMessage("", fileId = 3, data = byteArrayOf(9))),
+            ClanReplica(AccountView("bob", "Bob"), guest = true),
+            ClanNotification(listOf("bob"), false, "Owner", 2, PublicChatMessage("hi")),
+            ClanNotification(listOf("guest"), true, "Owner", 0, QuickChatMessage("", 3, byteArrayOf(9))),
         )
         for (event in events) {
             assertEquals(event, roundTrip(event), "round trip of ${event::class.simpleName}")
@@ -148,5 +155,15 @@ class ClanGatewayProtocolTest {
         assertTrue(decoded.settings[ClanSetting.MOTTO.name] is String)
         assertTrue(decoded.vars["3"] is Long)
         assertTrue(decoded.vars["1"] is Int)
+        val replica = ClanReplica(AccountView("owner", "Owner", social = Social(clanName = "Drynor", connectedToClan = true)),
+            clan, 7_000_000_000L, mapOf("owner" to "Owner", "bob" to "Bob", "troll" to "Troll"),
+            ClanChannelState("Drynor", 7_000_000_000L, clan.ccChatRank, clan.ccKickRank, listOf(ClanChatter("owner", "Owner", ClanRank.OWNER, 1))))
+        val restored = assertIs<ClanReplica>(roundTrip(replica))
+        assertEquals(replica.account, restored.account)
+        assertEquals(replica.version, restored.version)
+        assertEquals(replica.displayNames, restored.displayNames)
+        assertEquals(replica.channel, restored.channel)
+        assertEquals(clan.settings, restored.clan!!.settings)
+        assertEquals(clan.vars, restored.clan!!.vars)
     }
 }

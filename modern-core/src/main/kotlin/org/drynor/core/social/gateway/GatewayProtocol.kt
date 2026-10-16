@@ -189,6 +189,7 @@ data class SocialStateUpdate(
     val account: AccountView,
     val snapshot: SocialEvent.Snapshot,
     val temporaryIgnores: List<IgnoredPlayer> = emptyList(),
+    val resetClans: Boolean = false,
 ) : SocialGatewayWireMessage
 
 @Serializable @SerialName("FriendsChatReplica")
@@ -372,6 +373,27 @@ data class ClanCommandResult(
 @Serializable
 @SerialName("ClanSnapshot")
 data class ClanSnapshot(val clan: Clan) : SocialGatewayWireMessage
+
+/** Account membership, cache data and UI state travel together in the ordered gateway stream. */
+@Serializable @SerialName("ClanReplica")
+data class ClanReplica(
+    val account: AccountView,
+    val clan: Clan? = null,
+    val version: Long = 0,
+    val displayNames: Map<String, String> = emptyMap(),
+    val channel: ClanChannelState? = null,
+    val guest: Boolean = false,
+) : SocialGatewayWireMessage
+
+/** The channel selector belongs to the recipient, including when the speaker is a guest. */
+@Serializable @SerialName("ClanNotification")
+data class ClanNotification(
+    val usernames: List<String>,
+    val guest: Boolean,
+    val displayName: String,
+    val crown: Int,
+    val message: ChatMessage,
+) : SocialGatewayWireMessage
 
 /** Lobby → world: the clan no longer exists. */
 @Serializable
