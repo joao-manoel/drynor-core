@@ -199,12 +199,11 @@ class Rev727ServerUpdateDecoderTest {
     }
 
     @Test
-    fun `clan settings full decodes the filler members the encoder pads with`() {
+    fun `clan settings full preserves small rosters without invented members`() {
         val members = arrayOf(ClanSettingsMember("Owner", 126, 1), ClanSettingsMember("Alice", 0))
-        val padded = members + Array(3) { ClanSettingsMember("FILLER_CHARACTER$it", 0, 0) }
         codec.assertServerRoundTrip(
             ClanSettingsFull(false, "Small", 3, false, 0, 100, members, null, null),
-            ClanSettingsFull(false, "Small", 3, false, 0, 100, padded, emptyArray(), emptyArray()),
+            ClanSettingsFull(false, "Small", 3, false, 0, 100, members, emptyArray(), emptyArray()),
         )
     }
 

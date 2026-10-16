@@ -287,14 +287,12 @@ internal fun Codec.registerRev727UpdatePackets() {
             val memberList = members ?: emptyArray()
             val bannedList = bannedUsers ?: emptyArray()
             val settingsList = settings ?: emptyArray()
-            val fillerCount = (5 - memberList.size).coerceAtLeast(0)
-            val totalSlots = memberList.size + fillerCount
 
             out.writeByte(3) // version
             out.writeByte(2) // attr: names as string
             out.writeInt(updateCount)
             out.writeInt(0) // creationDay
-            out.writeShort(totalSlots)
+            out.writeShort(memberList.size)
             out.writeByte(bannedList.size)
             out.writeRSString(clanName)
             out.writeByte(if (allowGuests) 1 else 0)
@@ -307,12 +305,6 @@ internal fun Codec.registerRev727UpdatePackets() {
                 out.writeRSString(member.displayName)
                 out.writeByte(member.rank)
                 out.writeInt(member.flags)
-            }
-
-            for (i in 0 until fillerCount) {
-                out.writeRSString("FILLER_CHARACTER$i")
-                out.writeByte(0) // rank
-                out.writeInt(0) // flags
             }
 
             for (banned in bannedList) {

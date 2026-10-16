@@ -99,13 +99,13 @@ class ClanPacketsTest {
     }
 
     @Test
-    fun `the codec writes version 3 and pads to five member rows`() {
+    fun `the codec writes version 3 with only the three actual members`() {
         val bytes = runBlocking { ProtDebug.encodeServerBody(727, ClanPackets.settingsFull(clan(), main = true)) }
         assertEquals(1, bytes[0].toInt(), "main")
         assertEquals(3, bytes[1].toInt(), "version")
         assertEquals(2, bytes[2].toInt(), "names as strings")
         val totalSlots = (bytes[11].toInt() and 0xFF shl 8) or (bytes[12].toInt() and 0xFF)
-        assertEquals(Clan.MIN_FILLER_SLOTS, totalSlots, "three members plus two filler rows")
+        assertEquals(3, totalSlots, "only actual members")
         assertEquals(2, bytes[13].toInt(), "banned count")
     }
 

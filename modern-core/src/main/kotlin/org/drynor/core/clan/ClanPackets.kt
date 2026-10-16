@@ -27,7 +27,7 @@ enum class ClanVarKind { INT, LONG, STRING }
 /**
  * The client packets both servers build from the shared clan state, so a member in a world and a
  * member on the lobby screen see exactly the same thing. Every builder is pure; the codec in
- * `Rev727ServerCodecsUpdate` writes the version byte, the filler rows and the setting type tags.
+ * `Rev727ServerCodecsUpdate` writes the version byte and the setting type tags.
  */
 object ClanPackets {
 
@@ -35,8 +35,7 @@ object ClanPackets {
      * `ClanSettingsFull` for [clan]. [main] is true for a member's own clan, false for a guest or
      * an interface that only looks at the clan. [displayName] turns a username into what the
      * client shows; the lobby resolves it from the accounts, a world from its players. Members are
-     * in join order (then username) so every send lists them the same way; the codec pads to the
-     * client's five-row minimum with filler rows.
+     * in join order (then username) so every send lists only real members in the same order.
      */
     fun settingsFull(
         clan: Clan,
