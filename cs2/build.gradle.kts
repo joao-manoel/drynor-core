@@ -9,3 +9,11 @@ dependencies {
     implementation(project(":core"))
     testImplementation(kotlin("test"))
 }
+
+tasks.register<JavaExec>("verifyClanInterfaceCache") {
+    group = "verification"
+    dependsOn(tasks.named("testClasses"))
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass.set("org.drynor.cs2.ClanInterfaceCacheProbe")
+    args(providers.gradleProperty("clanSources").get(), providers.gradleProperty("clanCache").get())
+}

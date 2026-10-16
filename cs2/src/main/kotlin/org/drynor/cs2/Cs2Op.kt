@@ -978,7 +978,7 @@ enum class Cs2Op(
     IF_GETHEIGHT(953, "ifGetHeight", false, OpKind.NORMAL, 1, 0, 0, 1, 0, 0, false, listOf(ArgType.COMPONENT)),
     IGNORE_ADD_TEMP(954, "ignoreAddTemp", false, OpKind.NORMAL, 0, 1, 0, 0, 0, 0, false),
     AUTOSETUP_SETMIN(955, "autosetupSetMin", false, OpKind.NORMAL, 0, 0, 0, 0, 0, 0, false),
-    ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT(956, "activeClanSettingsGetsortedaffinedslot", false, OpKind.NORMAL, 0, 0, 0, 0, 0, 0, false),
+    ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT(956, "activeClanSettingsGetsortedaffinedslot", false, OpKind.NORMAL, 1, 0, 0, 1, 0, 0, false),
     CC_SETONTIMER(957, "ccSetOnTimer", false, OpKind.HOOK, 0, 1, 0, 0, 0, 0, true),
     CHATPHRASE_GETAUTORESPONSECOUNT(958, "chatPhraseGetautoresponsecount", false, OpKind.NORMAL, 1, 0, 0, 1, 0, 0, false),
     SOUND_SPEECH_VOLUME(959, "soundSpeechVolume", false, OpKind.NORMAL, 4, 0, 0, 0, 0, 0, false),

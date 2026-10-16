@@ -20,6 +20,25 @@ import org.drynor.cs2.ir.Cs2Type
  * bytes.
  */
 class Cs2SourceContextTest {
+    @Test
+    fun `clan member sorting consumes the requested slot and returns its member index`() {
+        val folder = Files.createTempDirectory("cs2-clan-sort").toFile()
+        try {
+            val file = Cs2Layout.fileFor(folder, 0)
+            file.parentFile?.mkdirs()
+            file.writeText("// ${Cs2Layout.headerOf(0)}\nfunction f(slot: number): number {\n return activeClanSettingsGetsortedaffinedslot(slot);\n}\n")
+            val script = Cs2Codec.decode(Cs2Compiler.fromSources(folder).compile(file))
+            val sort = script.instructions.indexOfFirst { it.op == Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT }
+            assertTrue(sort > 0)
+            assertEquals(Cs2Op.PUSH_INT_LOCAL, script.instructions[sort - 1].op)
+            assertEquals(Cs2Op.RETURN, script.instructions[sort + 1].op)
+            assertEquals(1, Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT.popInt)
+            assertEquals(1, Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT.pushInt)
+        } finally {
+            folder.deleteRecursively()
+        }
+    }
+
 
     @Test
     fun `a signature is read without parsing the body`() {
