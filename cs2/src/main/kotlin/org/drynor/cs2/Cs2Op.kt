@@ -27,7 +27,7 @@ enum class Cs2Op(
     SOUND_SYNTH(2, "soundSynth", false, OpKind.NORMAL, 3, 0, 0, 0, 0, 0, false, listOf(ArgType.SOUND, ArgType.INT, ArgType.INT)),
     CC_GETINVCOUNT(3, "ccGetInvCount", false, OpKind.NORMAL, 0, 0, 0, 1, 0, 0, false),
     RESUME_STRINGDIALOG(4, "resumeStringDialog", false, OpKind.NORMAL, 0, 1, 0, 0, 0, 0, false),
-    ACTIVECLANCHANNEL_GETSORTEDUSERSLOT(5, "activeClanChannelGetsorteduserslot", false, OpKind.NORMAL, 0, 0, 0, 0, 0, 0, false),
+    ACTIVECLANCHANNEL_GETSORTEDUSERSLOT(5, "activeClanChannelGetsorteduserslot", false, OpKind.NORMAL, 1, 0, 0, 1, 0, 0, false),
     FORMATMINIMENU(6, "formatminimenu", false, OpKind.NORMAL, 12, 0, 0, 0, 0, 0, false, listOf(ArgType.INT, ArgType.INT, ArgType.INT, ArgType.INT, ArgType.GRAPHIC, ArgType.GRAPHIC, ArgType.GRAPHIC, ArgType.GRAPHIC, ArgType.GRAPHIC, ArgType.INT, ArgType.INT, ArgType.INT)),
     ACTIVECLANSETTINGS_GETREPLACEMENTOWNER_SLOT(7, "activeClanSettingsGetreplacementownerSlot", false, OpKind.NORMAL, 0, 0, 0, 1, 0, 0, false),
     CAM_DEC_Y(8, "camDecY", false, OpKind.NORMAL, 0, 0, 0, 0, 0, 0, false),

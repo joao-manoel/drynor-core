@@ -26,14 +26,16 @@ class Cs2SourceContextTest {
         try {
             val file = Cs2Layout.fileFor(folder, 0)
             file.parentFile?.mkdirs()
-            file.writeText("// ${Cs2Layout.headerOf(0)}\nfunction f(slot: number): number {\n return activeClanSettingsGetsortedaffinedslot(slot);\n}\n")
-            val script = Cs2Codec.decode(Cs2Compiler.fromSources(folder).compile(file))
-            val sort = script.instructions.indexOfFirst { it.op == Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT }
-            assertTrue(sort > 0)
-            assertEquals(Cs2Op.PUSH_INT_LOCAL, script.instructions[sort - 1].op)
-            assertEquals(Cs2Op.RETURN, script.instructions[sort + 1].op)
-            assertEquals(1, Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT.popInt)
-            assertEquals(1, Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT.pushInt)
+            for (op in listOf(Cs2Op.ACTIVECLANSETTINGS_GETSORTEDAFFINEDSLOT, Cs2Op.ACTIVECLANCHANNEL_GETSORTEDUSERSLOT)) {
+                file.writeText("// ${Cs2Layout.headerOf(0)}\nfunction f(slot: number): number {\n return ${op.tsName}(slot);\n}\n")
+                val script = Cs2Codec.decode(Cs2Compiler.fromSources(folder).compile(file))
+                val sort = script.instructions.indexOfFirst { it.op == op }
+                assertTrue(sort > 0)
+                assertEquals(Cs2Op.PUSH_INT_LOCAL, script.instructions[sort - 1].op)
+                assertEquals(Cs2Op.RETURN, script.instructions[sort + 1].op)
+                assertEquals(1, op.popInt)
+                assertEquals(1, op.pushInt)
+            }
         } finally {
             folder.deleteRecursively()
         }

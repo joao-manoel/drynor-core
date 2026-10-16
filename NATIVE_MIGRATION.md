@@ -199,3 +199,11 @@ O script 4301 foi compilado e empacotado sozinho em cache de teste, fechado/reab
 
 Verificação final automatizada: core 396, CS2 15, lobby 110 e world 35 testes sem falhas; builds, probe de cache e packed readback passaram. Runtime local atualizado; confirmação visual desta versão pendente.
 
+
+### Save & Quit sem alteração e ordenação do canal (2026-10-16)
+O usuário confirmou a lista Clanmates corrigida, mas Save & Quit não respondeu. Quando a bandeira era igual à persistida, nenhum PENDING_CLAN existia e o guard descartava a conclusão antes de detectar o no-op. A conclusão sem mudança agora precede esse guard; um marcador de operação em andamento impede confirmação antecipada em clique repetido. A seleção não é consumida antes do ack, permitindo retry após falha.
+
+O log do cliente confirmou também underflow em CS2Interpreter.method471: opcode 5, ordenação do canal, exige um inteiro de entrada e saída. Corrigidos catálogo, declaração e os callers 4436/4444. A regressão compila ambas as operações de ordenação; probe empacota somente 4301/4436/4444 e compara o readback e a sequência load -> sort -> store. Core/CS2 e probe passaram; build world e confirmação humana desta versão em andamento. RuneLite preservado, sem merge na main.
+
+Verificação final desta correção: core 396, CS2 15 e world 35 testes sem falhas; build e packed readback passaram. Atualizados localmente somente dat2/idx12/idx255, preservando o manifesto e os demais assets. Cliente será reaberto para validar mudança e confirmação sem mudança; ambos ainda pendentes.
+
