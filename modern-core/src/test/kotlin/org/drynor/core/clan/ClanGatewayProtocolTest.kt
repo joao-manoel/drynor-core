@@ -19,6 +19,7 @@ import org.drynor.core.social.gateway.ClanQuickChatMessage
 import org.drynor.core.social.gateway.ClanSnapshot
 import org.drynor.core.social.gateway.ClanReplica
 import org.drynor.core.social.gateway.ClanNotification
+import org.drynor.core.social.gateway.ClanFetchResult
 import org.drynor.core.model.AccountView
 import org.drynor.core.model.Social
 import org.drynor.core.social.gateway.SocialGatewayWireJson
@@ -92,6 +93,8 @@ class ClanGatewayProtocolTest {
     fun `clan events round trip`() {
         val events = listOf(
             ClanFetch("Drynor"),
+            ClanFetch("Drynor", 7_000_000_001L),
+            ClanFetchResult("Missing", 7_000_000_002L),
             ClanCommandResult("bob", 17, "Create", ok = true),
             ClanCommandResult("bob", 18, "Ban", ok = false, message = "You do not have permission to ban users."),
             ClanDeleted("Drynor"),
@@ -165,5 +168,8 @@ class ClanGatewayProtocolTest {
         assertEquals(replica.channel, restored.channel)
         assertEquals(clan.settings, restored.clan!!.settings)
         assertEquals(clan.vars, restored.clan!!.vars)
+        val lookup = assertIs<ClanFetchResult>(roundTrip(ClanFetchResult("Drynor", 7_000_000_003L, clan, replica.displayNames)))
+        assertEquals(clan.settings, lookup.clan!!.settings)
+        assertEquals(replica.displayNames, lookup.displayNames)
     }
 }

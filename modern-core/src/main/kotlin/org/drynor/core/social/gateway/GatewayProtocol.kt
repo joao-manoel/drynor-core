@@ -346,10 +346,18 @@ data class ClanCommand(
     val action: ClanAction,
 ) : SocialGatewayWireMessage
 
-/** World → lobby: send me [clanName] as a [ClanSnapshot], or [ClanDeleted] if it does not exist. */
+/** World → lobby: fetch public clan data through the same bounded, correlated request stream. */
 @Serializable
 @SerialName("ClanFetch")
-data class ClanFetch(val clanName: String) : SocialGatewayWireMessage
+data class ClanFetch(val clanName: String, val requestId: Long = 0) : SocialGatewayWireMessage
+
+@Serializable @SerialName("ClanFetchResult")
+data class ClanFetchResult(
+    val clanName: String,
+    val requestId: Long,
+    val clan: Clan? = null,
+    val displayNames: Map<String, String> = emptyMap(),
+) : SocialGatewayWireMessage
 
 /**
  * Lobby → world: the outcome of one [ClanCommand]. [action] is the [ClanAction.serialName] of
