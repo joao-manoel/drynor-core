@@ -67,7 +67,7 @@ class ClanGatewayProtocolTest {
     @Test
     fun `every clan action round trips inside a clan command`() {
         for (action in actions) {
-            val command = ClanCommand(username = "bob", requestId = 17, action = action)
+            val command = ClanCommand(username = "bob", requestId = 7_000_000_017L, action = action)
             val decoded = assertIs<ClanCommand>(roundTrip(command))
             assertEquals(command, decoded, "round trip of ${action.serialName}")
         }

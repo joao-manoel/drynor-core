@@ -341,7 +341,7 @@ data class SocialNotification(
 @SerialName("ClanCommand")
 data class ClanCommand(
     val username: String,
-    val requestId: Int,
+    val requestId: Long,
     val action: ClanAction,
 ) : SocialGatewayWireMessage
 
@@ -359,7 +359,7 @@ data class ClanFetch(val clanName: String) : SocialGatewayWireMessage
 @SerialName("ClanCommandResult")
 data class ClanCommandResult(
     val username: String,
-    val requestId: Int,
+    val requestId: Long,
     val action: String,
     val ok: Boolean,
     val message: String? = null,
