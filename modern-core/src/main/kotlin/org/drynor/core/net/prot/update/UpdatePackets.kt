@@ -87,4 +87,5 @@ data class NpcUpdateNpc(
     val movementType: MoveType,
     val faceAngle: Int,
     val blocks: NpcUpdateBlocks,
+    val hidden: Boolean = false,
 )

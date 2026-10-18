@@ -25,8 +25,10 @@ import org.drynor.core.update.NpcUpdateBlocks
 import org.drynor.core.update.SequencesUpdate
 import org.drynor.core.update.SpotAnim
 import org.drynor.core.update.Tint
+import world.gregs.voidps.buffer.write.BufferWriter
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertContentEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -75,6 +77,7 @@ class Rev727NpcUpdateDecoderTest {
         finished: Boolean = false,
         faceAngle: Int = 0,
         blocks: NpcUpdateBlocks = NpcUpdateBlocks(),
+        hidden: Boolean = false,
     ) = NpcUpdateNpc(
         index = index,
         id = id,
@@ -89,6 +92,7 @@ class Rev727NpcUpdateDecoderTest {
         movementType = moveType,
         faceAngle = faceAngle,
         blocks = blocks,
+        hidden = hidden,
     )
 
     @Test
@@ -122,6 +126,48 @@ class Rev727NpcUpdateDecoderTest {
         assertEquals("Captain Rovin", named.masks?.name)
         assertEquals(250, named.masks?.combatLevel)
         assertNull(frame[12])
+    }
+
+    @Test
+    fun `hidden and other-plane npcs are never added to the local list`() {
+        val harness = Harness(customisationLayout)
+
+        val frame = harness.tick(
+            localTile,
+            npc(1, 1, 3201, 3201),
+            npc(2, 2, 3201, 3201, plane = 1),
+            npc(3, 3, 3201, 3201, hidden = true),
+        )
+
+        assertEquals(listOf(1), frame.entries.map { it.index })
+        assertEquals(listOf(1), harness.client.localNpcIndices())
+    }
+
+    @Test
+    fun `already-local npc is removed when it becomes hidden or changes plane`() {
+        val hiddenHarness = Harness(customisationLayout)
+        hiddenHarness.tick(localTile, npc(1, 1, 3201, 3201))
+        val hidden = hiddenHarness.tick(localTile, npc(1, 1, 3201, 3201, hidden = true))
+        assertTrue(hidden[1]!!.removed)
+        assertEquals(emptyList(), hiddenHarness.client.localNpcIndices())
+
+        val planeHarness = Harness(customisationLayout)
+        planeHarness.tick(localTile, npc(2, 2, 3201, 3201))
+        val changedPlane = planeHarness.tick(localTile, npc(2, 2, 3201, 3201, plane = 1))
+        assertTrue(changedPlane[2]!!.removed)
+        assertEquals(emptyList(), planeHarness.client.localNpcIndices())
+    }
+
+    @Test
+    fun `npc local list respects the revision server limit`() {
+        val harness = Harness(customisationLayout)
+        val npcs = Array(251) { offset -> npc(offset + 1, 1000 + offset, 3201, 3201) }
+
+        val frame = harness.tick(localTile, *npcs)
+
+        assertEquals(250, frame.entries.size)
+        assertEquals(250, harness.server.localCount)
+        assertEquals(250, harness.client.localNpcIndices().size)
     }
 
     @Test
@@ -161,7 +207,7 @@ class Rev727NpcUpdateDecoderTest {
             npc(20, 1, 3201, 3206, walk = 1),
             npc(21, 2, 3195, 3194, walk = 4, moveType = MoveType.CRAWL),
             npc(22, 3, 3203, 3195, walk = 6, run = 6, moveType = MoveType.RUN),
-            npc(23, 4, 3190, 3210, plane = 1, teleported = true),
+            npc(23, 4, 3190, 3210, teleported = true),
             npc(24, 5, 3198, 3202, finished = true),
             npc(25, 6, 3201, 3201, blocks = NpcUpdateBlocks(say = "Hello")),
         )
@@ -172,7 +218,7 @@ class Rev727NpcUpdateDecoderTest {
         val jumped = frame[23]!!
         assertTrue(jumped.added)
         assertTrue(jumped.teleported)
-        assertEquals(tileHash30(3190, 3210, 1), jumped.tileHash30)
+        assertEquals(tileHash30(3190, 3210, 0), jumped.tileHash30)
         assertTrue(frame[24]!!.removed)
         assertEquals(-1, harness.client.npcIds[24])
         assertEquals("Hello", frame[25]?.masks?.say)
@@ -188,11 +234,11 @@ class Rev727NpcUpdateDecoderTest {
     @Test
     fun `large scene view adds npcs far from the local player`() {
         val harness = Harness(customisationLayout)
-        val distant = npc(30, 7, 3300, 3080, plane = 2)
+        val distant = npc(30, 7, 3300, 3080)
 
         val frame = harness.tick(localTile, distant, largeSceneView = true)
 
-        assertEquals(tileHash30(3300, 3080, 2), frame[30]?.tileHash30)
+        assertEquals(tileHash30(3300, 3080, 0), frame[30]?.tileHash30)
     }
 
     @Test
@@ -237,6 +283,29 @@ class Rev727NpcUpdateDecoderTest {
         assertEquals(blocks.comparable(), frame[40]!!.masks!!.comparable())
         assertEquals(101, frame[40]?.id)
         assertEquals(101, harness.client.npcIds[40])
+    }
+
+    @Test
+    fun `tile rotation preserves both coordinate ushorts in its mask`() {
+        val key = (0xC320 shl 16) or 0x0C80
+        val snapshot = npc(
+            42,
+            100,
+            3201,
+            3201,
+            blocks = NpcUpdateBlocks(
+                common = CommonUpdateBlocks(modelOverrides = ModelOverrides(intArrayOf(key), intArrayOf(0x7FFF))),
+            ),
+        )
+        val header = BufferWriter()
+        val block = BufferWriter()
+
+        npcMasks.encode(NpcMaskCtx(snapshot, added = false), org.drynor.core.net.prot.update.buildNpcMaskPresence(snapshot), header, block)
+
+        assertContentEquals(
+            byteArrayOf(0x40, 0x40, 0x7F, 0xA0.toByte(), 0xC3.toByte(), 0x0C, 0x80.toByte(), 0x7F, 0x7F),
+            header.toArray() + block.toArray(),
+        )
     }
 
     @Test

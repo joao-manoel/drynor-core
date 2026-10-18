@@ -22,9 +22,25 @@ data class PacketBody(val opcode: Int, val size: Int, val bytes: ByteArray) {
         }
 
         @JvmStatic
-        fun encode(codec: Codec, packet: ServerProt): PacketBody = runBlocking {
+        fun encode(codec: Codec, packet: ServerProt): PacketBody = encodeBody(codec, packet, false)
+
+        /** Handshake responses use a plain response code and length, without ISAAC. */
+        @JvmStatic
+        fun encodeLogin(codec: Codec, packet: ServerProt): ByteArray {
+            val body = encodeBody(codec, packet, true)
+            val prefix = when (body.size) {
+                -1 -> byteArrayOf(body.opcode.toByte(), body.bytes.size.toByte())
+                -2 -> byteArrayOf(body.opcode.toByte(), (body.bytes.size ushr 8).toByte(), body.bytes.size.toByte())
+                else -> byteArrayOf(body.opcode.toByte())
+            }
+            return prefix + body.bytes
+        }
+
+        private fun encodeBody(codec: Codec, packet: ServerProt, login: Boolean): PacketBody = runBlocking {
             val registration = requireNotNull(codec.serverProts[packet::class]) { "Unregistered server packet" }
-            require(packet::class !in codec.loginResponses) { "Login responses need handshake framing" }
+            require((packet::class in codec.loginResponses) == login) {
+                if (login) "Expected a login response" else "Login responses need handshake framing"
+            }
             val limit = when (val size = registration.size) {
                 is ProtSize.Fixed -> size.length
                 ProtSize.VarByte -> 255

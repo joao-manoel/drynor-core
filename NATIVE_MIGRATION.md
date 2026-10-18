@@ -222,3 +222,24 @@ Validação automatizada: core 400 e world 38 testes sem falhas, build/shadowJar
 
 Validação humana concluída: o usuário confirmou login, andar/correr, combate com NPC, banco, drop/coleta, amigos/clã e retorno ao lobby com novo login sem desconexão ou travamento na versão de framing nativo. Esse escopo está validado; transporte/sessão, corpos/handlers e os demais gates continuam pendentes. A atualização visual da bandeira permanece adiada por solicitação do usuário.
 
+### Listener nativo e ciclo de vida da sessão no world (2026-10-16)
+O world agora aceita conexões pelo listener Netty do próprio serviço, sem iniciar `ServerChannelHandler`. `WorldConnectionHandler` controla handshake, quadro limitado de login, autorização e tráfego do jogo; mantém o prazo absoluto de autenticação, libera cada `ByteBuf` e zera o quadro de credenciais após decodificação/encerramento. A autorização conclui a transição no event loop, e o próximo tick do world detecta canal fechado e executa o fluxo existente de salvamento/saída.
+
+O status `WorldLoginDetails` é enviado sem ISAAC antes do tráfego de jogo. `Session.decoder`, `encoder` e horário do último pacote são visíveis entre as threads. Como primeiro pacote tipado da etapa seguinte, `Ping` do catálogo 727 agora responde com `KeepAlive` do core sem criar o DTO/handler antigo; os restantes ainda usam adaptadores temporários.
+
+Validação automatizada: suíte do world (45 testes) passou, incluindo frames divididos/coalescidos, autorização, prazo, liberação, bind/shutdown, fechamento de canal e alinhamento do ISAAC no login/ping. A suíte core passou com `-Pdrynor.testBudgetSeconds=90`; o orçamento padrão de 20s não comportou os testes lentos de catálogo/clãs. A compilação do world/core passou. Não houve validação manual de cliente nesta versão.
+
+Próximo bloco: migrar builders de entity updates para snapshots e máscaras tipadas de jogador/NPC; depois substituir os adapters de corpos e o uso de `Session` no gameplay. O listener já é nativo, mas login e gameplay ainda atravessam a sessão da `legacy-compat`, portanto esse avanço não autoriza removê-la nem concluir a migração.
+
+### Updates de NPC pelo snapshot do core (2026-10-16)
+O world substituiu o serializer de `LocalNPCUpdate` por `NativeNpcUpdateSnapshots`: captura movimento, posição, visibilidade, animações, hits/barras, efeitos, transformações, customização, nome/nível, face e modelo em `NpcUpdateSnapshot`/`NpcUpdateBlocks`, e delega a codificação 727 ao core. O estado do índice local permanece por observador; remoção/reset limpa as referências, adições respeitam o limite 250 e a política polimórfica de visibilidade (`withinDistance`) é preservada inclusive para NPCs exclusivos do dono. Um NPC live consultado substitui uma entidade antiga se o índice for reutilizado no mesmo tick.
+
+O codec central agora exclui NPCs ocultos/de outro plano e limita a lista local a 250. A suíte de codec cobre ocultação/plano na adição e remoção, limite, movimento e máscaras. Revisão independente comparou movimento, teleportes, ordem e máscaras com o builder anterior. Duas diferenças intencionais precisam permanecer como gates de cliente: o novo encoder limpa faceEntity ao adicionar um NPC para impedir estado residual em slots reutilizados; a representação de rotações de tile envia os dois ushorts marcados, corrigindo a perda de coordenada do serializer legado. Ambas estão cobertas pelo roundtrip do codec, mas ainda sem confirmação visual nesta versão.
+
+Verificação automatizada: teste focado do core, suíte do world e `shadowJar` passaram; revisão de protocolo sem bloqueios após preservar visibilidade de OwnedNPC e substituir entradas stale por referências live. NPC updates migrados; `LocalPlayerUpdate`, adapters de corpo de pacote e dependência `Session` continuam pendentes. Nenhuma alteração no cliente/RuneLite e sem merge na main.
+
+### Próximo bloco: integração dos updates de jogadores
+O core já contém encoder 727, estado por observador e testes de roundtrip para jogadores; o trabalho restante está no adapter do world e no lifecycle. A revisão de protocolo recomenda inicializar o estado junto com `BuildRegion`, produzir snapshots completos de 2048 slots por observador/tick e resetar a cada nova região/sessão. Conversões dependentes do observador (hits e hitbars), appearance cache/throttling, deslocamento walk+run que se anula e reutilização de índices precisam de testes diferenciais contra o serializer legado antes de remover `LocalPlayerUpdate`.
+
+Esta lista é o escopo de entrada da próxima etapa, não uma declaração de implementação concluída. A migração NPC permanece coberta por teste focado com golden bytes de rotação; execução validada em 2026-10-16.
+

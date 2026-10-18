@@ -2,6 +2,7 @@ package rs.drynor.core.protocol
 
 import org.drynor.core.net.prot.packet.ClanSettingsFullRaw
 import org.drynor.core.net.prot.packet.PlayerUpdate
+import org.drynor.core.net.prot.packet.WorldLoginDetails
 import org.drynor.core.net.prot.revision.rev727.register727
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -25,5 +26,13 @@ class PacketBodyTest {
         assertFailsWith<IllegalArgumentException> {
             PacketBody.encode(register727(), PlayerUpdate(ByteArray(65536)))
         }
+    }
+
+    @Test fun `world login response uses plain success code and one byte length`() {
+        val details = WorldLoginDetails(0, 0, false, false, true, false, 1, true, 0, true, "Drynor")
+        val frame = PacketBody.encodeLogin(register727(), details)
+        assertEquals(2, frame[0].toInt() and 255)
+        assertEquals(frame.size - 2, frame[1].toInt() and 255)
+        assertFailsWith<IllegalArgumentException> { PacketBody.encode(register727(), details) }
     }
 }

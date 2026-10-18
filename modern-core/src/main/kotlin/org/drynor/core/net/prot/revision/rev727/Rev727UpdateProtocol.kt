@@ -36,6 +36,7 @@ object Rev727UpdateProtocol : UpdateProtocol {
         walkDirectionBits = 3,
         idBits = 15,
         planeBits = 2,
+        maxLocalCount = 250,
     )
 
     // ----------------------------
@@ -371,6 +372,7 @@ object Rev727UpdateProtocol : UpdateProtocol {
     }
 
     private fun within(localTileHash30: Int, npc: NpcUpdateNpc, radius: Int): Boolean {
+        if (npc.hidden || tileHash30Plane(localTileHash30) != npc.plane) return false
         val localX = (localTileHash30 shr 14) and 0x3fff
         val localY = localTileHash30 and 0x3fff
         return abs(npc.x - localX) <= radius && abs(npc.y - localY) <= radius
@@ -440,7 +442,7 @@ object Rev727UpdateProtocol : UpdateProtocol {
         val posMask = (1 shl posBits) - 1
 
         for (npc in snapshot.nearbyNpcs) {
-            if (state.localCount >= state.localIndexes.size) break
+            if (state.localCount >= minOf(state.localIndexes.size, cfg.maxLocalCount)) break
             if (state.localIndexes.take(state.localCount).any { it == npc.index }) continue
             if (npc.finished || !within(snapshot.localTileHash30, npc, radius)) continue
 

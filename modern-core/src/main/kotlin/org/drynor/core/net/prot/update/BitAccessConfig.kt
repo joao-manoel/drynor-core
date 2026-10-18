@@ -88,4 +88,13 @@ data class NpcBitConfig(
     val walkDirectionBits: Int,
     val idBits: Int,
     val planeBits: Int,
-)
+    /** Maximum NPCs that can be kept in the observer's local list. */
+    val maxLocalCount: Int = (1 shl localCountBits) - 1,
+) {
+    init {
+        require(localCountBits in 1..30) { "localCountBits must be in 1..30" }
+        require(maxLocalCount in 0..((1 shl localCountBits) - 1)) {
+            "maxLocalCount must fit in $localCountBits bits (got $maxLocalCount)"
+        }
+    }
+}
