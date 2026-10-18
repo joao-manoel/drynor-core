@@ -1,4 +1,4 @@
-import org.darkan.build.gameval.GenerateGamevalConstants
+import org.drynor.build.gameval.GenerateGamevalConstants
 
 plugins {
     kotlin("plugin.serialization")
@@ -25,22 +25,22 @@ dependencies {
     testImplementation(project(":legacy-compat"))
 }
 
-// Typed gameval constants (org.darkan.core.gameval.gen.*): one Java class of public static final
+// Typed gameval constants (org.drynor.core.gameval.gen.*): one Java class of public static final
 // int per <cache source tree>/gamevals/<type>.json, generated into build/generated/sources/gameval/java
 // by the buildSrc task and compiled as part of this module. Nothing is committed and no python is
 // involved; see docs/gameval.md, "Typed constants". The catalogs are the only copy of the names and
 // live in the cache source tree (docs/cache-source.md): the cache-source submodule by default, or the
-// directory named by -Pdarkan.cacheSource=<path> / the DARKAN_CACHE_SOURCE environment variable.
-val cacheSourceDir: File = (findProperty("darkan.cacheSource") as String?
-    ?: System.getenv("DARKAN_CACHE_SOURCE"))
+// directory named by -Pdrynor.cacheSource=<path> / the DRYNOR_CACHE_SOURCE environment variable.
+val cacheSourceDir: File = (findProperty("drynor.cacheSource") as String?
+    ?: System.getenv("DRYNOR_CACHE_SOURCE"))
     ?.let { rootProject.file(it) }
     ?: rootProject.file("cache-source")
 val generateGamevalConstants = tasks.register<GenerateGamevalConstants>("generateGamevalConstants") {
     group = "generation"
-    description = "Generates org.darkan.core.gameval.gen.* from the cache source tree's gamevals/*.json"
+    description = "Generates org.drynor.core.gameval.gen.* from the cache source tree's gamevals/*.json"
     catalogDirectory.set(File(cacheSourceDir, "gamevals"))
     outputDirectory.set(layout.buildDirectory.dir("generated/sources/gameval/java"))
-    generatorLabel.set("the :core:generateGamevalConstants Gradle task (buildSrc org.darkan.build.gameval)")
+    generatorLabel.set("the :core:generateGamevalConstants Gradle task (buildSrc org.drynor.build.gameval)")
     regenerateCommand.set("./gradlew :core:generateGamevalConstants")
 }
 

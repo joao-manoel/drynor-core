@@ -12,7 +12,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //  Copyright (C) 2021 Trenton Kress
-//  This file is part of project: Darkan
+//  This file is part of project: Drynor
 //
 package com.rs.lib.net;
 
@@ -34,9 +34,9 @@ import io.netty.channel.ChannelFuture;
 public class Session {
 
 	private Channel channel;
-	private Decoder decoder;
-	private Encoder encoder;
-	private long lastPacket = System.currentTimeMillis();
+	private volatile Decoder decoder;
+	private volatile Encoder encoder;
+	private volatile long lastPacket = System.currentTimeMillis();
 	private IsaacKeyPair isaac;
 	
 	private transient OutputStream queuedStream;
@@ -152,7 +152,7 @@ public class Session {
 
 	@SuppressWarnings("unchecked")
 	public final <T extends Encoder> T getEncoder(Class<T> clazz) {
-		if (encoder != null && encoder.getClass().isAssignableFrom(clazz))
+		if (encoder != null && clazz.isAssignableFrom(encoder.getClass()))
 			return (T) encoder;
 		return null;
 	}
@@ -183,7 +183,7 @@ public class Session {
 	}
 	
 	public boolean isClosed() {
-		return System.currentTimeMillis() - this.lastPacket > 10000;
+		return channel == null || !channel.isActive() || System.currentTimeMillis() - this.lastPacket > 10000;
 	}
 
 	public IsaacKeyPair getIsaac() {

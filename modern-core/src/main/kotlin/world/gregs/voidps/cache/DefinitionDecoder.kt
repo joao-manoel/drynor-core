@@ -1,8 +1,8 @@
 package world.gregs.voidps.cache
 
 import it.unimi.dsi.fastutil.ints.IntArrayList
-import org.darkan.core.Logger.logError
-import org.darkan.core.Logger.logInfo
+import org.drynor.core.Logger.logError
+import org.drynor.core.Logger.logInfo
 import world.gregs.voidps.buffer.Cp1252
 import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.buffer.read.Reader

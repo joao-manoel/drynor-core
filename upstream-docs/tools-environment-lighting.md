@@ -1,6 +1,6 @@
 # Map environment, lighting, fog and skybox — appearance reference
 
-Extracted from the deobfuscated reference client at `~/darkan/darkan-bot`. This
+Extracted from the deobfuscated reference client at `~/drynor/drynor-bot`. This
 document is the **appearance** contract for the tools engine. The reference
 client's *implementation* is fixed-function GL 1.x with per-frame CPU work and
 must not be copied — only the visual result matters.

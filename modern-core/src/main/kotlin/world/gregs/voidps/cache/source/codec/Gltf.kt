@@ -38,7 +38,7 @@ import java.nio.ByteOrder
 object Gltf {
 
     /** Fixed, because a generator string that moved would rewrite every `.glb` in the tree. */
-    const val GENERATOR = "darkan cache-source"
+    const val GENERATOR = "drynor cache-source"
 
     // --- component types -----------------------------------------------------------------------
 

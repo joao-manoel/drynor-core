@@ -78,7 +78,7 @@ class BZip2EncoderTest {
         val random = Random(0xda27a4)
         val words = listOf(
             "the", "cache", "container", "archive", "definition", "opcode", "buffer", "sector",
-            "bzip2", "huffman", "burrows", "wheeler", "revision", "727", "darkan", "void",
+            "bzip2", "huffman", "burrows", "wheeler", "revision", "727", "drynor", "void",
         )
         val out = ByteArray(size)
         var position = 0

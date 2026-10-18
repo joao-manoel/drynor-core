@@ -27,7 +27,7 @@ class AnimationDecoder : DefinitionDecoder<AnimationDefinition>(ANIMATIONS) {
         when (opcode) {
             1 -> {
                 val length = buffer.readShort()
-                durations = IntArray(length) { buffer.readShort() }
+                durations = IntArray(length) { buffer.readUnsignedShort() }
                 frames = IntArray(length) { buffer.readShort() }
                 for (count in 0 until length) {
                     frames!![count] = (buffer.readShort() shl 16) + frames!![count]

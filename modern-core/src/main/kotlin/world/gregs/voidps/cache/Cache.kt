@@ -1,8 +1,8 @@
 package world.gregs.voidps.cache
 
-import org.darkan.core.EnvVars
-import org.darkan.core.Logger.logWarn
-import org.darkan.core.cache.CacheSource
+import org.drynor.core.EnvVars
+import org.drynor.core.Logger.logWarn
+import org.drynor.core.cache.CacheSource
 import world.gregs.voidps.cache.definition.data.AnimationDefinition
 import world.gregs.voidps.cache.definition.data.BASDefinition
 import world.gregs.voidps.cache.definition.data.ClanVarDefinition
@@ -128,7 +128,7 @@ interface Cache : Closeable {
 
     companion object {
         private const val HUFFMAN_ARCHIVE = 1
-        private const val OPTIONAL_CACHE_PROPERTY = "darkan.cache.optional"
+        private const val OPTIONAL_CACHE_PROPERTY = "drynor.cache.optional"
 
         @Volatile
         private var installed: Cache? = null
@@ -200,6 +200,10 @@ interface Cache : Closeable {
 
         @JvmStatic val clanVars: Array<ClanVarDefinition> by lazy {
             ClanVarDecoder().load(singleton)
+        }
+
+        @JvmStatic val clanVarSettings: Array<ClanVarDefinition> by lazy {
+            ClanVarDecoder(Config.VAR_CLAN_SETTINGS, 2).load(singleton)
         }
 
         @JvmStatic val interfaces: Array<InterfaceDefinition> by lazy {

@@ -1,12 +1,12 @@
 # Environment Variables
 
-Every setting is read in `core/src/main/kotlin/org/darkan/core/EnvVars.kt`, which holds the full list and the defaults. Set them in a `.env` file in the project root. The commonly tuned ones:
+Every setting is read in `core/src/main/kotlin/org/drynor/core/EnvVars.kt`, which holds the full list and the defaults. Set them in a `.env` file in the project root. The commonly tuned ones:
 
 ## Server Configuration
 ```env
 DEBUG=false
 MEMBERS=true
-SERVER_NAME=Darkan
+SERVER_NAME=Drynor
 ```
 
 ## Network Ports
@@ -42,7 +42,7 @@ CRYPTO_ARGON2_PARALLELISM=4
 
 ## Database
 ```env
-MONGO_URI=mongodb://localhost:27017/darkan-server
+MONGO_URI=mongodb://localhost:27017/drynor-server
 MEM_CACHE=false            # true only on a lobby: holds the packed cache in memory for JS5 serving; worlds read it from disk
 CACHE_PATH=../cache/
 ```
@@ -56,12 +56,12 @@ GAMEVAL_PATH=             # folder of <type>.json name catalogs; default <CACHE_
 
 ## Social Gateway (World Server)
 ```env
-SOCIAL_GATEWAY_URL=ws://dev.darkan.org:4040/social/ws   # default: the dev lobby
+SOCIAL_GATEWAY_URL=ws://127.0.0.1:4040/social/ws   # default: the dev lobby
 SOCIAL_GATEWAY_TOKEN=<shared-secret>   # default: COMMUNITY_WORLD_TOKEN, i.e. a community world (docs/community-worlds.md)
-COMMUNITY_WORLD_TOKEN=darkan-community-world   # public; the lobby accepts it only with DEBUG=true
+COMMUNITY_WORLD_TOKEN=drynor-community-world   # public; the lobby accepts it only with DEBUG=true
 OFFICIAL_WORLD_MAX=99         # worlds 1..99 are official; the lobby refuses them to community worlds
 WORLD_ID=100
-WORLD_NAME=Darkan
+WORLD_NAME=Drynor
 WORLD_HOST=localhost
 WORLD_PUBLIC_HOST=localhost
 WORLD_MEMBERS=true

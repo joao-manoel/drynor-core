@@ -12,7 +12,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 //  Copyright (C) 2021 Trenton Kress
-//  This file is part of project: Darkan
+//  This file is part of project: Drynor
 //
 package com.rs.cache.loaders.animations;
 

@@ -2,19 +2,19 @@
 
 Two VMs, one pattern. Each server is a directory owned by `trent` holding a run script, a `.env`,
 and the jar, driven by a systemd unit that runs the script in a restart loop. On every restart the
-script pulls the newest jar CI published to the GitLab package registry (`darkanrs/server`,
+script pulls the newest jar CI published to the GitLab package registry (`drynorrs/server`,
 project `67255206`), so **deploying is: push to the branch, wait for the pipeline, restart the unit.**
 A failed download keeps the current jar running.
 
 | VM | Host | Units |
 |---|---|---|
-| `darkan-lobbies` | `10.69.69.22` | `prod-lobby` (43594 / API 4040), `dev-lobby` (43593 / API 4039) |
-| `darkan-worlds` | `10.69.69.21` | `bleeding-edge-world` (dev, world 1, 43601) + the production worlds |
+| `drynor-lobbies` | `10.69.69.22` | `prod-lobby` (43594 / API 4040), `dev-lobby` (43593 / API 4039) |
+| `drynor-worlds` | `10.69.69.21` | `bleeding-edge-world` (dev, world 1, 43601) + the production worlds |
 
 CI (`.gitlab-ci.yml`) - `dev` is the only branch; releases are tags cut from it:
 
 - `build` compiles every branch and tag and keeps nothing.
-- `deploy` on a `dev` push publishes `org/darkan/{lobby,world}-server` as `3.0.0-dev-<pipeline id>` -
+- `deploy` on a `dev` push publishes `org/drynor/{lobby,world}-server` as `3.0.0-dev-<pipeline id>` -
   the channel the beta scripts and the servers' auto-update follow (`AUTO_UPDATE_CHANNEL`, default
   `dev`, highest pipeline id wins).
 - `deploy` on a tag publishes the same two packages under the tag, and `release` creates a GitLab
@@ -31,15 +31,15 @@ deploy/install.sh <name> <lobby|world> <release|dev> [git-url] [gitlab-project-i
 ```
 
 That clones the repo (shallow, `dev`) into `/home/trent/<name>`, copies `deploy/env.<kind>.example`
-to `.env`, writes `.env.unit`, installs `deploy/darkan@.service` as `darkan@<name>` and enables it.
-Fill in the two files, then `systemctl start darkan@<name>`. A fork (the anarchy and rsps worlds) is
+to `.env`, writes `.env.unit`, installs `deploy/drynor@.service` as `drynor@<name>` and enables it.
+Fill in the two files, then `systemctl start drynor@<name>`. A fork (the anarchy and rsps worlds) is
 installed the same way with its own git URL and project id.
 
 ```
 /home/trent/<name>/
   deploy/run.sh        # tracked: the restart loop the unit runs
   .env                 # game configuration; secrets; chmod 600
-  .env.unit            # DARKAN_KIND, AUTO_UPDATE_CHANNEL, DARKAN_GITLAB_PROJECT_ID, GITLAB_ACCESS_TOKEN, JAVA_HOME, DARKAN_JAVA_VM_ARGS
+  .env.unit            # DRYNOR_KIND, AUTO_UPDATE_CHANNEL, DRYNOR_GITLAB_PROJECT_ID, GITLAB_ACCESS_TOKEN, JAVA_HOME, DRYNOR_JAVA_VM_ARGS
   lobby-server.jar | world-server.jar   # downloaded by run.sh
   .jar.version         # which build that jar is
   mainlog.txt
@@ -59,7 +59,7 @@ in the unit depends on the machine's default `java`.
 
 ```env
 DEBUG=true
-SERVER_NAME=Darkan Dev
+SERVER_NAME=Drynor Dev
 LOBBY_PORT=43593
 LOBBY_API_PORT=4039
 CACHE_PATH=../dev-cache/
@@ -76,14 +76,14 @@ LOCAL_WORLD_ID=300              # dev lobby only: lists world 300 as localhost:4
 
 ```env
 DEBUG=true
-SERVER_NAME=Darkan BE
+SERVER_NAME=Drynor BE
 CACHE_PATH=../cache/
 MONGO_URI=<the world's own database: players, highscores, grandexchange, logs - never the accounts>
 WORLD_ID=1
-WORLD_NAME=Darkan BE
+WORLD_NAME=Drynor BE
 WORLD_PORT=43601                 # must match worldInfo.port in data/worldConfig.json (the bind port)
 WORLD_HOST=10.69.69.21
-WORLD_PUBLIC_HOST=xmr.darkan.org # what the lobby advertises to clients
+WORLD_PUBLIC_HOST=xmr.drynor.org # what the lobby advertises to clients
 WORLD_ACTIVITY=Bleeding-Edge Test World
 WORLD_MEMBERS=true
 WORLD_BOTS_ALLOWED=false
@@ -198,11 +198,11 @@ inside the server JVM at startup, so keep `-Xmx` at least 3 GB on a host that bu
 **CI** (`.gitlab-ci.yml`) does not check the submodule out: it sparse-clones only
 `cache-source/gamevals` at the pinned commit (blob-less clone, a few MB), which is all the typed
 constants generator needs. Locally, `git clone --recurse-submodules` or the `submodule update`
-above; `-Pdarkan.cacheSource=<path>` / `DARKAN_CACHE_SOURCE` point the build at a tree elsewhere.
+above; `-Pdrynor.cacheSource=<path>` / `DRYNOR_CACHE_SOURCE` point the build at a tree elsewhere.
 
 **Rollout order** (the catalogs moved out of the server repo, so the two repos must move together):
 
-1. The tree lives at `darkanrs/cache-unpacked` (checked out as `cache-source/`). The submodule URL in
+1. The tree lives at `drynorrs/cache-unpacked` (checked out as `cache-source/`). The submodule URL in
    `.gitmodules` is relative (`../cache-unpacked.git`), so it resolves against the server repo's own
    remote; `tools cache unpack` regenerates the tree from a packed cache (`docs/cache-source.md`).
 2. Push the server branch. CI's sparse clone needs the cache-source project to allow CI job tokens
@@ -212,7 +212,7 @@ above; `-Pdarkan.cacheSource=<path>` / `DARKAN_CACHE_SOURCE` point the build at 
 ## Lobby commands and password recovery
 
 The lobby accepts `::` commands from a logged-in client (typed as a command or as `::`/`;;` chat),
-dispatched by rights the same way the world does (`org.darkan.lobby.command.LobbyCommands`):
+dispatched by rights the same way the world does (`org.drynor.lobby.command.LobbyCommands`):
 
 | command | rights | effect |
 |---|---|---|

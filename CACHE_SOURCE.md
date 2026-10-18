@@ -1,16 +1,16 @@
 # Core moderno, cache source e CS2
 
-Base: Darkan server dev, commit b56852003eb02280218757ecfd546d892ca5a25a.
+Base: Drynor server dev, commit b56852003eb02280218757ecfd546d892ca5a25a.
 Fontes e licença GPLv3 preservadas. Versão Drynor: 3.0.0-drynor-SNAPSHOT.
 
 | Módulo | Responsabilidade |
 |---|---|
-| core (modern-core/) | Core atual do Darkan: rede, cache, modelos, Mongo, social, codecs |
+| core (modern-core/) | Core atual do Drynor: rede, cache, modelos, Mongo, social, codecs |
 | cs2 | Compiler TypeScript, decompiler, VM e codec source do índice 12 |
 | tools | CLI e ferramentas visuais upstream |
 | legacy-compat | Contratos com.rs usados pelo gameplay Drynor durante a migração |
 
-O core principal usa org.darkan; o gameplay existente ainda usa o módulo
+O core principal usa org.drynor; o gameplay existente ainda usa o módulo
 separado de compatibilidade. Não houve substituição do conteúdo do world
 pelo gameplay upstream. Migrar cada consumidor às APIs modernas é trabalho
 incremental; importar o core não transforma o gameplay inteiro automaticamente.

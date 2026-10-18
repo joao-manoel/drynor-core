@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache
 
-import org.darkan.core.EnvVars
+import org.drynor.core.EnvVars
 import world.gregs.voidps.cache.secure.VersionTableBuilder
 import world.gregs.voidps.cache.store.FileStore
 import java.io.File

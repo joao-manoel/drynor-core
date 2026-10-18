@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.definition
 
-import org.darkan.core.model.Vars
+import org.drynor.core.model.Vars
 import world.gregs.voidps.buffer.read.Reader
 
 interface Transforms {

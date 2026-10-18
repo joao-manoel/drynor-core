@@ -1,8 +1,8 @@
 package world.gregs.voidps.cache.compress
 
 import lzma.sdk.lzma.Decoder
-import org.darkan.core.Logger.logError
-import org.darkan.core.Logger.logWarn
+import org.drynor.core.Logger.logError
+import org.drynor.core.Logger.logWarn
 import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.cache.secure.Xtea
 import java.io.ByteArrayInputStream

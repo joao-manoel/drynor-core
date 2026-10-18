@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "rs.drynor"
-    version = findProperty("darkanVersion") as String
+    version = findProperty("drynorVersion") as String
 
     repositories {
         mavenLocal()
@@ -18,7 +18,7 @@ allprojects {
     }
 }
 
-val testBudgetSeconds = (findProperty("darkan.testBudgetSeconds") as String?)?.toDouble() ?: 20.0
+val testBudgetSeconds = (findProperty("drynor.testBudgetSeconds") as String?)?.toDouble() ?: 20.0
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -58,7 +58,7 @@ subprojects {
         testLogging.showStandardStreams = true
         // A test never requires a packed cache: without one the world boots on empty definition
         // tables instead of dying, and `cacheTest` says so itself by failing its own assertions.
-        systemProperty("darkan.cache.optional", "true")
+        systemProperty("drynor.cache.optional", "true")
     }
 
     if (file("src/cacheTest").isDirectory) {
@@ -95,7 +95,7 @@ subprojects {
                 val slowest = suites.sortedByDescending { it.second }.take(5)
                     .joinToString("\n") { (name, seconds) -> "  %6.1fs  %s".format(seconds, name) }
                 throw GradleException(
-                    "$path ran for %.1fs of test time; the budget is %.0fs (-Pdarkan.testBudgetSeconds). ".format(total, budget) +
+                    "$path ran for %.1fs of test time; the budget is %.0fs (-Pdrynor.testBudgetSeconds). ".format(total, budget) +
                         "Make the slow tests fast or move them to src/cacheTest, the opt-in suite:\n$slowest",
                 )
             }

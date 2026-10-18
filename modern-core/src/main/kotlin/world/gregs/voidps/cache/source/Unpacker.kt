@@ -1,7 +1,7 @@
 package world.gregs.voidps.cache.source
 
-import org.darkan.core.EnvVars
-import org.darkan.core.map.MapXteas
+import org.drynor.core.EnvVars
+import org.drynor.core.map.MapXteas
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.Index
 import world.gregs.voidps.cache.MapSquare

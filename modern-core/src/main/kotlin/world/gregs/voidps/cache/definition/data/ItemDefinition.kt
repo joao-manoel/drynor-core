@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.definition.data
 
-import org.darkan.core.Constants
+import org.drynor.core.Constants
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.Definition
 import world.gregs.voidps.cache.definition.ColourPalette
@@ -226,7 +226,7 @@ data class ItemDefinition(
     fun getQuestId(): Int = getParam(-1, 861)
 
     /**
-     * Equipment bonuses, indexed by [org.darkan.core.model.Bonus] ordinal.
+     * Equipment bonuses, indexed by [org.drynor.core.model.Bonus] ordinal.
      *
      * Legacy `ItemDefinitions.parseBonuses()`: 18 entries, with summoning defence at param 417, the
      * absorb bonuses at 967/968/969, melee and ranged strength at 641/643 (tenths) and magic damage
@@ -745,7 +745,7 @@ data class ItemDefinition(
         val EMPTY = ItemDefinition()
 
         /**
-         * Indices into [getBonuses], matching [org.darkan.core.model.Bonus] ordinals and the
+         * Indices into [getBonuses], matching [org.drynor.core.model.Bonus] ordinals and the
          * constants of the same name on legacy `ItemDefinitions`.
          */
         const val STAB_ATTACK = 0

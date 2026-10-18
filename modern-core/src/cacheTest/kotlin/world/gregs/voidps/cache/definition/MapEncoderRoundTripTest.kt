@@ -1,7 +1,7 @@
 package world.gregs.voidps.cache.definition
 
-import org.darkan.core.EnvVars
-import org.darkan.core.map.MapXteas
+import org.drynor.core.EnvVars
+import org.drynor.core.map.MapXteas
 import world.gregs.voidps.buffer.write.BufferWriter
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.FileCache

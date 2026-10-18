@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.source
 
-import org.darkan.core.EnvVars
+import org.drynor.core.EnvVars
 import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.Index
@@ -503,6 +503,6 @@ class LoadingScreenCodecTest {
         private const val PROOF = 3770
 
         private const val PROOFS =
-            "/tmp/claude-1000/-home-trent-darkan-server/7342d152-879a-4df7-9110-0ce208e488a1/scratchpad"
+            "/tmp/claude-1000/-home-trent-drynor-server/7342d152-879a-4df7-9110-0ce208e488a1/scratchpad"
     }
 }

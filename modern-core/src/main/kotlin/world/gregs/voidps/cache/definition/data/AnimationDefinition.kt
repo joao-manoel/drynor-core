@@ -56,6 +56,9 @@ data class AnimationDefinition(
      */
     override var shadowedPayloads: Array<ByteArray?>? = null
 
+    fun getDurationMillis(): Int = getEmoteTime() * 20
+    val emoteGameTicks: Int get() = getDurationMillis() / 600
+
     /** Opcodes 19 and 20 are one record per sound frame, not a field written twice. */
     override fun repeats(opcode: Int): Boolean = opcode == 19 || opcode == 20
 

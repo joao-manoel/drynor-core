@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache
 
-import org.darkan.core.EnvVars
+import org.drynor.core.EnvVars
 import world.gregs.voidps.type.Region
 import java.io.File
 import kotlin.test.Test

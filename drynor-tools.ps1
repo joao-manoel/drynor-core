@@ -23,6 +23,6 @@ try {
     # The generated .bat exceeds cmd.exe's 8191-character classpath limit.
     # Java expands the lib wildcard itself, keeping the native command short.
     & "$env:JAVA_HOME/bin/java.exe" '-Xmx4g' '--enable-native-access=ALL-UNNAMED' '--enable-final-field-mutation=ALL-UNNAMED' `
-        '-cp' "$PSScriptRoot/tools/build/install/tools/lib/*" 'org.darkan.tools.MainKt' @ToolArguments
+        '-cp' "$PSScriptRoot/tools/build/install/tools/lib/*" 'org.drynor.tools.MainKt' @ToolArguments
     exit $LASTEXITCODE
 } finally { Pop-Location }

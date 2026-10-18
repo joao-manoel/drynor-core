@@ -1,6 +1,6 @@
 package world.gregs.voidps.cache.source
 
-import org.darkan.core.EnvVars
+import org.drynor.core.EnvVars
 import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.FileCache
 import world.gregs.voidps.cache.Index

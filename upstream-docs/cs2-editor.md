@@ -3,14 +3,14 @@
 Decompiles RuneScape clientscripts (cache index 12) into TypeScript, recompiles that
 TypeScript back into bytecode, and runs it against a live interface.
 
-The toolchain itself lives in `cs2/src/main/kotlin/org/darkan/cs2/` - its own Gradle module,
+The toolchain itself lives in `cs2/src/main/kotlin/org/drynor/cs2/` - its own Gradle module,
 headless and depending only on `:core`. The CLI (`Cs2Cli.kt`, still
-`tools/src/main/kotlin/org/darkan/tools/cs2/`) and the interface editor
+`tools/src/main/kotlin/org/drynor/tools/cs2/`) and the interface editor
 (`tools/.../rsinterface/`) stay in `tools`, which is where LWJGL, GLFW and ImGui come in.
 
 The split exists because the server compiles clientscripts too: index 12 of a cache source tree
 is stored as exactly the TypeScript `cs2 decompile-all` writes (`docs/cache-source.md`), and
-rebuilding a cache must not link a windowing toolkit. `org.darkan.cs2.Cs2Compiler` is the entry
+rebuilding a cache must not link a windowing toolkit. `org.drynor.cs2.Cs2Compiler` is the entry
 point for that - see *Compiling from server code* below.
 
 ## Commands
@@ -317,7 +317,7 @@ tools interface 499 --source cache-source \
     --stat all=99 --run cs2_23 --capture /tmp/guide.png --settle 30
 ```
 
-`--capture` and `--settle` set `-Ddarkan.capture` / `-Ddarkan.captureAfter`, so this works under
+`--capture` and `--settle` set `-Ddrynor.capture` / `-Ddrynor.captureAfter`, so this works under
 `tools/capture-headless.sh` with no GUI interaction.
 
 ## Running scripts
@@ -406,7 +406,7 @@ holds exactly what `decompile-all` writes - `<category>/<name>.ts` per script pl
 editing the TypeScript in the tree, and the server compiles it back when it rebuilds the cache.
 Open `<tree>/clientscripts` in an editor and every command here works on it as it stands.
 
-`org.darkan.cs2.source.Cs2SourceCodec` is the two directions. It claims index 12 by being on the
+`org.drynor.cs2.source.Cs2SourceCodec` is the two directions. It claims index 12 by being on the
 classpath (a `SourceCodecProvider` in `META-INF/services/`), so nothing has to register it.
 
 - **Unpacking** decompiles each script and writes its `.ts`, and nothing else - no sidecar, no

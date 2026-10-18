@@ -11,7 +11,7 @@ import world.gregs.voidps.cache.definition.data.ClanVarDefinition
  * Opcode 1 is written from [ClanVarDefinition.typeChar], the descriptor byte itself, because
  * [world.gregs.voidps.cache.definition.cs2.CS2Type.forJagexDesc] is many to one.
  */
-class ClanVarEncoder : OpcodeEncoder<ClanVarDefinition>() {
+class ClanVarEncoder(private val bitOpcode: Int = 3) : OpcodeEncoder<ClanVarDefinition>() {
 
     override fun opcodes(definition: ClanVarDefinition): IntArray {
         val opcodes = ArrayList<Int>(2)
@@ -19,7 +19,7 @@ class ClanVarEncoder : OpcodeEncoder<ClanVarDefinition>() {
             opcodes.add(1)
         }
         if (definition.baseVar != -1) {
-            opcodes.add(3)
+            opcodes.add(bitOpcode)
         }
         return opcodes.toIntArray()
     }
@@ -27,7 +27,7 @@ class ClanVarEncoder : OpcodeEncoder<ClanVarDefinition>() {
     override fun Writer.encodeOpcode(definition: ClanVarDefinition, members: ClanVarDefinition, opcode: Int, occurrence: Int) {
         when (opcode) {
             1 -> writeByte(Cp1252.encode(definition.typeChar).toInt())
-            3 -> {
+            bitOpcode -> {
                 writeShort(definition.baseVar)
                 writeByte(definition.startBit)
                 writeByte(definition.endBit)

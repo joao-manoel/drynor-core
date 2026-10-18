@@ -1,6 +1,6 @@
 package world.gregs.voidps.type
 
-import org.darkan.core.util.Structure
+import org.drynor.core.util.Structure
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
