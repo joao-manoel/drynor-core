@@ -1,6 +1,7 @@
 package world.gregs.voidps.cache.definition.decoder
 
 import world.gregs.voidps.buffer.read.Reader
+import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.DefinitionDecoder
 import world.gregs.voidps.cache.Index.ITEMS
 import world.gregs.voidps.cache.definition.data.ItemDefinition
@@ -17,6 +18,11 @@ class ItemDecoder : DefinitionDecoder<ItemDefinition>(ITEMS) {
     override fun getFile(id: Int) = id and 0xff
 
     override fun getArchive(id: Int) = id ushr 8
+
+    override fun size(cache: Cache): Int {
+        val archive = cache.lastArchiveId(index)
+        return if (archive < 0) -1 else archive * 256 + cache.lastFileId(index, archive)
+    }
 
     override fun ItemDefinition.read(opcode: Int, buffer: Reader) {
         when (opcode) {

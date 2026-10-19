@@ -1,6 +1,7 @@
 package world.gregs.voidps.cache.definition.decoder
 
 import world.gregs.voidps.buffer.read.Reader
+import world.gregs.voidps.cache.Cache
 import world.gregs.voidps.cache.DefinitionDecoder
 import world.gregs.voidps.cache.Index.OBJECTS
 import world.gregs.voidps.cache.definition.data.ObjectDefinition
@@ -20,6 +21,11 @@ open class ObjectDecoder(
     override fun getFile(id: Int) = id and 0xff
 
     override fun getArchive(id: Int) = id ushr 8
+
+    override fun size(cache: Cache): Int {
+        val archive = cache.lastArchiveId(index)
+        return if (archive < 0) -1 else archive * 256 + cache.lastFileId(index, archive)
+    }
 
     override fun ObjectDefinition.read(opcode: Int, buffer: Reader) {
         when (opcode) {
@@ -82,9 +88,9 @@ open class ObjectDecoder(
             66 -> modelSizeZ = buffer.readShort()
             67 -> modelSizeY = buffer.readShort()
             69 -> blockFlag = buffer.readUnsignedByte()
-            70 -> offsetX = buffer.readUnsignedShort() shl 2
-            71 -> offsetZ = buffer.readUnsignedShort() shl 2
-            72 -> offsetY = buffer.readUnsignedShort() shl 2
+            70 -> offsetX = buffer.readShort() shl 2
+            71 -> offsetZ = buffer.readShort() shl 2
+            72 -> offsetY = buffer.readShort() shl 2
             73 -> blocksLand = true
             74 -> {
                 ignoreOnRoute = true

@@ -24,6 +24,7 @@ tasks.named<JavaExec>("run") {
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
     implementation(project(":core"))
     // The CS2 toolchain, which is headless and shared with the server; see cs2/build.gradle.kts.
     implementation(project(":cs2"))

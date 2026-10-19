@@ -17,7 +17,8 @@ class NPCDecoder(val members: Boolean = true) : DefinitionDecoder<NPCDefinition>
 
     // Index 18 packs 128 npcs per archive (id ushr 7 below); the base class assumes 256.
     override fun size(cache: Cache): Int {
-        return cache.lastArchiveId(index) * 128 + (cache.fileCount(index, cache.lastArchiveId(index)))
+        val archive = cache.lastArchiveId(index)
+        return if (archive < 0) -1 else archive * 128 + cache.lastFileId(index, archive)
     }
 
     override fun getFile(id: Int) = id and 0x7f
