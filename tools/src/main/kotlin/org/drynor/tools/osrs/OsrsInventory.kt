@@ -22,8 +22,8 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
-    require(args.size == 4 && args[0] in setOf("inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
-        "osrs <inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
+    require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
+        "osrs <preview-zulrah-static|inventory-zulrah|inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
     }
     val source = Path.of(args[1]).toRealPath()
     val target = Path.of(args[2]).toRealPath()
@@ -33,6 +33,10 @@ fun runOsrs(args: List<String>) {
     require(!Files.exists(output)) { "Report already exists: $output" }
     for (directory in listOf(source, target)) {
         require(Files.isRegularFile(directory.resolve("main_file_cache.dat2"))) { "Missing packed cache: $directory" }
+    }
+    if (args[0] == "preview-zulrah-static") {
+        ZulrahStaticPreview.build(source, target, output)
+        return
     }
     if (args[0] == "preview-inferno") {
         StaticInfernoPreview.build(source, target, output)
@@ -54,7 +58,7 @@ fun runOsrs(args: List<String>) {
         FileCache(target.toString(), writable = false).use { destination ->
             val sourceBefore = InfernoDependencyPlan.snapshot(origin)
             val targetBefore = InfernoDependencyPlan.snapshot(destination)
-            val inventory = InfernoInventory.inspect(origin, destination, source, target)
+            val inventory = if (args[0] == "inventory-zulrah") ZulrahInventory.inspect(origin, destination, source, target) else InfernoInventory.inspect(origin, destination, source, target)
             val report = if (args[0] == "plan-inferno") InfernoDependencyPlan.inspect(origin, destination, inventory) else inventory
             check(sourceBefore == InfernoDependencyPlan.snapshot(origin)) { "Source reference tables changed during inspection; retry with a stable cache." }
             check(targetBefore == InfernoDependencyPlan.snapshot(destination)) { "Target reference tables changed during inspection; retry with a stable cache." }
@@ -62,7 +66,7 @@ fun runOsrs(args: List<String>) {
             Files.writeString(output, Json { prettyPrint = true }.encodeToString(JsonObject.serializer(), report) + "\n", CREATE_NEW, WRITE)
         }
     }
-    println("Read-only Inferno inventory: $output")
+    println("Read-only OSRS inventory: $output")
 }
 
 object InfernoInventory {
