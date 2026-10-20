@@ -203,6 +203,3 @@ object ZulrahNativeSurroundings {
 
     private fun hash(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 }
-
-
-

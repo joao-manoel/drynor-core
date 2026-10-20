@@ -15,4 +15,3 @@ class ZulrahHumanoidSkeletonTest {
         assertContentEquals(intArrayOf(0),osrs.shadowed); assertContentEquals(intArrayOf(65535),osrs.submeshes)
     }
 }
-

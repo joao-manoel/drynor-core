@@ -121,5 +121,3 @@ internal object ZulrahAnimationAssets {
     private fun encode(block: (Writer) -> Unit) = BufferWriter(1 shl 20).also(block).toArray()
     private fun hash(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 }
-
-
