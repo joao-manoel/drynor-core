@@ -22,6 +22,41 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-zulrah-live") {
+        require(args.size == 4) { "osrs preview-zulrah-live <gielenor-cache> <full-preview-root> <new-output-root>" }
+        ZulrahLiveAssets.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-full") {
+        require(args.size == 4) { "osrs preview-zulrah-full <gielenor-cache> <item-preview-root> <new-output-root>" }
+        ZulrahItemsPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]),full=true)
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-items") {
+        require(args.size == 4) { "osrs preview-zulrah-items <gielenor-cache> <actor-preview-root> <new-output-root>" }
+        ZulrahItemsPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-actors") {
+        require(args.size == 4) { "osrs preview-zulrah-actors <gielenor-cache> <static-preview-root> <new-output-root>" }
+        ZulrahActorPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-water") {
+        require(args.size == 3) { "osrs preview-zulrah-water <static-preview-root> <new-output-root>" }
+        ZulrahWaterPreview.build(Path.of(args[1]),Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-surroundings") {
+        require(args.size == 4) { "osrs preview-zulrah-surroundings <gielenor-cache> <static-preview-root> <new-output-root>" }
+        ZulrahNativeSurroundings.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zulrah-worldmap") {
+        require(args.size == 3) { "osrs preview-zulrah-worldmap <static-preview-root> <new-output-root>" }
+        ZulrahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]))
+        return
+    }
     require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
         "osrs <preview-zulrah-static|inventory-zulrah|inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
     }

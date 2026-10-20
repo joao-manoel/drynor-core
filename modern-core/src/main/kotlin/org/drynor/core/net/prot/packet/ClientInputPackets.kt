@@ -70,7 +70,10 @@ data class MoveMouseData(val frameCount: Int, val frameSteps: Int, val steps: Ar
     }
 }
 
-data class KeyPress(val keyCode: Int, val time: Int) : ClientProt
+data class KeyPressEvent(val keyCode: Int, val time: Int)
+
+/** One client frame may contain several ordered keyboard events. */
+data class KeyPress(val keyCode: Int, val time: Int, val additionalKeys: List<KeyPressEvent> = emptyList()) : ClientProt
 
 data class ClientCheat(val client: Boolean, val save: Boolean, val command: String) : ClientProt
 

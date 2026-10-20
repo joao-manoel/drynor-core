@@ -227,10 +227,23 @@ internal fun Codec.registerRev727ClientProts() {
         }
     }
 
-    clientProt(opcode = 28, size = ProtSize.VarShort) { KeyPress(keyCode = readByte().toInt(), time = readUMedium()) }
+    clientProt(opcode = 28, size = ProtSize.VarShort) {
+        val length = remaining.toInt()
+        require(length in 4..65532 && length % 4 == 0) { "Invalid keyboard event payload length: $length" }
+        val keyCode = readByte().toInt()
+        val time = readUMedium()
+        val additionalKeys = List(length / 4 - 1) { KeyPressEvent(readByte().toInt(), readUMedium()) }
+        KeyPress(keyCode, time, additionalKeys)
+    }
         .encoder { out ->
+            require(additionalKeys.size <= 16382)
+            require(time in 0..0xffffff && additionalKeys.all { it.time in 0..0xffffff })
             out.writeByte(keyCode)
             out.writeMedium(time)
+            for (event in additionalKeys) {
+                out.writeByte(event.keyCode)
+                out.writeMedium(event.time)
+            }
         }
 
     clientProt(opcode = 85, size = ProtSize.VarByte) {

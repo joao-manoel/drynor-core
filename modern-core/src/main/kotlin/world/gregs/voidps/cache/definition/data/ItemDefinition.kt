@@ -219,8 +219,8 @@ data class ItemDefinition(
      */
     fun getRenderAnimId(): Int = getParam(1426, 644)
 
-    /** Whether this weapon has a special attack bar. Legacy `hasSpecialBar()` - param 686. */
-    fun hasSpecialBar(): Boolean = getParamVal(686) == 1
+    /** Native CS2 special_attack parameter; 686 selects the weapon attack styles. */
+    fun hasSpecialBar(): Boolean = getParamVal(687) == 1
 
     /** The quest this item belongs to. Legacy `getQuestId()` - param 861. */
     fun getQuestId(): Int = getParam(-1, 861)

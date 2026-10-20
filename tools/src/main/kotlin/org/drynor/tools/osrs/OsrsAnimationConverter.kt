@@ -53,7 +53,8 @@ object OsrsAnimationConverter {
     /**
      * Map keys are physical Gielenor frame-set IDs (raw sequence archive + 5000).
      * Preview mode explicitly drops sounds and equipment overrides whose IDs need separate imports.
-     * Opcode 4 has no 727 representation and is rejected even in preview mode.
+     * Gielenor AnimationConfig.decodeOSRS opcode 4 reads no payload and sets only a local
+     * discarded boolean. Its runtime behavior is therefore preserved by emitting no native opcode.
      */
     fun convertSequence(
         targetId: Int,
@@ -92,6 +93,7 @@ object OsrsAnimationConverter {
                     result.interleaveOrder = BooleanArray(256).also { flags -> indices.forEach { flags[it] = true } }
                     result.interleaveRecords = indices
                 }
+                4 -> Unit // Gielenor AnimationConfig.decodeOSRS: local boolean only, no retained state.
                 5 -> result.priority = reader.u8()
                 6, 7 -> {
                     val value = reader.u16()

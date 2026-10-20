@@ -81,5 +81,12 @@ class OsrsAnimationConverterTest {
         }
     }
 
+    @Test
+    fun sourceOpcodeFourHasNoRetainedStateInGielenorClient() {
+        val withFlag = OsrsAnimationConverter.convertSequence(20000, bytes(4, 5, 7, 0), emptyMap())
+        val withoutFlag = OsrsAnimationConverter.convertSequence(20000, bytes(5, 7, 0), emptyMap())
+        assertEquals(withoutFlag, withFlag)
+        assertEquals(7, withFlag.priority)
+    }
     private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 }

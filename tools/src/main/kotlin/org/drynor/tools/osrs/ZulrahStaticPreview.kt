@@ -41,11 +41,12 @@ import java.nio.file.Path
 import java.security.MessageDigest
 
 object ZulrahStaticPreview {
+    internal val osrsRegions = listOf(8494,8495,8496,8750,8751,9006,9007,9008)
     private val json = Json { prettyPrint = true }
     private data class Address(val index: Int, val archive: Int, val file: Int)
     private data class Asset(val address: Address, val bytes: ByteArray, val name: String? = null)
     internal fun overlayFile(raw: Int): Int {
-        require(raw in setOf(2,6,42,81,85,131,153,161)) { "Unverified overlay $raw" }
+        require(raw in setOf(2,6,22,42,81,85,131,153,161)) { "Unverified overlay $raw" }
         return when (raw) { 6 -> 111; 85 -> 113; else -> raw - 1 }
     }
     internal fun underlayFile(raw: Int): Int {
@@ -55,8 +56,13 @@ object ZulrahStaticPreview {
     fun build(sourcePath: Path, targetPath: Path, output: Path) {
         require(!Files.exists(output))
         val worldKeys = Json.parseToJsonElement(Files.readString(Path.of("../drynor-world-server/data/map/xteaKeys.json"))).jsonObject
-        val arenaKeys = requireNotNull(worldKeys["9008"]).jsonArray.map { it.jsonPrimitive.int }.toIntArray()
-        val encryptedLandscape = "l35_48"
+        fun landscapeKeys(name: String?): IntArray? {
+            if (name == null || !name.startsWith("l")) return null
+            val coordinates = name.substring(1).split('_')
+            require(coordinates.size == 2)
+            val region = (coordinates[0].toInt() shl 8) or coordinates[1].toInt()
+            return worldKeys[region.toString()]?.jsonArray?.map { it.jsonPrimitive.int }?.toIntArray()
+        }
         val baselineHashes = cacheHashes(targetPath)
         FileCache(sourcePath.toString(), writable = false).use { source ->
             FileCache(targetPath.toString(), writable = false).use { target ->
@@ -64,7 +70,7 @@ object ZulrahStaticPreview {
                 val targetSnapshot = InfernoDependencyPlan.snapshot(target)
                 val locations = sortedMapOf<Int, MapDefinition>()
                 val ids = sortedSetOf<Int>()
-                for (region in listOf(8751,9007,9008)) {
+                for (region in osrsRegions) {
                     val map = MapDefinition(region)
                     val bytes = requireNotNull(source.data(Index.MAPS, "l${region ushr 8}_${region and 255}"))
                     val decoder = object : MapObjectDecoder() {
@@ -144,7 +150,7 @@ object ZulrahStaticPreview {
                     for ((prefix,bytes) in listOf("m" to terrainBytes,"l" to locBytes)) {
                         val name = "$prefix$suffix"
                         val existing = target.archiveId(Index.MAPS,name)
-                        if (existing >= 0) { require(region == 9008); replacements.add(existing) }
+                        if (existing >= 0) { require(region in setOf(8496,9008)); replacements.add(existing) }
                         assets.add(Asset(Address(Index.MAPS,if(existing >= 0) existing else nextMap++,0),bytes,name))
                     }
                     regionReports.add(buildJsonObject { put("regionId",region); put("originalPlacements",original.objects.size); put("previewPlacements",locs.objects.size); put("omittedPlacements",original.objects.size-locs.objects.size) })
@@ -157,11 +163,11 @@ object ZulrahStaticPreview {
                 FileCache(packed.toString(),writable=true).use { cache -> for (asset in compiled) {
                     val a = asset.address
                     asset.name?.let { requireNotNull(cache.referenceTable(a.index)).archiveOrCreate(a.archive).nameHash = it.hashCode() }
-                    cache.write(a.index,a.archive,a.file,asset.bytes,if (asset.name == encryptedLandscape) arenaKeys else null)
+                    cache.write(a.index,a.archive,a.file,asset.bytes,landscapeKeys(asset.name))
                 } }
                 var checked = 0
                 FileCache(packed.toString(),writable=false).use { cache ->
-                    for(asset in compiled) check(cache.data(asset.address.index,asset.address.archive,asset.address.file,if (asset.name == encryptedLandscape) arenaKeys else null).contentEquals(asset.bytes))
+                    for(asset in compiled) check(cache.data(asset.address.index,asset.address.archive,asset.address.file,landscapeKeys(asset.name)).contentEquals(asset.bytes))
                     val touched = compiled.map { it.address.index to it.address.archive }.toSet()
                     for(index in target.indices()) for(archive in target.archiveIds(index)) {
                         if(index to archive !in touched) { check(target.container(index,archive).contentEquals(cache.container(index,archive))); checked++ }

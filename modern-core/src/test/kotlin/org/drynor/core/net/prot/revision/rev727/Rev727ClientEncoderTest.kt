@@ -17,6 +17,7 @@ import org.drynor.core.net.prot.ChatHuffman
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class Rev727ClientEncoderTest {
     private val codec = register727()
@@ -34,6 +35,26 @@ class Rev727ClientEncoderTest {
 
     private fun decodeAs(opcode: Int, bytes: ByteArray): ClientProt? = runBlocking {
         codec.decode(codec.clientProtsByOpcode.getValue(opcode), opcode, Buffer().apply { write(bytes) })
+    }
+
+    @Test
+    fun `keyboard batch matches client golden bytes including signed keys and unsigned elapsed time`() {
+        // One opcode per batch; each event is an untransformed signed byte and unsigned BE medium.
+        val golden = byteArrayOf(82, 0, 0, 1, 81, 0, 0, 2, -1, -1, -1, -1, 13, 0, 0, 0)
+        val batch = KeyPress(82, 1, listOf(KeyPressEvent(81, 2), KeyPressEvent(-1, 0xffffff), KeyPressEvent(13, 0)))
+        assertEquals(28, opcodeOf(batch))
+        assertContentEquals(golden, codec.clientBytes(batch))
+        assertEquals(batch, decodeAs(28, golden))
+        codec.assertClientRoundTrip(batch)
+    }
+
+    @Test
+    fun `keyboard batch rejects empty and partial event bodies`() {
+        for (length in listOf(0, 1, 2, 3, 5, 6, 7, 9, 65536)) {
+            assertFailsWith<IllegalArgumentException>("length=$length") {
+                decodeAs(28, ByteArray(length))
+            }
+        }
     }
 
     @Test

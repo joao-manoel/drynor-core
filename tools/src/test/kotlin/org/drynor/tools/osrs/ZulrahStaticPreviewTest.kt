@@ -10,6 +10,7 @@ class ZulrahStaticPreviewTest {
         assertEquals(111, ZulrahStaticPreview.overlayFile(6))
         assertEquals(113, ZulrahStaticPreview.overlayFile(85))
         assertEquals(160, ZulrahStaticPreview.overlayFile(161))
+        assertEquals(21, ZulrahStaticPreview.overlayFile(22))
         assertEquals(110, ZulrahStaticPreview.underlayFile(111))
     }
 

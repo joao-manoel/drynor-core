@@ -4,7 +4,7 @@ import world.gregs.voidps.cache.definition.data.ItemDefinition
 
 /** Gielenor OSRS item records, not its native 718/727 records. Unknown payloads fail closed. */
 object OsrsItemConverter {
-    fun decode(id: Int, bytes: ByteArray, unconvertedLinks: MutableMap<Int, Int>? = null): ItemDefinition {
+    fun decode(id: Int, bytes: ByteArray, unconvertedLinks: MutableMap<Int, Int>? = null, ignoredPresentation: MutableMap<Int, Int>? = null): ItemDefinition {
         val input = OsrsByteReader(bytes)
         val item = ItemDefinition(id)
         fun model() = input.u16() + 200000
@@ -22,9 +22,9 @@ object OsrsItemConverter {
             11 -> item.stackable = 1
             12 -> item.cost = integer()
             16 -> item.members = true
-            23 -> { item.primaryMaleModel = model(); require(input.u8() == 0) { "Nonzero OSRS male offset requires explicit conversion" } }
+            23 -> { item.primaryMaleModel = model(); val offset=input.u8(); if(offset != 0) requireNotNull(ignoredPresentation) { "Nonzero OSRS male offset requires explicit conversion" }[23]=offset }
             24 -> item.secondaryMaleModel = model()
-            25 -> { item.primaryFemaleModel = model(); require(input.u8() == 0) { "Nonzero OSRS female offset requires explicit conversion" } }
+            25 -> { item.primaryFemaleModel = model(); val offset=input.u8(); if(offset != 0) requireNotNull(ignoredPresentation) { "Nonzero OSRS female offset requires explicit conversion" }[25]=offset }
             26 -> item.secondaryFemaleModel = model()
             in 30..34 -> item.floorOptions[opcode - 30] = input.string().takeUnless { it.equals("hidden", true) }
             in 35..39 -> item.options[opcode - 35] = input.string()
@@ -35,17 +35,31 @@ object OsrsItemConverter {
                 if (opcode == 40) { item.originalColours = from; item.modifiedColours = to }
                 else { item.originalTextureColours = from; item.modifiedTextureColours = to }
             }
-            42 -> item.team = input.u8().toByte().toInt()
+            // Donor reads and discards the OSRS shift-click index; native opcode 42 is a different field.
+            42 -> input.u8()
             65 -> item.exchangeable = true
             78 -> item.tertiaryMaleModel = model()
             79 -> item.tertiaryFemaleModel = model()
+            90 -> item.primaryMaleDialogueHead = model()
+            91 -> item.primaryFemaleDialogueHead = model()
+            92 -> item.secondaryMaleDialogueHead = model()
+            93 -> item.secondaryFemaleDialogueHead = model()
             95 -> item.graphicCameraYaw = input.u16()
+            97 -> item.noteId = input.u16() + 30000
+            98 -> item.notedTemplateId = input.u16() + 30000
+            in 100..109 -> {
+                if (item.stackIds == null) { item.stackIds = IntArray(10); item.stackAmounts = IntArray(10) }
+                item.stackIds!![opcode - 100] = input.u16() + 30000
+                item.stackAmounts!![opcode - 100] = input.u16()
+            }
             110 -> item.floorScaleX = input.u16()
             111 -> item.floorScaleZ = input.u16()
             112 -> item.floorScaleY = input.u16()
             113 -> item.ambience = input.u8().toByte().toInt()
             114 -> item.diffusion = input.u8().toByte().toInt() * 5
             115 -> item.team = input.u8()
+            139 -> item.lendId = input.u16() + 30000
+            140 -> item.lendTemplateId = input.u16() + 30000
             148, 149 -> requireNotNull(unconvertedLinks) { "OSRS placeholder links need explicit handling" }.put(opcode, input.u16() + 30000)
             249 -> {
                 val params = linkedMapOf<Int, Any>()
