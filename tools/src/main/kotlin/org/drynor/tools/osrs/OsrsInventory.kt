@@ -22,6 +22,18 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-raid-equipment") {
+        RaidEquipmentPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3])); return
+    }
+    if (args.firstOrNull() == "merge-cache-imports") {
+        CacheImportReconciliation.merge(Path.of(args[1]),Path.of(args[2])); return
+    }
+    if (args.firstOrNull() == "audit-cache-imports") {
+        CacheImportReconciliation.audit(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]),Path.of(args[4])); return
+    }
+    if (args.firstOrNull() == "audit-raid-equipment") {
+        RaidEquipmentPreview.audit(Path.of(args[1]),Path.of(args[2])); return
+    }
     if (args.firstOrNull() == "preview-zulrah-live") {
         require(args.size == 4) { "osrs preview-zulrah-live <gielenor-cache> <full-preview-root> <new-output-root>" }
         ZulrahLiveAssets.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
