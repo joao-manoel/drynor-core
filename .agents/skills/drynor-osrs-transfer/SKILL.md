@@ -10,6 +10,7 @@ Read the owning repository AGENTS.md and drynor-code-standards. Use drynor-conte
 ## Workflow
 
 1. Identify what is actually OSRS: compare terrain/landscape archives and map-ID lists, not just region names. Record source revision, region/chunks/planes, XTEA policy and actual source gameplay handlers. A hybrid Gielenor region can already be byte-identical to native Drynor.
+   For a large connected continent, derive its bounds from the cache and traversal links. Include subterranean regions, upper floors, interiors, instanced templates and the entrance/exit graph; screenshots and a named region list are only starting coordinates.
 2. Inventory dependency closure before allocating IDs: floors, locations, object definitions, NPC/BAS, models, sequences/frames/bases, spots/projectiles, textures/materials/sprites, sounds, items and Java definition overrides. Explicitly record omissions and blockers.
 3. Allocate IDs deterministically after inspecting physical destination archives/files and client limits. Import into a new packed output with the baseline preserved. Use strict source grammar and translate to native 727 representation; offsets alone do not convert formats. Refuse unknown payloads instead of silently skipping them.
 4. Keep editable JSON/GLB/PNG or existing source representations and verify their binary round trip. Read every imported asset through native decoders and the actual client consumers. Compare all unaffected archive hashes, accounting for shared blobs such as materials.
@@ -21,3 +22,5 @@ Read the owning repository AGENTS.md and drynor-code-standards. Use drynor-conte
 For known Inferno pitfalls, conversion entry points and reusable evidence, read [references/inferno-lessons.md](references/inferno-lessons.md). Treat concrete IDs as historical evidence and recheck collisions for each import.
 
 For animated imported scenery, native water/world-map conversion, equipment/pets and complete encounter rewards, read [references/zulrah-lessons.md](references/zulrah-lessons.md). These are observed pipeline constraints, not a mandate to copy source economic rates or historical IDs into a new feature.
+
+The current Zeah/Kourend/Kebos/Wintertodt transfer is tracked in `A:/dev/drynor/drynor-world-server/docs/CONTENT_OSRS_ZEAH_ROADMAP.md`. Its inventory must cover object animations, NPCs, items and every linked cave before bulk conversion or a completeness claim.
