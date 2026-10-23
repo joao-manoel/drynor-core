@@ -2,6 +2,10 @@ package org.drynor.tools.osrs
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.int
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -17,16 +21,20 @@ import java.security.MessageDigest
 
 /** Read-only first pass. Bounding coordinates are candidates, not a claim of complete area coverage. */
 object ZeahRegionInventory {
-    fun inspect(sourcePath: Path, settingsPath: Path, sourceKeysPath: Path, targetPath: Path, reportPath: Path, minX: Int, maxX: Int, minY: Int, maxY: Int) {
+    fun inspect(sourcePath: Path, settingsPath: Path, sourceKeysPath: Path, targetPath: Path, targetKeysPath: Path, reportPath: Path, minX: Int, maxX: Int, minY: Int, maxY: Int) {
         require(minX in 0..255 && maxX in minX..255 && minY in 0..255 && maxY in minY..255)
         require((maxX - minX + 1) * (maxY - minY + 1) <= 1024) { "Inspect a bounded set of regions." }
         require(sourcePath.toAbsolutePath().normalize() != targetPath.toAbsolutePath().normalize())
         require(!Files.exists(reportPath)) { "Report already exists: $reportPath" }
         val sourceKeys = loadPackedKeys(sourceKeysPath)
+        val targetKeys = loadJsonKeys(targetKeysPath)
         val osrsRegionIds = readDonorOsrsMapIds(settingsPath)
         FileCache(sourcePath.toString(), writable = false).use { source ->
             FileCache(targetPath.toString(), writable = false).use { target ->
                 val osrsObjectIds = sortedSetOf<Int>()
+                val occupiedTargetObjectIds = target.archiveIds(Index.OBJECTS)
+                    .flatMap { archive -> target.files(Index.OBJECTS, archive).map { file -> (archive shl 8) or file } }
+                    .toSet()
                 val report = buildJsonObject {
                     put("schemaVersion", 1)
                     put("purpose", "read-only Zeah candidate region inventory")
@@ -36,6 +44,8 @@ object ZeahRegionInventory {
                     put("sourceKeysFile", sourceKeysPath.toString())
                     put("sourceKeysSha256", hash(Files.readAllBytes(sourceKeysPath)))
                     put("sourceKeyCount", sourceKeys.size)
+                    put("targetKeysSha256", hash(Files.readAllBytes(targetKeysPath)))
+                    put("targetKeyCount", targetKeys.size)
                     put("targetCache", targetPath.toString())
                     put("dependencyClosureComplete", false)
                     put("regions", buildJsonArray {
@@ -46,7 +56,9 @@ object ZeahRegionInventory {
                                 put("regionY", y)
                                 put("donorOsrsMapId", ((x shl 8) or y) in osrsRegionIds)
                                 val regionKey = sourceKeys[(x shl 8) or y]?.takeUnless { it.all { word -> word == 0 } }
+                                val targetRegionKey = targetKeys[(x shl 8) or y]?.takeUnless { it.all { word -> word == 0 } }
                                 put("sourceXteaPresent", regionKey != null)
+                                put("targetXteaPresent", targetRegionKey != null)
                                 for (prefix in listOf("m", "l")) {
                                     val name = "$prefix${x}_$y"
                                     put(if (prefix == "m") "terrain" else "landscape", buildJsonObject {
@@ -88,7 +100,7 @@ object ZeahRegionInventory {
                                         }
                                         if (targetArchive >= 0) {
                                             try {
-                                                val bytes = requireNotNull(target.data(Index.MAPS, targetArchive))
+                                                val bytes = requireNotNull(target.data(Index.MAPS, targetArchive, 0, if (prefix == "l") targetRegionKey else null))
                                                 put("targetStatus", "readable")
                                                 put("targetBytes", bytes.size)
                                                 put("targetSha256", hash(bytes))
@@ -132,6 +144,16 @@ object ZeahRegionInventory {
                             })
                         }
                     })
+                    val objectIdPlan = DeterministicIds.plan(osrsObjectIds, occupiedTargetObjectIds)
+                    put("occupiedTargetObjectIds", occupiedTargetObjectIds.size)
+                    put("provisionalObjectIdRemapsForThisRectangleOnly", buildJsonArray {
+                        objectIdPlan.forEach { (sourceId, targetId) ->
+                            if (sourceId != targetId) add(buildJsonObject {
+                                put("sourceRuntimeId", sourceId)
+                                put("plannedTargetId", targetId)
+                            })
+                        }
+                    })
                 }
                 Files.createDirectories(reportPath.toAbsolutePath().parent)
                 Files.writeString(reportPath, Json { prettyPrint = true }.encodeToString(report) + "\n", CREATE_NEW, WRITE)
@@ -154,6 +176,13 @@ object ZeahRegionInventory {
         }
         return keys
     }
+
+    private fun loadJsonKeys(path: Path): Map<Int, IntArray> = Json.parseToJsonElement(Files.readString(path))
+        .jsonObject.mapKeys { it.key.toInt() }.mapValues { (_, value) ->
+            val words = value.jsonArray.map { it.jsonPrimitive.int }.toIntArray()
+            require(words.size == 4) { "Invalid Drynor XTEA tuple" }
+            words
+        }
 
     private fun readDonorOsrsMapIds(path: Path): Set<Int> {
         val source = Files.readString(path)

@@ -22,11 +22,21 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "audit-zeah-object-deps") {
+        require(args.size == 4) { "osrs audit-zeah-object-deps <gielenor-cache> <object-id-plan.json> <new-audit.json>" }
+        ZeahObjectDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "plan-zeah-object-ids") {
+        require(args.size >= 4) { "osrs plan-zeah-object-ids <drynor-cache> <new-plan.json> <region-report.json> [more-region-reports.json...]" }
+        ZeahObjectIdPlan.build(Path.of(args[1]), Path.of(args[2]), args.drop(3).map(Path::of))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-regions") {
-        require(args.size == 10) { "osrs inventory-zeah-regions <gielenor-cache> <gielenor-Settings.java> <gielenor-packed.mcx> <drynor-cache> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
+        require(args.size == 11) { "osrs inventory-zeah-regions <gielenor-cache> <gielenor-Settings.java> <gielenor-packed.mcx> <drynor-cache> <drynor-xteaKeys.json> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
         ZeahRegionInventory.inspect(
-            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]),
-            args[6].toInt(), args[7].toInt(), args[8].toInt(), args[9].toInt(),
+            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]),
+            args[7].toInt(), args[8].toInt(), args[9].toInt(), args[10].toInt(),
         )
         return
     }
