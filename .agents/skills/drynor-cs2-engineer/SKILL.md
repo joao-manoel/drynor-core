@@ -7,7 +7,9 @@ description: Author and debug revision 727 CS2 scripts, interface components and
 
 Resolve the real cache source and read the current cs2/tools command help plus docs/cs2-editor.md and docs/cache-source.md when present. The headless CS2 module depends on core, not rendering tools. Preserve the RuneLite integration; cache UI work is not permission to replace client code.
 
-Trace the script, component hooks, var triggers and the actual client reader. Use drynor-client/src/main/java/com/rs/jagex and the read-only Referencia/client-reference when applicable. Reference-only custom scripts and IDs are leads, not proof that Drynor contains them.
+Before changing a script, compare the active packed cache mounted on the VPS with the local `cache-unpacked` source. The source checkout can be older than production. Compile and verify in a separate packed output; never replace `A:/dev/drynor/cache` through an automatic startup build.
+
+Trace the script, component hooks, var triggers and the actual client reader. Use drynor-client-v2/src/main/kotlin/com/jagex/game/runetek5 and the read-only Referencia/client-reference when applicable. Reference-only custom scripts and IDs are leads, not proof that Drynor contains them.
 
 Compile the affected script, pack to a controlled output, decompile/read back and compare the actual hook signatures and bytecode. For visual changes inspect the packed result at relevant fixed/resizable layouts. Keep source and catalogs synchronized. Do not mark a UI flow validated merely because the compiler passed.
 

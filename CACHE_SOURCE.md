@@ -19,18 +19,23 @@ JDK 26 e Gradle 9.7.1 são necessários. Lobby/world usam composite build para
 legacy-compat, que depende do core moderno e do CS2. O cache é construído
 diretamente pela implementação moderna no mesmo processo.
 
-Se ../cache-unpacked/cache.json existir, Cache.init(path) constrói esse tree
-no caminho packed solicitado. Configuração opcional:
+O cache empacotado em `../cache/` é o padrão de execução. O checkout
+`../cache-unpacked/` é fonte de edição e não deve sobrescrever o cache ativo
+somente por existir. Para empacotar uma mudança, pare lobby e world, selecione
+explicitamente a fonte e construa em um diretório temporário; confira o pacote
+antes de promovê-lo.
 
 | Variável | Padrão |
 |---|---|
-| CACHE_SOURCE_PATH | ../cache-unpacked |
-| CACHE_BUILD_PATH | argumento de Cache.init |
-| DRYNOR_CACHE_BUILD | false desativa o build automático |
+| CACHE_SOURCE_PATH | não definido; habilita a fonte no core moderno quando definido |
+| CACHE_BUILD_PATH | saída separada para o build explícito |
+| DRYNOR_CACHE_BUILD | `true` habilita o build no adaptador legado; caso contrário serve o pacote existente |
 
 Falhas interrompem o startup. Um arquivo de lock ao lado da saída serializa
-builders de lobby/world. Pare servidores antes de reconstruir: o lock não
-protege leitores que já estão ativos.
+builders, mas não protege leitores ativos. Nunca empacote diretamente em
+`../cache/` com lobby ou world em execução. O cache local de produção deve ser
+sincronizado do diretório montado pelos containers da VPS, com SHA-256 conferido;
+o procedimento está em [WORKSPACE_ORGANIZATION.md](WORKSPACE_ORGANIZATION.md).
 
 ```powershell
 .\build-cache.bat

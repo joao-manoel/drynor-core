@@ -7,6 +7,8 @@ description: Develop or port Drynor gameplay and cache assets while preserving c
 
 Establish the actual cache source path from DRYNOR_CACHE_SOURCE, build properties and the checkout. Do not assume the reference tree's custom assets or paths exist in Drynor. Read definitions, gameval catalogs and client scripts before allocating or changing IDs.
 
+For the active Drynor runtime, first identify the packed cache mounted by VPS lobby/world and compare its hashes with `A:/dev/drynor/cache`. `cache-unpacked` may lag behind production; do not repack it over the active cache during ordinary startup. Build edited source to a separate directory, verify readback, then promote it with services stopped and a rollback path. See `A:/dev/drynor/WORKSPACE_ORGANIZATION.md`.
+
 1. Trace the feature through the world handler, cache definition and client consumer. Record the behavior that must survive migration.
 2. Reuse an existing asset only when the definitions and client behavior support it. New IDs need collision checks, deterministic allocation and meaningful catalog names.
 3. Edit the source representation, build into a separate packed output and read it back through the current decoder. Compare intended fields and unaffected archive signatures against a baseline captured before editing.

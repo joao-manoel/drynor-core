@@ -2,7 +2,6 @@ package org.drynor.core
 
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
-import java.io.File
 
 object EnvVars {
     private val dotenv: Dotenv = dotenv {
@@ -41,11 +40,9 @@ object EnvVars {
     val lobbyOwner: String = dotenv.get("LOBBY_OWNER", "trent").lowercase().replace(" ", "_")
     // The prepacked cache named in the environment; only served when no source tree is configured.
     val prepackedCachePath: String = dotenv.get("CACHE_PATH", "../cache/")
-    // A cache source tree (docs/cache-source.md). When set, the server builds it into CACHE_BUILD_PATH on
-    // startup and serves that; when unset, CACHE_PATH names a prepacked cache, and a clone with the
-    // cache-source submodule but no prepacked cache serves the submodule.
+    // A source tree is only used when explicitly configured; an unpacked checkout must not
+    // silently replace the packed cache currently served to clients.
     val cacheSourcePath: String? = dotenv.get("CACHE_SOURCE_PATH", null)?.takeIf { it.isNotBlank() }
-        ?: CACHE_SOURCE_SUBMODULE.takeIf { File(it, "cache.json").isFile }
     val cacheBuildPath: String = dotenv.get("CACHE_BUILD_PATH", "./data/cache")
     // The packed cache the server actually opens: the build of the source tree when one is configured
     // (org.drynor.core.cache.CacheSource builds it before Cache.get() opens it), else the prepacked one.

@@ -15,7 +15,8 @@ object CacheSource {
     @Synchronized
     @Throws(IOException::class)
     fun ensureBuilt(packedPath: String): String {
-        if (System.getenv("DRYNOR_CACHE_BUILD") == "false") return packedPath
+        // Serving the packed cache is the default; source packing is an explicit maintenance action.
+        if (System.getenv("DRYNOR_CACHE_BUILD") != "true") return packedPath
         val configuredSource = System.getenv("CACHE_SOURCE_PATH")?.takeIf { it.isNotBlank() }
         val source = Path.of(configuredSource ?: "../cache-unpacked").toAbsolutePath().normalize()
         if (!Files.isRegularFile(source.resolve("cache.json"))) {

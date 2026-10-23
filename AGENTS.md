@@ -2,7 +2,7 @@
 
 Read .agents/skills/drynor-code-standards/SKILL.md before source edits. Shared workspace conventions and specialist routing are in .codex/workspace-AGENTS.md; sibling checkouts have their own AGENTS.md and retain their local requirements.
 
-The native runtime lives in modern-core, with separate cs2 and tools modules. legacy-compat is temporary migration infrastructure, not a destination for new implementations. Production native code must not import compatibility classes. Keep current codecs/models and use the read-only reference/client sources for protocol evidence.
+The native runtime lives in modern-core, with separate cs2 and tools modules. legacy-compat is temporary migration infrastructure, not a destination for new implementations. Production native code must not import compatibility classes. Keep current codecs/models and use the read-only reference/client sources for protocol evidence. Use `WORKSPACE_RUNBOOK.md` for current workspace operations; historical migration notes are not startup instructions.
 
 Use the specialized Codex profiles in .codex/agents for substantial cache, network, migration or rendering tasks. For wire/transport changes, request a focused network correctness review when delegation is available. Inherit the parent model; do not hardcode an alternative model.
 

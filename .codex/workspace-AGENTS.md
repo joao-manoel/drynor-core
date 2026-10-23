@@ -1,6 +1,6 @@
 # Drynor workspace
 
-This workspace contains independent repositories: drynor-core (modern-core, cs2, tools and temporary legacy-compat), drynor-world-server, drynor-lobby-server and drynor-client. drynor-cache-tools and Referencia are read-only reference checkouts unless the user explicitly assigns a change there.
+This workspace contains independent repositories: drynor-core (modern-core, cs2, tools and temporary legacy-compat), drynor-world-server, drynor-lobby-server and drynor-client-v2. Referencia contains the read-only reference checkouts drynor-cache-tools and client-reference unless the user explicitly assigns a change there.
 
 Read the owning repository's AGENTS.md and the shared .agents/skills/drynor-code-standards/SKILL.md before source changes. The canonical skills and Codex agent profiles are versioned in drynor-core/.agents and drynor-core/.codex. Workspace-level links expose them when Codex starts in A:/dev/drynor. Resolve paths relative to the actual checkout rather than assuming the reference monorepo layout.
 

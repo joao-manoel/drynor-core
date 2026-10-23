@@ -1,5 +1,10 @@
 # Drynor: retirada das APIs antigas
 
+> Registro histórico das etapas de 14–18/10/2026. A branch citada abaixo já
+> não existe localmente porque foi incorporada à `main`. Para o estado atual,
+> conferir código, `git status` e testes; para execução, usar
+> [WORKSPACE_RUNBOOK.md](WORKSPACE_RUNBOOK.md).
+
 Trabalho na branch `codex/native-api-migration` dos repositórios core, lobby,
 world e client. Os checkouts originais são utilizados; a `main` permanece no
 checkpoint jogável até a conclusão dos gates abaixo.
