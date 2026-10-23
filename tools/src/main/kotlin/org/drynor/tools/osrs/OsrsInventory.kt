@@ -22,6 +22,14 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "inventory-zeah-regions") {
+        require(args.size == 8) { "osrs inventory-zeah-regions <gielenor-cache> <drynor-cache> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
+        ZeahRegionInventory.inspect(
+            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]),
+            args[4].toInt(), args[5].toInt(), args[6].toInt(), args[7].toInt(),
+        )
+        return
+    }
     if (args.firstOrNull() == "preview-raid-equipment") {
         RaidEquipmentPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3])); return
     }
