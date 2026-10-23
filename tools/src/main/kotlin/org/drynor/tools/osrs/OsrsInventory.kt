@@ -23,10 +23,10 @@ import java.security.MessageDigest
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
     if (args.firstOrNull() == "inventory-zeah-regions") {
-        require(args.size == 8) { "osrs inventory-zeah-regions <gielenor-cache> <drynor-cache> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
+        require(args.size == 10) { "osrs inventory-zeah-regions <gielenor-cache> <gielenor-Settings.java> <gielenor-packed.mcx> <drynor-cache> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
         ZeahRegionInventory.inspect(
-            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]),
-            args[4].toInt(), args[5].toInt(), args[6].toInt(), args[7].toInt(),
+            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]),
+            args[6].toInt(), args[7].toInt(), args[8].toInt(), args[9].toInt(),
         )
         return
     }
