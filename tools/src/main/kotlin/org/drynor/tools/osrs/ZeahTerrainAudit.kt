@@ -8,8 +8,11 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
+import world.gregs.voidps.buffer.read.BufferReader
 import world.gregs.voidps.cache.FileCache
 import world.gregs.voidps.cache.Index
+import world.gregs.voidps.cache.config.data.OverlayDefinition
+import world.gregs.voidps.cache.config.decoder.OverlayDecoder
 import world.gregs.voidps.cache.definition.data.MapDefinition
 import world.gregs.voidps.cache.definition.data.MapTile
 import world.gregs.voidps.cache.definition.decoder.MapTileDecoder
@@ -94,6 +97,23 @@ object ZeahTerrainAudit {
                             if (sourceBytes != null) put("sourceSha256", sha256(sourceBytes))
                             if (targetBytes != null) put("targetSha256", sha256(targetBytes))
                             put("identicalBytes", sourceBytes != null && targetBytes != null && sourceBytes.contentEquals(targetBytes))
+                            if (archive == 4 && sourceBytes != null) {
+                                val overlay = OverlayDefinition(fileId)
+                                var textureOpcode = 0
+                                OverlayDecoder().readLoopTraced(overlay, BufferReader(sourceBytes)) { opcode, _ ->
+                                    if (opcode == 2 || opcode == 3) textureOpcode = opcode
+                                }
+                                put("sourceTextureOpcode", textureOpcode)
+                                put("sourceTextureId", overlay.texture)
+                                if (overlay.texture >= 0) {
+                                    val effectiveTexture = if (fileId >= 1000 && textureOpcode == 3) {
+                                        GielenorVisualProfile.runtimeMaterial(overlay.texture)
+                                    } else overlay.texture
+                                    put("gielenorEffectiveTextureId", effectiveTexture)
+                                    put("effectiveTexturePresentInSource", source.data(Index.TEXTURES, effectiveTexture) != null)
+                                    put("effectiveTexturePresentInTarget", target.data(Index.TEXTURES, effectiveTexture) != null)
+                                }
+                            }
                             put("sameByteTargetFilesWithinByte", buildJsonArray {
                                 if (sourceBytes != null) targetFloorsWithinByte.getValue(archive).forEach { (id, bytes) ->
                                     if (sourceBytes.contentEquals(bytes)) add(JsonPrimitive(id))
