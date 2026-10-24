@@ -22,6 +22,11 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "audit-zeah-npc-deps") {
+        require(args.size == 4) { "osrs audit-zeah-npc-deps <gielenor-cache> <npc-spawn-report.json> <new-report.json>" }
+        ZeahNpcDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-npc-spawns") {
         require(args.size == 4) { "osrs inventory-zeah-npc-spawns <gielenor-root> <object-id-plan.json> <new-report.json>" }
         ZeahNpcSpawnInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
