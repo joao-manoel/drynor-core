@@ -23,8 +23,8 @@ import java.security.MessageDigest
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
     if (args.firstOrNull() == "audit-zeah-object-deps") {
-        require(args.size == 4) { "osrs audit-zeah-object-deps <gielenor-cache> <object-id-plan.json> <new-audit.json>" }
-        ZeahObjectDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        require(args.size == 4 || args.size == 5) { "osrs audit-zeah-object-deps <gielenor-cache> <object-id-plan.json> <new-audit.json> [drynor-cache]" }
+        ZeahObjectDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.getOrNull(4)?.let(Path::of))
         return
     }
     if (args.firstOrNull() == "plan-zeah-object-ids") {

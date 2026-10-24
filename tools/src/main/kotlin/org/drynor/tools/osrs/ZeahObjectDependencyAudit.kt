@@ -22,7 +22,7 @@ import java.security.MessageDigest
 
 /** Strictly decodes donor object definitions to expose asset closure before conversion. */
 object ZeahObjectDependencyAudit {
-    fun audit(sourcePath: Path, planPath: Path, outputPath: Path) {
+    fun audit(sourcePath: Path, planPath: Path, outputPath: Path, targetPath: Path? = null) {
         require(!Files.exists(outputPath))
         val plan = Json.parseToJsonElement(Files.readString(planPath)).jsonObject
         require(Path.of(plan.getValue("sourceCache").jsonPrimitive.content).toRealPath() == sourcePath.toRealPath())
@@ -85,12 +85,14 @@ object ZeahObjectDependencyAudit {
             var nativeFrames = 0
             var missingFrames = 0
             var undecodableFrames = 0
+            val missingFrameIds = sortedSetOf<Int>()
             val frameFailures = buildJsonArray {
                 frameIds.forEach { id ->
                     try {
                         val bytes = source.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
                         if (bytes == null) {
                             missingFrames++
+                            missingFrameIds.add(id)
                             add(buildJsonObject {
                                 put("id", id)
                                 put("reason", "missing-source-frame")
@@ -112,6 +114,32 @@ object ZeahObjectDependencyAudit {
                     } catch (error: Exception) {
                         undecodableFrames++
                         add(buildJsonObject { put("id", id); put("error", "${error.javaClass.simpleName}: ${error.message}") })
+                    }
+                }
+            }
+            val targetFrameReports = buildJsonArray {
+                if (targetPath != null) {
+                    FileCache(targetPath.toString(), writable = false).use { target ->
+                        missingFrameIds.forEach { id ->
+                            add(buildJsonObject {
+                                put("id", id)
+                                val bytes = target.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
+                                if (bytes == null) {
+                                    put("status", "missing-target-frame")
+                                } else {
+                                    put("sha256", hash(bytes))
+                                    try {
+                                        val native = AnimationFrameDefinition(id)
+                                        AnimationFrameDecoder().readLoop(native, BufferReader(bytes))
+                                        put("status", "native-decoded")
+                                        put("baseId", native.baseId)
+                                    } catch (error: Exception) {
+                                        put("status", "target-decode-failed")
+                                        put("error", "${error.javaClass.simpleName}: ${error.message}")
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
             }
@@ -137,6 +165,8 @@ object ZeahObjectDependencyAudit {
                 put("nativeFramesDecoded", nativeFrames)
                 put("missingSourceFrames", missingFrames)
                 put("undecodableFrames", undecodableFrames)
+                put("targetCache", targetPath?.toString() ?: "")
+                put("missingSourceFrameTargetReports", targetFrameReports)
                 put("sequenceReadFailures", sequenceFailures)
                 put("frameReadFailures", frameFailures)
                 put("missingSourceBaseIds", buildJsonArray {
