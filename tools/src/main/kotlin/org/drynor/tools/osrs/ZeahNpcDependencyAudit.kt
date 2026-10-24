@@ -20,7 +20,7 @@ import java.nio.file.StandardOpenOption.WRITE
 
 /** Strict source dependency probe for OSRS-offset NPCs selected by Zeah's spawn inventory. */
 object ZeahNpcDependencyAudit {
-    fun audit(sourcePath: Path, spawnReportPath: Path, outputPath: Path) {
+    fun audit(sourcePath: Path, spawnReportPath: Path, outputPath: Path, targetPath: Path? = null) {
         require(!Files.exists(outputPath))
         val inventory = Json.parseToJsonElement(Files.readString(spawnReportPath)).jsonObject
         require(Path.of(inventory.getValue("sourceCache").jsonPrimitive.content).toRealPath() == sourcePath.toRealPath())
@@ -29,6 +29,7 @@ object ZeahNpcDependencyAudit {
         val visited = sortedSetOf<Int>()
         val models = sortedSetOf<Int>()
         val animations = sortedSetOf<Int>()
+        val animationNpcs = sortedMapOf<Int, MutableSet<Int>>()
         val textures = sortedSetOf<Int>()
         val headIcons = sortedSetOf<Int>()
         FileCache(sourcePath.toString(), writable = false).use { source ->
@@ -44,7 +45,11 @@ object ZeahNpcDependencyAudit {
                             val morphs = deps.morphs.map { it + 20000 }
                             queue.addAll(morphs.filter { it !in visited })
                             models.addAll(deps.models.map { it + 200000 })
-                            animations.addAll(deps.animations.map { it + 20000 })
+                            deps.animations.forEach { rawId ->
+                                val animationId = rawId + 20000
+                                animations.add(animationId)
+                                animationNpcs.getOrPut(animationId) { sortedSetOf() }.add(id)
+                            }
                             textures.addAll(deps.textures)
                             headIcons.addAll(deps.headIcons)
                             put("status", "parsed")
@@ -60,11 +65,15 @@ object ZeahNpcDependencyAudit {
                 }
             }
             val frameIds = sortedSetOf<Int>()
+            val frameSequences = sortedMapOf<Int, MutableSet<Int>>()
             val sequenceFailures = buildJsonArray {
                 animations.forEach { id ->
                     try {
                         val bytes = requireNotNull(source.data(Index.ANIMATIONS, id ushr 7, id and 127))
-                        frameIds.addAll(OsrsSequenceDependencies.parse(bytes).frameIds)
+                        OsrsSequenceDependencies.parse(bytes).frameIds.forEach { frameId ->
+                            frameIds.add(frameId)
+                            frameSequences.getOrPut(frameId) { sortedSetOf() }.add(id)
+                        }
                     } catch (error: Exception) {
                         add(buildJsonObject { put("id", id); put("error", "${error.javaClass.simpleName}: ${error.message}") })
                     }
@@ -73,11 +82,19 @@ object ZeahNpcDependencyAudit {
             val baseIds = sortedSetOf<Int>()
             var nativeFrames = 0
             var legacyFrames = 0
+            val missingFrameIds = sortedSetOf<Int>()
             val frameFailures = buildJsonArray {
                 frameIds.forEach { id ->
                     val bytes = source.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
                     if (bytes == null) {
-                        add(buildJsonObject { put("id", id); put("reason", "missing-source-frame") })
+                        missingFrameIds.add(id)
+                        add(buildJsonObject {
+                            put("id", id)
+                            put("reason", "missing-source-frame")
+                            put("sequenceIds", buildJsonArray {
+                                frameSequences.getValue(id).forEach { add(JsonPrimitive(it)) }
+                            })
+                        })
                         return@forEach
                     }
                     try {
@@ -95,15 +112,49 @@ object ZeahNpcDependencyAudit {
                     }
                 }
             }
+            val targetFrameReports = buildJsonArray {
+                if (targetPath != null) {
+                    FileCache(targetPath.toString(), writable = false).use { target ->
+                        missingFrameIds.forEach { id ->
+                            add(buildJsonObject {
+                                put("id", id)
+                                val bytes = target.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
+                                if (bytes == null) {
+                                    put("status", "missing-target-frame")
+                                } else {
+                                    try {
+                                        val native = AnimationFrameDefinition(id)
+                                        AnimationFrameDecoder().readLoop(native, BufferReader(bytes))
+                                        put("status", "native-decoded")
+                                        put("baseId", native.baseId)
+                                    } catch (error: Exception) {
+                                        put("status", "target-decode-failed")
+                                        put("error", "${error.javaClass.simpleName}: ${error.message}")
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            }
             val result = buildJsonObject {
                 put("schemaVersion", 1)
                 put("scopeComplete", false)
                 put("sourceCache", sourcePath.toString())
+                put("targetCache", targetPath?.toString() ?: "")
                 put("spawnReport", spawnReportPath.toString())
                 put("directOsrsNpcCount", selected.count { it >= 20000 })
                 put("nativeRangeNpcCount", selected.count { it < 20000 })
                 put("npcClosureCount", visited.size)
                 put("npcReports", reports)
+                put("animationNpcOwners", buildJsonArray {
+                    animationNpcs.forEach { (animationId, owners) ->
+                        add(buildJsonObject {
+                            put("animationId", animationId)
+                            put("npcIds", buildJsonArray { owners.forEach { add(JsonPrimitive(it)) } })
+                        })
+                    }
+                })
                 put("uniqueModelIds", models.size)
                 put("uniqueAnimationIds", animations.size)
                 put("uniqueFrameIds", frameIds.size)
@@ -112,6 +163,7 @@ object ZeahNpcDependencyAudit {
                 put("legacyFramesDecoded", legacyFrames)
                 put("sequenceFailures", sequenceFailures)
                 put("frameFailures", frameFailures)
+                put("missingSourceFrameTargetReports", targetFrameReports)
                 put("missingSourceBases", buildJsonArray {
                     baseIds.forEach { if (source.data(Index.ANIMATION_SKELETONS, it) == null) add(JsonPrimitive(it)) }
                 })
