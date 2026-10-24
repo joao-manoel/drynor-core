@@ -11,6 +11,9 @@ import kotlinx.serialization.json.put
 import world.gregs.voidps.cache.FileCache
 import world.gregs.voidps.cache.Index
 import world.gregs.voidps.cache.definition.decoder.ModelDecoder
+import world.gregs.voidps.cache.definition.decoder.AnimationFrameDecoder
+import world.gregs.voidps.cache.definition.data.AnimationFrameDefinition
+import world.gregs.voidps.buffer.read.BufferReader
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption.CREATE_NEW
@@ -62,6 +65,56 @@ object ZeahObjectDependencyAudit {
                     })
                 }
             }
+            val frameIds = sortedSetOf<Int>()
+            val frameSequences = sortedMapOf<Int, MutableSet<Int>>()
+            val sequenceFailures = buildJsonArray {
+                animations.forEach { id ->
+                    try {
+                        val bytes = requireNotNull(source.data(Index.ANIMATIONS, id ushr 7, id and 127))
+                        OsrsSequenceDependencies.parse(bytes).frameIds.forEach { frameId ->
+                            frameIds.add(frameId)
+                            frameSequences.getOrPut(frameId) { sortedSetOf() }.add(id)
+                        }
+                    } catch (error: Exception) {
+                        add(buildJsonObject { put("id", id); put("error", "${error.javaClass.simpleName}: ${error.message}") })
+                    }
+                }
+            }
+            val baseIds = sortedSetOf<Int>()
+            var legacyFrames = 0
+            var nativeFrames = 0
+            var missingFrames = 0
+            var undecodableFrames = 0
+            val frameFailures = buildJsonArray {
+                frameIds.forEach { id ->
+                    try {
+                        val bytes = source.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
+                        if (bytes == null) {
+                            missingFrames++
+                            add(buildJsonObject {
+                                put("id", id)
+                                put("reason", "missing-source-frame")
+                                put("sequenceIds", buildJsonArray {
+                                    frameSequences.getValue(id).forEach { add(JsonPrimitive(it)) }
+                                })
+                            })
+                            return@forEach
+                        }
+                        try {
+                            baseIds.add(OsrsFrameDependencies.parseFrame(bytes).baseId)
+                            legacyFrames++
+                        } catch (legacyError: Exception) {
+                            val native = AnimationFrameDefinition(id)
+                            AnimationFrameDecoder().readLoop(native, BufferReader(bytes))
+                            baseIds.add(native.baseId)
+                            nativeFrames++
+                        }
+                    } catch (error: Exception) {
+                        undecodableFrames++
+                        add(buildJsonObject { put("id", id); put("error", "${error.javaClass.simpleName}: ${error.message}") })
+                    }
+                }
+            }
             val result = buildJsonObject {
                 put("schemaVersion", 1)
                 put("scopeComplete", false)
@@ -78,6 +131,19 @@ object ZeahObjectDependencyAudit {
                 count("uniqueSoundIds", sounds)
                 count("uniqueSpriteIds", sprites)
                 count("uniqueMapIconIds", mapIcons)
+                put("uniqueFrameIds", frameIds.size)
+                put("uniqueBaseIds", baseIds.size)
+                put("legacyOsrsFramesDecoded", legacyFrames)
+                put("nativeFramesDecoded", nativeFrames)
+                put("missingSourceFrames", missingFrames)
+                put("undecodableFrames", undecodableFrames)
+                put("sequenceReadFailures", sequenceFailures)
+                put("frameReadFailures", frameFailures)
+                put("missingSourceBaseIds", buildJsonArray {
+                    baseIds.forEach { id ->
+                        if (source.data(Index.ANIMATION_SKELETONS, id) == null) add(JsonPrimitive(id))
+                    }
+                })
                 put("missingSourceModelIds", buildJsonArray {
                     models.forEach { id -> if (source.data(Index.MODELS, id) == null) add(JsonPrimitive(id)) }
                 })
