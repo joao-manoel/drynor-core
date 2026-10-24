@@ -76,18 +76,29 @@ object ZeahTerrainAudit {
                         })
                     }
                 }
-                fun floorReports(ids: Set<Int>, archive: Int) = buildJsonArray {
+                val targetFloorsWithinByte = mapOf(1 to (0..254).mapNotNull { id ->
+                    target.data(Index.CONFIGS, 1, id)?.let { id to it }
+                }, 4 to (0..254).mapNotNull { id ->
+                    target.data(Index.CONFIGS, 4, id)?.let { id to it }
+                })
+                fun floorReports(ids: Set<Int>, archive: Int, effective: (Int) -> Int = { it - 1 }) = buildJsonArray {
                     ids.forEach { rawId ->
-                        val fileId = rawId - 1
+                        val fileId = effective(rawId)
                         val sourceBytes = source.data(Index.CONFIGS, archive, fileId)
                         val targetBytes = target.data(Index.CONFIGS, archive, fileId)
                         add(buildJsonObject {
                             put("rawId", rawId)
+                            put("effectiveFileId", fileId)
                             put("sourceStatus", if (sourceBytes == null) "missing" else "present")
                             put("targetStatus", if (targetBytes == null) "missing" else "present")
                             if (sourceBytes != null) put("sourceSha256", sha256(sourceBytes))
                             if (targetBytes != null) put("targetSha256", sha256(targetBytes))
                             put("identicalBytes", sourceBytes != null && targetBytes != null && sourceBytes.contentEquals(targetBytes))
+                            put("sameByteTargetFilesWithinByte", buildJsonArray {
+                                if (sourceBytes != null) targetFloorsWithinByte.getValue(archive).forEach { (id, bytes) ->
+                                    if (sourceBytes.contentEquals(bytes)) add(JsonPrimitive(id))
+                                }
+                            })
                         })
                     }
                 }
@@ -101,6 +112,16 @@ object ZeahTerrainAudit {
                     put("regionReports", reports)
                     put("overlayReports", floorReports(overlays, 4))
                     put("underlayReports", floorReports(underlays, 1))
+                    put("effectiveOverlayReports", floorReports(overlays, 4, ::gielenorOverlayFile))
+                    put("effectiveUnderlayReports", floorReports(underlays, 1, ::gielenorUnderlayFile))
+                    put("freeOverlayFilesWithinByte", buildJsonArray {
+                        val occupied = target.files(Index.CONFIGS, 4).toSet()
+                        (0..254).filter { it !in occupied }.forEach { add(JsonPrimitive(it)) }
+                    })
+                    put("freeUnderlayFilesWithinByte", buildJsonArray {
+                        val occupied = target.files(Index.CONFIGS, 1).toSet()
+                        (0..254).filter { it !in occupied }.forEach { add(JsonPrimitive(it)) }
+                    })
                 }
                 Files.createDirectories(outputPath.toAbsolutePath().parent)
                 Files.writeString(outputPath, Json { prettyPrint = true }.encodeToString(result) + "\n", CREATE_NEW, WRITE)
@@ -110,4 +131,24 @@ object ZeahTerrainAudit {
 
     private fun sha256(bytes: ByteArray): String = MessageDigest.getInstance("SHA-256")
         .digest(bytes).joinToString("") { "%02x".format(it) }
+
+    /** Class240 adds 1000 to OSRS terrain IDs; Class375 then resolves these exceptions. */
+    private fun gielenorOverlayFile(raw: Int): Int {
+        val offsetId = 999 + raw
+        return when (offsetId) {
+            1005 -> 111
+            1084 -> 113
+            1051 -> 97
+            in retainedOsrsOverlays -> offsetId
+            else -> raw - 1
+        }
+    }
+
+    /** Class451 keeps OSRS underlay 1026; all other OSRS IDs return to the native index. */
+    private fun gielenorUnderlayFile(raw: Int): Int = if (raw == 27) 1026 else raw - 1
+
+    private val retainedOsrsOverlays = setOf(
+        1110, 1111, 1112, 1071, 1065, 1066, 1070, 1127, 1072, 1091,
+        1098, 1095, 1113, 1056, 1060, 1061, 1151, 1135, 1120,
+    )
 }
