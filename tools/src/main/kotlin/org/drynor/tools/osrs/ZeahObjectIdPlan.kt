@@ -79,11 +79,12 @@ object ZeahObjectIdPlan {
             val occupied = target.archiveIds(Index.OBJECTS)
                 .flatMap { archive -> target.files(Index.OBJECTS, archive).map { file -> (archive shl 8) or file } }
                 .toSet()
-            val plan = DeterministicIds.plan(definitions.keys, occupied)
+            val plan = ZeahPlacementIds.plan(definitions.keys, occupied)
             val result = buildJsonObject {
                 put("schemaVersion", 1)
                 put("status", "read-only-provisional-plan")
                 put("scopeComplete", false)
+                put("maxPlacementObjectId", ZeahPlacementIds.MAX_ID)
                 put("sourceCache", sourceCache!!)
                 put("sourceSettingsSha256", settingsHash!!)
                 put("targetCache", canonicalTarget.toString())
