@@ -12,7 +12,16 @@ data class ObjectDependencies(
     val varbits: Set<Int>,
     val varps: Set<Int>,
     val sprites: Set<Int>,
-    val mapIcons: Set<Int>
+    val mapIcons: Set<Int>,
+    val morphSelector: OsrsMorphSelector? = null
+)
+
+data class OsrsMorphSelector(
+    val opcode: Int,
+    val rawVarbit: Int,
+    val rawVarp: Int,
+    val variants: List<Int>,
+    val default: Int
 )
 
 /** Dependency grammar from Gielenor ObjectConfig.decodeOSRS; never skip an unknown payload. */
@@ -29,6 +38,7 @@ object OsrsObjectDependencies {
         val varps = sortedSetOf<Int>()
         val sprites = sortedSetOf<Int>()
         val icons = sortedSetOf<Int>()
+        var morphSelector: OsrsMorphSelector? = null
         fun reference(set: MutableSet<Int>, absent65535: Boolean = false) {
             input.u16().takeIf { !absent65535 || it != 65535 }?.let(set::add)
         }
@@ -37,7 +47,7 @@ object OsrsObjectDependencies {
             when (opcode) {
                 0 -> {
                     input.requireEnd()
-                    return ObjectDependencies(name, models, animations, morphs, textures, sounds, varbits, varps, sprites, icons)
+                    return ObjectDependencies(name, models, animations, morphs, textures, sounds, varbits, varps, sprites, icons, morphSelector)
                 }
                 1 -> repeat(input.u8()) { reference(models); input.u8() }
                 2 -> name = input.string()
@@ -51,10 +61,15 @@ object OsrsObjectDependencies {
                 65, 66, 67, 70, 71, 72 -> input.skip(2)
                 68 -> reference(sprites)
                 77, 92 -> {
-                    reference(varbits, absent65535 = true)
-                    reference(varps, absent65535 = true)
-                    if (opcode == 92) reference(morphs, absent65535 = true)
-                    repeat(input.u8() + 1) { reference(morphs, absent65535 = true) }
+                    check(morphSelector == null) { "Duplicate OSRS morph selector" }
+                    val rawVarbit = input.u16().takeUnless { it == 65535 } ?: -1
+                    val rawVarp = input.u16().takeUnless { it == 65535 } ?: -1
+                    if (rawVarbit >= 0) varbits += rawVarbit
+                    if (rawVarp >= 0) varps += rawVarp
+                    val default = if (opcode == 92) input.u16().takeUnless { it == 65535 } ?: -1 else -1
+                    val variants = List(input.u8() + 1) { input.u16().takeUnless { it == 65535 } ?: -1 }
+                    (variants + default).filter { it >= 0 }.forEach(morphs::add)
+                    morphSelector = OsrsMorphSelector(opcode, rawVarbit, rawVarp, variants, default)
                 }
                 78 -> { reference(sounds); input.skip(1) }
                 79 -> { input.skip(5); repeat(input.u8()) { reference(sounds) } }
