@@ -22,6 +22,11 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-zeah-object-animation-assets") {
+        require(args.size == 5) { "osrs preview-zeah-object-animation-assets <static-preview-root> <bounded-object-plan.json> <object-animation-audit.json> <new-output-root>" }
+        ZeahObjectAnimationPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
     if (args.firstOrNull() == "audit-zeah-object-animations") {
         require(args.size == 3) { "osrs audit-zeah-object-animations <bounded-object-plan.json> <new-report.json>" }
         ZeahObjectAnimationAudit.audit(Path.of(args[1]), Path.of(args[2]))
