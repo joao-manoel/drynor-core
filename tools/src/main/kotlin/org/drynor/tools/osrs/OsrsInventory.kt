@@ -22,6 +22,16 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "audit-zeah-remaining-objects") {
+        require(args.size == 6) { "osrs audit-zeah-remaining-objects <preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-report.json>" }
+        ZeahRemainingObjectAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-animated-objects") {
+        require(args.size == 10) { "osrs preview-zeah-animated-objects <animation-assets-preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <material-audit.json> <sound-audit.json> <icon-audit.json> <animation-audit.json> <new-output-root>" }
+        ZeahAnimatedObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]), Path.of(args[7]), Path.of(args[8]), Path.of(args[9]))
+        return
+    }
     if (args.firstOrNull() == "preview-zeah-object-animation-assets") {
         require(args.size == 5) { "osrs preview-zeah-object-animation-assets <static-preview-root> <bounded-object-plan.json> <object-animation-audit.json> <new-output-root>" }
         ZeahObjectAnimationPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
