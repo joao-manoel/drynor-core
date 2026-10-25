@@ -52,6 +52,12 @@ object ZeahStaticObjectAudit {
                     for (id in modelIds) {
                         val destination = modelMap.getValue(id)
                         val bytes = source.data(Index.MODELS, id)
+                        val materials = if (bytes == null) emptySet() else try {
+                            ModelDecoder.read(destination, bytes).faceTextures
+                                ?.filter { it != (-1).toShort() }
+                                ?.map { it.toInt() and 65535 }
+                                ?.toSortedSet().orEmpty()
+                        } catch (_: Exception) { emptySet() }
                         val status = try {
                             requireNotNull(bytes) { "missing-source" }
                             val model = if (bytes.size == 18 && bytes.all { it == 0.toByte() }) {
@@ -72,6 +78,20 @@ object ZeahStaticObjectAudit {
                             put("plannedTargetId", destination)
                             put("status", status)
                             if (bytes != null) put("sourceSha256", sha256(bytes))
+                            put("materials", buildJsonArray {
+                                materials.forEach { raw ->
+                                    val effective = GielenorVisualProfile.runtimeMaterial(raw)
+                                    val donorMaterial = source.data(Index.TEXTURES, effective)
+                                    val drynorMaterial = target.data(Index.TEXTURES, effective)
+                                    add(buildJsonObject {
+                                        put("rawId", raw)
+                                        put("effectiveId", effective)
+                                        put("sourcePresent", donorMaterial != null)
+                                        put("targetPresent", drynorMaterial != null)
+                                        put("sameBytes", donorMaterial != null && drynorMaterial != null && donorMaterial.contentEquals(drynorMaterial))
+                                    })
+                                }
+                            })
                         })
                     }
                 }

@@ -22,9 +22,14 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "audit-zeah-materials") {
+        require(args.size == 4) { "osrs audit-zeah-materials <bounded-object-plan.json> <static-object-audit.json> <new-report.json>" }
+        ZeahMaterialAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
     if (args.firstOrNull() == "preview-zeah-static-objects") {
-        require(args.size == 5) { "osrs preview-zeah-static-objects <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-output-root>" }
-        ZeahStaticObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        require(args.size == 5 || args.size == 6) { "osrs preview-zeah-static-objects <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-output-root> [material-closure-audit.json]" }
+        ZeahStaticObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), args.getOrNull(5)?.let(Path::of))
         return
     }
     if (args.firstOrNull() == "audit-zeah-static-objects") {

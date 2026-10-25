@@ -28,7 +28,7 @@ import java.security.MessageDigest
 object ZeahStaticObjectPreview {
     private data class Asset(val index: Int, val archive: Int, val file: Int, val bytes: ByteArray)
 
-    fun build(landscapeRootPath: Path, planPath: Path, auditPath: Path, outputPath: Path) {
+    fun build(landscapeRootPath: Path, planPath: Path, auditPath: Path, outputPath: Path, materialAuditPath: Path? = null) {
         val json = Json { prettyPrint = true }
         val landscapeRoot = landscapeRootPath.toRealPath()
         val landscape = Json.parseToJsonElement(Files.readString(landscapeRoot.resolve("preview-report.json"))).jsonObject
@@ -39,6 +39,14 @@ object ZeahStaticObjectPreview {
         val plan = Json.parseToJsonElement(planBytes.decodeToString()).jsonObject
         val audit = Json.parseToJsonElement(Files.readString(auditPath)).jsonObject
         require(audit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
+        val safeMaterials = if (materialAuditPath == null) emptySet() else {
+            val materialAudit = Json.parseToJsonElement(Files.readString(materialAuditPath)).jsonObject
+            require(materialAudit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
+            require(materialAudit.getValue("objectAuditSha256").jsonPrimitive.content == sha256(Files.readAllBytes(auditPath)))
+            materialAudit.getValue("reports").jsonArray.filter {
+                it.jsonObject.getValue("safeToReuse").jsonPrimitive.content == "true"
+            }.map { it.jsonObject.getValue("effectiveMaterialId").jsonPrimitive.int }.toSet()
+        }
         val sourceRoot = Path.of(plan.getValue("sourceCache").jsonPrimitive.content).toRealPath()
         val targetRoot = Path.of(plan.getValue("targetCache").jsonPrimitive.content).toRealPath()
         require(Path.of(audit.getValue("sourceCache").jsonPrimitive.content).toRealPath() == sourceRoot)
@@ -58,10 +66,16 @@ object ZeahStaticObjectPreview {
         val modelHashes = audit.getValue("modelReports").jsonArray.associate { record ->
             record.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int to record.jsonObject.getValue("sourceSha256").jsonPrimitive.content
         }
-        val selected = audit.getValue("objectReports").jsonArray.filter {
+        val originallySelected = audit.getValue("objectReports").jsonArray.filter {
             it.jsonObject.getValue("status").jsonPrimitive.content == "exact-static-roundtrip"
         }.map { it.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
-        require(selected.size == audit.getValue("exactStaticObjectDefinitions").jsonPrimitive.int)
+        require(originallySelected.size == audit.getValue("exactStaticObjectDefinitions").jsonPrimitive.int)
+        val texturedCandidates = if (safeMaterials.isEmpty()) emptySet() else audit.getValue("objectReports").jsonArray
+            .filter { report ->
+                val reasons = report.jsonObject.getValue("reasons").jsonArray.map { it.jsonPrimitive.content }
+                reasons == listOf("model-conversion")
+            }.map { it.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
+        val selected = originallySelected + texturedCandidates
         val selectedTargets = selected.mapTo(mutableSetOf()) { objectMap.getValue(it) }
         check(selectedTargets.size == selected.size)
         val regions = plan.getValue("selectedOsrsRegions").jsonArray.map { it.jsonPrimitive.int }
@@ -100,8 +114,14 @@ object ZeahStaticObjectPreview {
                             check(template.vertexCount == 0 && template.faceCount == 0)
                             template.copy(id = destination)
                         } else ModelDecoder.read(destination, donor)
-                        require(model.faceTextures?.all { it == (-1).toShort() } != false)
-                        val bytes = ModelEncoder.encode(model)
+                        val converted = model.copy(faceTextures = model.faceTextures?.map { raw ->
+                            if (raw == (-1).toShort()) raw else {
+                                val effective = GielenorVisualProfile.runtimeMaterial(raw.toInt() and 65535)
+                                require(effective in safeMaterials) { "Unverified material $effective on model $id" }
+                                effective.toShort()
+                            }
+                        }?.toShortArray())
+                        val bytes = ModelEncoder.encode(converted)
                         check(ModelEncoder.encode(ModelDecoder.read(destination, bytes)).contentEquals(bytes))
                         Asset(Index.MODELS, destination, 0, bytes)
                     }
@@ -176,6 +196,8 @@ object ZeahStaticObjectPreview {
                         put("status", "experimental-static-objects-subset")
                         put("packedCache", packed.toString())
                         put("staticObjectDefinitions", objects.size)
+                        put("texturedObjectDefinitionsAdded", texturedCandidates.size)
+                        put("verifiedReusableMaterials", safeMaterials.size)
                         put("models", modelAssets.size)
                         put("landscapeRegions", landscapes.size)
                         put("keptPlacements", keptPlacements)
@@ -185,7 +207,7 @@ object ZeahStaticObjectPreview {
                         put("existingModelsPreserved", true)
                         put("scopeComplete", false)
                         put("clientVisualValidated", false)
-                        put("limitations", "Static subset only. Unsupported placements removed for preview; no animated/morphed/textured objects, NPCs, items, world-map area or gameplay. Never use as runtime cache.")
+                        put("limitations", "Static subset only. Unsupported placements removed for preview; textured material bytes checked but no client visual test. No animated/morphed objects, NPCs, items, world-map area or gameplay. Never use as runtime cache.")
                     }
                     Files.writeString(output.resolve("preview-report.json"), json.encodeToString(report) + "\n")
                 }
