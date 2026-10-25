@@ -1,5 +1,10 @@
 package org.drynor.tools.osrs
 
+import world.gregs.voidps.buffer.read.BufferReader
+import world.gregs.voidps.buffer.write.BufferWriter
+import world.gregs.voidps.cache.definition.data.ObjectDefinition
+import world.gregs.voidps.cache.definition.decoder.ObjectDecoder
+import world.gregs.voidps.cache.definition.encoder.ObjectEncoder
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -50,6 +55,27 @@ class OsrsObjectConverterTest {
         assertEquals(-1, result.mapDefinitionId)
         assertEquals(-1, result.anInt3015)
         assertFailsWith<IllegalArgumentException> { convert(bytes(79, 0, 1), true) }
+    }
+
+    @Test fun verifiedSoundAndIconReferencesSurviveNativeRoundtrip() {
+        val donor = bytes(68, 0, 88, 82, 0, 7, 78, 0, 5, 3, 79, 0, 1, 0, 2, 3, 1, 0, 4, 0)
+        val converted = OsrsObjectConverter.convert(500, donor, emptyMap(), emptyMap(), emptyMap(),
+            staticPreview = true, verifiedSoundIds = setOf(4, 5), verifiedMapsceneIds = setOf(0),
+            auditedMapIconIds = mapOf(7 to 600))
+        val writer = BufferWriter(128)
+        with(ObjectEncoder()) { writer.encode(converted) }
+        val readback = ObjectDefinition(500)
+        ObjectDecoder().readLoop(readback, BufferReader(writer.toArray()))
+        assertEquals(0, readback.mapscene)
+        assertEquals(600, readback.mapDefinitionId)
+        assertEquals(5, readback.anInt3015)
+        assertEquals(3, readback.anInt3012)
+        assertContentEquals(intArrayOf(4), readback.anIntArray3036)
+        assertFailsWith<IllegalArgumentException> {
+            OsrsObjectConverter.convert(500, donor, emptyMap(), emptyMap(), emptyMap(),
+                staticPreview = true, verifiedSoundIds = setOf(5), verifiedMapsceneIds = setOf(0),
+                auditedMapIconIds = mapOf(7 to 600))
+        }
     }
 
     @Test fun materialsAndColoursUseEffectiveClientValues() {

@@ -22,6 +22,26 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "audit-zeah-icon-aliases") {
+        require(args.size == 4) { "osrs audit-zeah-icon-aliases <bounded-object-plan.json> <object-icon-audit.json> <new-report.json>" }
+        ZeahIconAliasAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-icons") {
+        require(args.size == 4) { "osrs audit-zeah-object-icons <bounded-object-plan.json> <donor-client-ObjectConfig.java> <new-report.json>" }
+        ZeahObjectIconAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-sounds") {
+        require(args.size == 3) { "osrs audit-zeah-object-sounds <bounded-object-plan.json> <new-report.json>" }
+        ZeahObjectSoundAudit.audit(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-morph-visuals") {
+        require(args.size == 6) { "osrs preview-zeah-morph-visuals <static-preview-root> <landscape-preview-root> <bounded-object-plan.json> <morph-audit.json> <new-output-root>" }
+        ZeahMorphVisualPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
     if (args.firstOrNull() == "audit-zeah-morphs") {
         require(args.size == 3) { "osrs audit-zeah-morphs <bounded-object-plan.json> <new-report.json>" }
         ZeahMorphAudit.audit(Path.of(args[1]), Path.of(args[2]))
@@ -33,8 +53,8 @@ fun runOsrs(args: List<String>) {
         return
     }
     if (args.firstOrNull() == "preview-zeah-static-objects") {
-        require(args.size == 5 || args.size == 6) { "osrs preview-zeah-static-objects <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-output-root> [material-closure-audit.json]" }
-        ZeahStaticObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), args.getOrNull(5)?.let(Path::of))
+        require(args.size in 5..8) { "osrs preview-zeah-static-objects <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-output-root> [material-closure-audit.json] [object-sound-audit.json] [object-icon-audit.json]" }
+        ZeahStaticObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), args.getOrNull(5)?.let(Path::of), args.getOrNull(6)?.let(Path::of), args.getOrNull(7)?.let(Path::of))
         return
     }
     if (args.firstOrNull() == "audit-zeah-static-objects") {

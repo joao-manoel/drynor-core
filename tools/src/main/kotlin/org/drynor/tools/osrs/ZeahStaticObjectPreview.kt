@@ -28,7 +28,7 @@ import java.security.MessageDigest
 object ZeahStaticObjectPreview {
     private data class Asset(val index: Int, val archive: Int, val file: Int, val bytes: ByteArray)
 
-    fun build(landscapeRootPath: Path, planPath: Path, auditPath: Path, outputPath: Path, materialAuditPath: Path? = null) {
+    fun build(landscapeRootPath: Path, planPath: Path, auditPath: Path, outputPath: Path, materialAuditPath: Path? = null, soundAuditPath: Path? = null, iconAuditPath: Path? = null) {
         val json = Json { prettyPrint = true }
         val landscapeRoot = landscapeRootPath.toRealPath()
         val landscape = Json.parseToJsonElement(Files.readString(landscapeRoot.resolve("preview-report.json"))).jsonObject
@@ -47,6 +47,30 @@ object ZeahStaticObjectPreview {
                 it.jsonObject.getValue("safeToReuse").jsonPrimitive.content == "true"
             }.map { it.jsonObject.getValue("effectiveMaterialId").jsonPrimitive.int }.toSet()
         }
+        val safeSounds = if (soundAuditPath == null) emptySet() else {
+            val soundAudit = Json.parseToJsonElement(Files.readString(soundAuditPath)).jsonObject
+            require(soundAudit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
+            soundAudit.getValue("reports").jsonArray.filter { record ->
+                val item = record.jsonObject
+                item.getValue("identicalAtSameId").jsonPrimitive.content == "true" &&
+                    item.getValue("sourceNativeRoundtrip").jsonPrimitive.content == "true"
+            }.map { it.jsonObject.getValue("soundId").jsonPrimitive.int }.toSet()
+        }
+        val iconReports = if (iconAuditPath == null) emptyList() else {
+            val iconAudit = Json.parseToJsonElement(Files.readString(iconAuditPath)).jsonObject
+            require(iconAudit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
+            val donorClient = Path.of(iconAudit.getValue("donorClientObjectConfig").jsonPrimitive.content).toRealPath()
+            require(sha256(Files.readAllBytes(donorClient)) == iconAudit.getValue("donorClientObjectConfigSha256").jsonPrimitive.content)
+            iconAudit.getValue("objectReports").jsonArray.map { it.jsonObject }
+        }
+        val safeIconReports = iconReports.filter { it.getValue("allDisplayedIconsReusable").jsonPrimitive.content == "true" }
+        val mapsceneIds = safeIconReports.flatMap { report -> report.getValue("mapScenes").jsonArray.map {
+            it.jsonObject.getValue("donorClientMapSpriteId").jsonPrimitive.int
+        } }.toSet()
+        val mapIconIds = safeIconReports.flatMap { report -> report.getValue("mapIcons").jsonArray.map {
+            val record = it.jsonObject
+            record.getValue("rawOsrsId").jsonPrimitive.int to record.getValue("donorClientMapSpriteId").jsonPrimitive.int.takeIf { mapped -> mapped >= 0 }
+        } }.toMap()
         val sourceRoot = Path.of(plan.getValue("sourceCache").jsonPrimitive.content).toRealPath()
         val targetRoot = Path.of(plan.getValue("targetCache").jsonPrimitive.content).toRealPath()
         require(Path.of(audit.getValue("sourceCache").jsonPrimitive.content).toRealPath() == sourceRoot)
@@ -75,7 +99,22 @@ object ZeahStaticObjectPreview {
                 val reasons = report.jsonObject.getValue("reasons").jsonArray.map { it.jsonPrimitive.content }
                 reasons == listOf("model-conversion")
             }.map { it.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
-        val selected = originallySelected + texturedCandidates
+        val soundCandidates = if (safeSounds.isEmpty()) emptySet() else audit.getValue("objectReports").jsonArray
+            .filter { report ->
+                val reasons = report.jsonObject.getValue("reasons").jsonArray.map { it.jsonPrimitive.content }.toSet()
+                "ambient-sound" in reasons && reasons.all { it == "ambient-sound" || (it == "model-conversion" && safeMaterials.isNotEmpty()) }
+            }.map { it.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
+        val reusableIconObjects = safeIconReports.map { it.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
+        val iconCandidates = audit.getValue("objectReports").jsonArray.filter { report ->
+            val item = report.jsonObject
+            val reasons = item.getValue("reasons").jsonArray.map { it.jsonPrimitive.content }.toSet()
+            item.getValue("sourceRuntimeId").jsonPrimitive.int in reusableIconObjects &&
+                reasons.any { it == "mapscene-sprite" || it == "map-icon" } &&
+                reasons.all { it == "mapscene-sprite" || it == "map-icon" ||
+                    (it == "model-conversion" && safeMaterials.isNotEmpty()) ||
+                    (it == "ambient-sound" && safeSounds.isNotEmpty()) }
+        }.map { it.jsonObject.getValue("sourceRuntimeId").jsonPrimitive.int }.toSet()
+        val selected = originallySelected + texturedCandidates + soundCandidates + iconCandidates
         val selectedTargets = selected.mapTo(mutableSetOf()) { objectMap.getValue(it) }
         check(selectedTargets.size == selected.size)
         val regions = plan.getValue("selectedOsrsRegions").jsonArray.map { it.jsonPrimitive.int }
@@ -92,16 +131,22 @@ object ZeahStaticObjectPreview {
                         check(target.data(Index.OBJECTS, destination ushr 8, destination and 255) == null)
                         check(staged.data(Index.OBJECTS, destination ushr 8, destination and 255) == null)
                         val deps = OsrsObjectDependencies.parse(donor)
-                        require(deps.animations.isEmpty() && deps.morphs.isEmpty() && deps.sounds.isEmpty() &&
-                            deps.sprites.isEmpty() && deps.mapIcons.isEmpty() && deps.varbits.isEmpty() && deps.varps.isEmpty())
+                        require(deps.animations.isEmpty() && deps.morphs.isEmpty() && deps.sounds.all { it in safeSounds } &&
+                            deps.sprites.map { if (it == 88) 0 else it }.all { it in mapsceneIds } &&
+                            deps.mapIcons.all { it in mapIconIds } && deps.varbits.isEmpty() && deps.varps.isEmpty())
                         requiredModels += deps.models.map { it + 200_000 }
-                        val definition = OsrsObjectConverter.convert(destination, donor, modelMap, emptyMap(), objectMap, staticPreview = true)
+                        val definition = OsrsObjectConverter.convert(destination, donor, modelMap, emptyMap(), objectMap,
+                            staticPreview = true, verifiedSoundIds = safeSounds, verifiedMapsceneIds = mapsceneIds, auditedMapIconIds = mapIconIds)
                         val writer = BufferWriter(donor.size + 1024)
                         with(ObjectEncoder()) { writer.encode(definition) }
                         val bytes = writer.toArray()
                         val readback = ObjectDefinition(destination)
                         ObjectDecoder().readLoop(readback, BufferReader(bytes))
                         check(readback.modelIds.contentDeepEquals(definition.modelIds) && readback.sizeX == definition.sizeX && readback.sizeY == definition.sizeY)
+                        check(readback.anInt3015 == definition.anInt3015 && readback.anInt3012 == definition.anInt3012 &&
+                            readback.anInt2989 == definition.anInt2989 && readback.anInt2971 == definition.anInt2971 &&
+                            readback.anIntArray3036.contentEquals(definition.anIntArray3036))
+                        check(readback.mapscene == definition.mapscene && readback.mapDefinitionId == definition.mapDefinitionId)
                         objects += Asset(Index.OBJECTS, destination ushr 8, destination and 255, bytes)
                     }
                     val modelAssets = requiredModels.map { id ->
@@ -197,7 +242,12 @@ object ZeahStaticObjectPreview {
                         put("packedCache", packed.toString())
                         put("staticObjectDefinitions", objects.size)
                         put("texturedObjectDefinitionsAdded", texturedCandidates.size)
+                        put("soundObjectDefinitionsAdded", soundCandidates.size)
+                        put("iconObjectDefinitionsAdded", iconCandidates.size)
                         put("verifiedReusableMaterials", safeMaterials.size)
+                        put("verifiedReusableSounds", safeSounds.size)
+                        put("verifiedReusableMapscenes", mapsceneIds.size)
+                        put("auditedMapIconMappings", mapIconIds.size)
                         put("models", modelAssets.size)
                         put("landscapeRegions", landscapes.size)
                         put("keptPlacements", keptPlacements)
@@ -207,7 +257,7 @@ object ZeahStaticObjectPreview {
                         put("existingModelsPreserved", true)
                         put("scopeComplete", false)
                         put("clientVisualValidated", false)
-                        put("limitations", "Static subset only. Unsupported placements removed for preview; textured material bytes checked but no client visual test. No animated/morphed objects, NPCs, items, world-map area or gameplay. Never use as runtime cache.")
+                        put("limitations", "Static subset only. Unsupported placements removed for preview; material, sound and icon dependencies checked by byte identity but no client visual/audio test. No animated/morphed objects, NPCs, items, world-map area or gameplay. Never use as runtime cache.")
                     }
                     Files.writeString(output.resolve("preview-report.json"), json.encodeToString(report) + "\n")
                 }
