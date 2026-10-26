@@ -212,6 +212,11 @@ fun runOsrs(args: List<String>) {
         ZeahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
         return
     }
+    if (args.firstOrNull() == "probe-zeah-floor") {
+        require(args.size == 6) { "osrs probe-zeah-floor <source-cache> <preview-cache> <palette.json> <x> <y>" }
+        ZeahFloorProbe.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args[4].toInt(), args[5].toInt())
+        return
+    }
     require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
         "osrs <preview-zulrah-static|inventory-zulrah|inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
     }
