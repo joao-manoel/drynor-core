@@ -29,11 +29,14 @@ object ZeahMorphVisualPreview {
         require(audit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
         require(audit.getValue("staticFallbackAuthorized").jsonPrimitive.content == "false")
         val staticReport = Json.parseToJsonElement(Files.readString(staticRoot.resolve("preview-report.json"))).jsonObject
-        require(staticReport.getValue("status").jsonPrimitive.content in setOf("experimental-static-objects-subset", "experimental-animated-object-subset"))
-        val previousPlacements = if (staticReport.getValue("status").jsonPrimitive.content == "experimental-static-objects-subset")
-            staticReport.getValue("keptPlacements").jsonPrimitive.int
-        else staticReport.getValue("priorStaticPlacements").jsonPrimitive.int +
-            staticReport.getValue("animatedPlacementsAdded").jsonPrimitive.int
+        val previousPlacements = when (staticReport.getValue("status").jsonPrimitive.content) {
+            "experimental-static-objects-subset" -> staticReport.getValue("keptPlacements").jsonPrimitive.int
+            "experimental-animated-object-subset" -> staticReport.getValue("priorStaticPlacements").jsonPrimitive.int +
+                staticReport.getValue("animatedPlacementsAdded").jsonPrimitive.int
+            "experimental-icon-objects-subset" -> staticReport.getValue("priorPlacements").jsonPrimitive.int +
+                staticReport.getValue("iconPlacementsAdded").jsonPrimitive.int
+            else -> error("Unsupported morph visual base preview")
+        }
         val landscapeReport = Json.parseToJsonElement(Files.readString(landscapeRoot.resolve("preview-report.json"))).jsonObject
         require(landscapeReport.getValue("status").jsonPrimitive.content == "experimental-landscapes-without-definitions")
         val staticCachePath = Path.of(staticReport.getValue("packedCache").jsonPrimitive.content).toRealPath()

@@ -22,7 +22,8 @@ object OsrsObjectConverter {
         staticPreview: Boolean = false,
         verifiedSoundIds: Set<Int> = emptySet(),
         verifiedMapsceneIds: Set<Int> = emptySet(),
-        auditedMapIconIds: Map<Int, Int?> = emptyMap()
+        auditedMapIconIds: Map<Int, Int?> = emptyMap(),
+        auditedMapsceneIds: Map<Int, Int> = emptyMap()
     ): ObjectDefinition {
         val input = OsrsByteReader(data)
         val result = ObjectDefinition(id)
@@ -101,7 +102,8 @@ object OsrsObjectConverter {
                 68 -> {
                     val raw = input.u16()
                     val effective = if (raw == 88) 0 else raw
-                    if (effective in verifiedMapsceneIds) result.mapscene = effective
+                    if (effective in auditedMapsceneIds) result.mapscene = auditedMapsceneIds.getValue(effective)
+                    else if (effective in verifiedMapsceneIds) result.mapscene = effective
                     else check(staticPreview) { "Object $id: OSRS mapscene $raw requires an audited sprite mapping" }
                 }
                 69 -> result.blockFlag = input.u8()

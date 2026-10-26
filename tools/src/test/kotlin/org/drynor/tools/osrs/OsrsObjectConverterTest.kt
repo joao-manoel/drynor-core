@@ -76,6 +76,11 @@ class OsrsObjectConverterTest {
                 staticPreview = true, verifiedSoundIds = setOf(5), verifiedMapsceneIds = setOf(0),
                 auditedMapIconIds = mapOf(7 to 600))
         }
+        val remapped = OsrsObjectConverter.convert(500, donor, emptyMap(), emptyMap(), emptyMap(),
+            staticPreview = true, verifiedSoundIds = setOf(4, 5), auditedMapsceneIds = mapOf(0 to 501),
+            auditedMapIconIds = mapOf(7 to 601))
+        assertEquals(501, remapped.mapscene)
+        assertEquals(601, remapped.mapDefinitionId)
     }
 
     @Test fun materialsAndColoursUseEffectiveClientValues() {

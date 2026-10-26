@@ -22,6 +22,16 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-zeah-icon-objects") {
+        require(args.size == 11) { "osrs preview-zeah-icon-objects <icon-remap-preview-root> <animated-objects-preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <material-audit.json> <sound-audit.json> <icon-audit.json> <animation-audit.json> <new-output-root>" }
+        ZeahIconObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]), Path.of(args[7]), Path.of(args[8]), Path.of(args[9]), Path.of(args[10]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-icon-remaps") {
+        require(args.size == 6) { "osrs preview-zeah-icon-remaps <base-preview-root> <bounded-object-plan.json> <object-icons-audit.json> <icon-alias-audit.json> <new-output-root>" }
+        ZeahIconRemapPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
     if (args.firstOrNull() == "audit-zeah-remaining-objects") {
         require(args.size == 6) { "osrs audit-zeah-remaining-objects <preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-report.json>" }
         ZeahRemainingObjectAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))

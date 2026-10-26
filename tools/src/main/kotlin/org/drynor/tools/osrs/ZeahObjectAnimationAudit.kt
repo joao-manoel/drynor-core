@@ -55,6 +55,8 @@ object ZeahObjectAnimationAudit {
                         val frameFailures = mutableListOf<String>()
                         var soundCount = 0
                         var equipmentCount = 0
+                        var soundIds = emptySet<Int>()
+                        var equipmentIds = emptySet<Int>()
                         var frameCount = 0
                         var complete = false
                         var sequenceError = ""
@@ -64,6 +66,8 @@ object ZeahObjectAnimationAudit {
                             val deps = OsrsSequenceDependencies.parse(sequenceBytes)
                             soundCount = deps.sounds.size
                             equipmentCount = deps.equipment.size
+                            soundIds = deps.sounds
+                            equipmentIds = deps.equipment
                             frameCount = deps.frameIds.size
                             val frameSetMap = sortedMapOf<Int, Int>()
                             for (packed in deps.frameIds) {
@@ -130,6 +134,8 @@ object ZeahObjectAnimationAudit {
                             put("referencedFrames", frameCount)
                             put("sequenceSoundIds", soundCount)
                             put("equipmentOverrides", equipmentCount)
+                            put("sequenceSoundReferences", buildJsonArray { soundIds.sorted().forEach { add(JsonPrimitive(it)) } })
+                            put("equipmentOverrideValues", buildJsonArray { equipmentIds.sorted().forEach { add(JsonPrimitive(it)) } })
                             put("missingSourceFrames", buildJsonArray { missingFrames.forEach { add(JsonPrimitive(it)) } })
                             put("missingSourceBases", buildJsonArray { missingBases.forEach { add(JsonPrimitive(it)) } })
                             put("frameConversionErrors", buildJsonArray { frameFailures.forEach { add(JsonPrimitive(it)) } })
