@@ -85,11 +85,14 @@ object ZeahNpcDependencyAudit {
             val missingFrameIds = sortedSetOf<Int>()
             val frameFailures = buildJsonArray {
                 frameIds.forEach { id ->
-                    val bytes = source.data(Index.ANIMATION_FRAMES, id ushr 16, id and 65535)
+                    // Gielenor stores OSRS frame sets 5000 archives above the sequence's packed reference.
+                    val sourceArchive = (id ushr 16) + 5000
+                    val bytes = source.data(Index.ANIMATION_FRAMES, sourceArchive, id and 65535)
                     if (bytes == null) {
                         missingFrameIds.add(id)
                         add(buildJsonObject {
                             put("id", id)
+                            put("sourceArchive", sourceArchive)
                             put("reason", "missing-source-frame")
                             put("sequenceIds", buildJsonArray {
                                 frameSequences.getValue(id).forEach { add(JsonPrimitive(it)) }
@@ -99,10 +102,12 @@ object ZeahNpcDependencyAudit {
                     }
                     try {
                         try {
-                            baseIds.add(OsrsFrameDependencies.parseFrame(bytes).baseId)
+                            val rawBase = OsrsFrameDependencies.parseFrame(bytes).baseId
+                            val forceOsrs = frameSequences.getValue(id).any(GielenorVisualProfile::forceOsrsSkeleton)
+                            baseIds.add(GielenorVisualProfile.sourceBaseId(rawBase, forceOsrs))
                             legacyFrames++
                         } catch (_: Exception) {
-                            val native = AnimationFrameDefinition(id)
+                            val native = AnimationFrameDefinition((sourceArchive shl 16) or (id and 65535))
                             AnimationFrameDecoder().readLoop(native, BufferReader(bytes))
                             baseIds.add(native.baseId)
                             nativeFrames++
