@@ -56,7 +56,9 @@ object ZeahMorphAudit {
                     if (!seen.add(current)) return null to "cycle"
                     val deps = dependencies[current] ?: return null to "child-outside-plan"
                     val selector = deps.morphSelector ?: return current to "terminal"
-                    val child = selector.variants.lastOrNull() ?: -1
+                    // Both donor clients append the opcode-92 default as the final transform.
+                    // Opcode 77 appends -1: its last regular variant is not the fallback.
+                    val child = selector.default
                     if (child < 0) return null to "fallback-invisible"
                     current = child + 100_000
                 }
@@ -75,7 +77,7 @@ object ZeahMorphAudit {
                         put("opcode", selector.opcode)
                         put("rawVarbitIgnoredByDonor", selector.rawVarbit)
                         put("rawVarpIgnoredByDonor", selector.rawVarp)
-                        put("donorFallbackRawChild", selector.variants.lastOrNull() ?: -1)
+                        put("donorFallbackRawChild", selector.default)
                         put("defaultRawChild", selector.default)
                         put("fallbackTerminalRuntimeId", resolved ?: -1)
                         put("fallbackTerminalTargetId", resolved?.let { targetIds[it] } ?: -1)

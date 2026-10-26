@@ -64,6 +64,9 @@ object ZeahMorphVisualPreview {
                     if (parent in available || child !in available) return@mapNotNull null
                     parent to child
                 }.toMap()
+                val intentionallyInvisible = audit.getValue("reports").jsonArray.filter { entry ->
+                    entry.jsonObject.getValue("fallbackStatus").jsonPrimitive.content == "fallback-invisible"
+                }.mapTo(mutableSetOf()) { it.jsonObject.getValue("plannedTargetId").jsonPrimitive.int }
                 require(aliases.isNotEmpty())
                 require(aliases.size == audit.getValue("reports").jsonArray.count {
                     val item = it.jsonObject
@@ -85,7 +88,10 @@ object ZeahMorphVisualPreview {
                             if (objectId in retained) {
                                 map.objects += MapObject(objectId, localX, localY, level, shape, rotation)
                                 if (objectId in aliases) added++ else kept++
-                            } else excluded++
+                            } else {
+                                check(objectId in intentionallyInvisible) { "Unresolved object $objectId is not a donor-invisible morph" }
+                                excluded++
+                            }
                         }
                     }
                     check(reader.decode(donor, ByteArray(16384), region ushr 8, region and 255) == donor.size)
@@ -145,6 +151,8 @@ object ZeahMorphVisualPreview {
                     put("previousStaticPlacements", kept)
                     put("visualMorphPlacementsAdded", added)
                     put("excludedPlacements", excluded)
+                    put("donorInvisiblePlacements", excluded)
+                    put("unresolvedPlacements", 0)
                     put("landscapeRegions", landscapes.size)
                     put("scopeComplete", false)
                     put("clientVisualValidated", false)
