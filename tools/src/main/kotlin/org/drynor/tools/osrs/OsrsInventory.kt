@@ -207,6 +207,11 @@ fun runOsrs(args: List<String>) {
         ZulrahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]))
         return
     }
+    if (args.firstOrNull() == "preview-zeah-worldmap") {
+        require(args.size == 4) { "osrs preview-zeah-worldmap <visual-preview-root> <bounded-object-plan.json> <new-output-root>" }
+        ZeahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
     require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
         "osrs <preview-zulrah-static|inventory-zulrah|inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
     }
