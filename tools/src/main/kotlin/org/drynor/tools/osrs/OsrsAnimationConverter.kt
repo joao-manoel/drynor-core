@@ -61,6 +61,7 @@ object OsrsAnimationConverter {
         data: ByteArray,
         frameSetMap: Map<Int, Int>,
         previewWithoutSoundsAndEquipment: Boolean = false,
+        verifiedSoundIds: Set<Int> = emptySet(),
     ): AnimationDefinition {
         val reader = AnimationImportReader(data)
         val result = AnimationDefinition(targetId)
@@ -106,8 +107,16 @@ object OsrsAnimationConverter {
                 12 -> result.expressionFrames = frames(reader.u8())
                 13 -> {
                     val count = reader.u8()
-                    repeat(count) { reader.u8(); reader.u16() }
-                    require(previewWithoutSoundsAndEquipment || count == 0) { "Sounds require explicit sound mapping" }
+                    val sounds = Array<IntArray?>(count) {
+                        val packed = (reader.u8() shl 16) or reader.u16()
+                        if (packed == 0) null else {
+                            require((packed ushr 8) in verifiedSoundIds || previewWithoutSoundsAndEquipment) {
+                                "Sound ${packed ushr 8} requires verified cache identity"
+                            }
+                            if (previewWithoutSoundsAndEquipment) null else intArrayOf(packed)
+                        }
+                    }
+                    if (!previewWithoutSoundsAndEquipment) result.sounds = sounds
                 }
                 else -> throw IllegalArgumentException("Unsupported OSRS sequence opcode $opcode")
             }

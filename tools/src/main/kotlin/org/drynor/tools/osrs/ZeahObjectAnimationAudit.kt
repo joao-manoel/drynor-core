@@ -56,6 +56,7 @@ object ZeahObjectAnimationAudit {
                         var soundCount = 0
                         var equipmentCount = 0
                         var soundIds = emptySet<Int>()
+                        var reusableSoundIds = emptySet<Int>()
                         var equipmentIds = emptySet<Int>()
                         var frameCount = 0
                         var complete = false
@@ -67,6 +68,11 @@ object ZeahObjectAnimationAudit {
                             soundCount = deps.sounds.size
                             equipmentCount = deps.equipment.size
                             soundIds = deps.sounds
+                            reusableSoundIds = soundIds.filterTo(sortedSetOf()) { soundId ->
+                                val from = source.data(Index.SYNTH_SOUNDS, soundId, 0)
+                                val to = target.data(Index.SYNTH_SOUNDS, soundId, 0)
+                                from != null && to != null && from.contentEquals(to)
+                            }
                             equipmentIds = deps.equipment
                             frameCount = deps.frameIds.size
                             val frameSetMap = sortedMapOf<Int, Int>()
@@ -110,9 +116,10 @@ object ZeahObjectAnimationAudit {
                                 }
                             }
                             if (missingFrames.isEmpty() && missingBases.isEmpty() && frameFailures.isEmpty() &&
-                                soundCount == 0 && equipmentCount == 0) {
+                                reusableSoundIds.size == soundCount && equipmentCount == 0) {
                                 try {
-                                    val converted = OsrsAnimationConverter.convertSequence(sequenceId, sequenceBytes, frameSetMap)
+                                    val converted = OsrsAnimationConverter.convertSequence(sequenceId, sequenceBytes, frameSetMap,
+                                        verifiedSoundIds = reusableSoundIds)
                                     val writer = BufferWriter(sequenceBytes.size * 8 + 1024)
                                     with(AnimationEncoder()) { writer.encode(converted) }
                                     val native = AnimationDefinition(sequenceId)
@@ -135,6 +142,7 @@ object ZeahObjectAnimationAudit {
                             put("sequenceSoundIds", soundCount)
                             put("equipmentOverrides", equipmentCount)
                             put("sequenceSoundReferences", buildJsonArray { soundIds.sorted().forEach { add(JsonPrimitive(it)) } })
+                            put("sequenceSoundReferencesReusable", buildJsonArray { reusableSoundIds.forEach { add(JsonPrimitive(it)) } })
                             put("equipmentOverrideValues", buildJsonArray { equipmentIds.sorted().forEach { add(JsonPrimitive(it)) } })
                             put("missingSourceFrames", buildJsonArray { missingFrames.forEach { add(JsonPrimitive(it)) } })
                             put("missingSourceBases", buildJsonArray { missingBases.forEach { add(JsonPrimitive(it)) } })

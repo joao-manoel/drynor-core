@@ -4,6 +4,11 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import world.gregs.voidps.buffer.read.BufferReader
+import world.gregs.voidps.buffer.write.BufferWriter
+import world.gregs.voidps.cache.definition.data.AnimationDefinition
+import world.gregs.voidps.cache.definition.decoder.AnimationDecoder
+import world.gregs.voidps.cache.definition.encoder.AnimationEncoder
 
 class OsrsAnimationConverterTest {
     @Test
@@ -65,6 +70,20 @@ class OsrsAnimationConverterTest {
         val converted = OsrsAnimationConverter.convertSequence(1, data, emptyMap(), true)
         assertEquals(-1, converted.leftHandItem)
         assertEquals(null, converted.sounds)
+    }
+
+    @Test
+    fun verifiedSequenceSoundSurvivesNativeRoundTrip() {
+        val packed = (4078 shl 8) or 19
+        val data = bytes(13, 1, packed ushr 16, packed ushr 8, packed, 0)
+        assertFailsWith<IllegalArgumentException> { OsrsAnimationConverter.convertSequence(25771, data, emptyMap()) }
+        val converted = OsrsAnimationConverter.convertSequence(25771, data, emptyMap(), verifiedSoundIds = setOf(4078))
+        assertContentEquals(intArrayOf(packed), converted.sounds!![0])
+        val writer = BufferWriter(64)
+        with(AnimationEncoder()) { writer.encode(converted) }
+        val decoded = AnimationDefinition(25771)
+        AnimationDecoder().readLoop(decoded, BufferReader(writer.toArray()))
+        assertContentEquals(intArrayOf(packed), decoded.sounds!![0])
     }
 
     @Test

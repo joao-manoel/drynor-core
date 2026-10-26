@@ -24,10 +24,12 @@ object ZeahObjectAnimationPreview {
         val sequenceIds = audit.getValue("reports").jsonArray.filter { record ->
             val item = record.jsonObject
             item.getValue("nativeConversionProbePassed").jsonPrimitive.content == "true" &&
-                item.getValue("sequenceSoundIds").jsonPrimitive.int == 0 &&
                 item.getValue("equipmentOverrides").jsonPrimitive.int == 0
         }.mapTo(sortedSetOf()) { it.jsonObject.getValue("sequenceRuntimeId").jsonPrimitive.int }
         require(sequenceIds.size == audit.getValue("sequencesPassingNativeProbe").jsonPrimitive.int)
+        val verifiedSoundIds = audit.getValue("reports").jsonArray.filter {
+            it.jsonObject.getValue("nativeConversionProbePassed").jsonPrimitive.content == "true"
+        }.flatMap { it.jsonObject.getValue("sequenceSoundReferencesReusable").jsonArray.map { sound -> sound.jsonPrimitive.int } }.toSet()
         val sourceRoot = Path.of(plan.getValue("sourceCache").jsonPrimitive.content).toRealPath()
         val targetRoot = Path.of(plan.getValue("targetCache").jsonPrimitive.content).toRealPath()
         val staticRoot = staticRootPath.toRealPath()
@@ -48,7 +50,7 @@ object ZeahObjectAnimationPreview {
                         }
                     }
                     // Uses the same physical OSRS +5000 frame-set and skeleton rules as the audited Zulrah bridge.
-                    val planned = ZulrahAnimationAssets.plan(source, target, sequenceIds)
+                    val planned = ZulrahAnimationAssets.plan(source, target, sequenceIds, verifiedSoundIds = verifiedSoundIds)
                     check(planned.sequenceMap.keys == sequenceIds)
                     Files.createDirectories(output)
                     val packed = output.resolve("packed-cache")

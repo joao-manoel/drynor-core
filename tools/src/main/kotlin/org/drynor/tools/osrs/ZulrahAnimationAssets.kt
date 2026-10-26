@@ -26,7 +26,7 @@ internal object ZulrahAnimationAssets {
     )
     private data class Frame(val archive: Int, val file: Int, val sourceBase: Int, val bytes: ByteArray)
 
-    fun plan(source: Cache, target: Cache, sequenceIds: Set<Int>, equipmentClearedByDonor: Set<Int> = emptySet(), sceneOnlySequences: Set<Int> = emptySet()): Result {
+    fun plan(source: Cache, target: Cache, sequenceIds: Set<Int>, equipmentClearedByDonor: Set<Int> = emptySet(), sceneOnlySequences: Set<Int> = emptySet(), verifiedSoundIds: Set<Int> = emptySet()): Result {
         require(sequenceIds.isNotEmpty() && sequenceIds.all { it >= 20000 })
         val sequences = sequenceIds.sorted().associateWith { id ->
             requireNotNull(source.data(Index.ANIMATIONS, id ushr 7, id and 127)) { "Missing source sequence $id" }
@@ -34,7 +34,7 @@ internal object ZulrahAnimationAssets {
         val dependencies = sequences.mapValues { (_, bytes) -> OsrsSequenceDependencies.parse(bytes) }
         require(equipmentClearedByDonor.all { it == 25061 && it in sequenceIds }) { "Only the audited CustomAnims blowpipe override may clear equipment" }
         require(sceneOnlySequences.all { it in sequenceIds })
-        require(dependencies.all { (id,deps) -> deps.sounds.isEmpty() && (deps.equipment.isEmpty() || id in equipmentClearedByDonor || id in sceneOnlySequences) }) {
+        require(dependencies.all { (id,deps) -> deps.sounds.all { it in verifiedSoundIds } && (deps.equipment.isEmpty() || id in equipmentClearedByDonor || id in sceneOnlySequences) }) {
             "Actor animations require explicit sound/equipment import: $dependencies"
         }
         val frames = sortedMapOf<Long, Frame>()
@@ -86,7 +86,8 @@ internal object ZulrahAnimationAssets {
             // Unlike the older generic previews, this actor set has no foreign sounds/equipment.
             // Keep the strict converter mode so a new dependency fails instead of being dropped.
             // CustomAnims.modify case25061 clears both hand replacements after source decoding.
-            val converted = OsrsAnimationConverter.convertSequence(targetId, sequences.getValue(origin), frameMap,origin in equipmentClearedByDonor || origin in sceneOnlySequences)
+            val converted = OsrsAnimationConverter.convertSequence(targetId, sequences.getValue(origin), frameMap,
+                origin in equipmentClearedByDonor || origin in sceneOnlySequences, verifiedSoundIds)
             val bytes = encode { with(AnimationEncoder()) { it.encode(converted) } }
             val decoded = AnimationDefinition(targetId)
             AnimationDecoder().readLoop(decoded, BufferReader(bytes))
