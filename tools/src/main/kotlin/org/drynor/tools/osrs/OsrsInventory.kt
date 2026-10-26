@@ -217,6 +217,11 @@ fun runOsrs(args: List<String>) {
         ZeahFloorProbe.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args[4].toInt(), args[5].toInt())
         return
     }
+    if (args.firstOrNull() == "audit-zeah-object-model-offsets") {
+        require(args.size == 4) { "osrs audit-zeah-object-model-offsets <bounded-object-plan.json> <gielenor-client-ObjectConfig.java> <new-report.json>" }
+        ZeahObjectModelOffsets.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
     require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {
         "osrs <preview-zulrah-static|inventory-zulrah|inventory-inferno|plan-inferno|preview-inferno|audit-actors-inferno|preview-actors-inferno|reward-inferno> <gielenor-packed-cache> <drynor-packed-cache> <new-output>"
     }
