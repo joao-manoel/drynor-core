@@ -52,7 +52,8 @@ object OsrsAnimationConverter {
 
     /**
      * Map keys are physical Gielenor frame-set IDs (raw sequence archive + 5000).
-     * Preview mode explicitly drops sounds and equipment overrides whose IDs need separate imports.
+     * Preview mode explicitly drops unverified sounds and equipment overrides. Verified sound IDs
+     * and the audited object-only equipment value can instead survive native encoding.
      * Gielenor AnimationConfig.decodeOSRS opcode 4 reads no payload and sets only a local
      * discarded boolean. Its runtime behavior is therefore preserved by emitting no native opcode.
      */
@@ -62,6 +63,7 @@ object OsrsAnimationConverter {
         frameSetMap: Map<Int, Int>,
         previewWithoutSoundsAndEquipment: Boolean = false,
         verifiedSoundIds: Set<Int> = emptySet(),
+        preserveSceneEquipmentOverrides: Boolean = false,
     ): AnimationDefinition {
         val reader = AnimationImportReader(data)
         val result = AnimationDefinition(targetId)
@@ -98,7 +100,12 @@ object OsrsAnimationConverter {
                 5 -> result.priority = reader.u8()
                 6, 7 -> {
                     val value = reader.u16()
-                    require(previewWithoutSoundsAndEquipment) { "Equipment override $value requires explicit item mapping" }
+                    require(previewWithoutSoundsAndEquipment || preserveSceneEquipmentOverrides) {
+                        "Equipment override $value requires explicit scene-only approval or item mapping"
+                    }
+                    if (preserveSceneEquipmentOverrides) {
+                        if (opcode == 6) result.leftHandItem = value else result.rightHandItem = value
+                    }
                 }
                 8 -> result.maxLoops = reader.u8()
                 9 -> result.animatingPrecedence = reader.u8()

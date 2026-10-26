@@ -23,8 +23,7 @@ object ZeahObjectAnimationPreview {
         require(audit.getValue("objectPlanSha256").jsonPrimitive.content == sha256(planBytes))
         val sequenceIds = audit.getValue("reports").jsonArray.filter { record ->
             val item = record.jsonObject
-            item.getValue("nativeConversionProbePassed").jsonPrimitive.content == "true" &&
-                item.getValue("equipmentOverrides").jsonPrimitive.int == 0
+            item.getValue("nativeConversionProbePassed").jsonPrimitive.content == "true"
         }.mapTo(sortedSetOf()) { it.jsonObject.getValue("sequenceRuntimeId").jsonPrimitive.int }
         require(sequenceIds.size == audit.getValue("sequencesPassingNativeProbe").jsonPrimitive.int)
         val verifiedSoundIds = audit.getValue("reports").jsonArray.filter {
@@ -50,7 +49,8 @@ object ZeahObjectAnimationPreview {
                         }
                     }
                     // Uses the same physical OSRS +5000 frame-set and skeleton rules as the audited Zulrah bridge.
-                    val planned = ZulrahAnimationAssets.plan(source, target, sequenceIds, verifiedSoundIds = verifiedSoundIds)
+                    val planned = ZulrahAnimationAssets.plan(source, target, sequenceIds, verifiedSoundIds = verifiedSoundIds,
+                        preservedSceneEquipmentSequences = sequenceIds.intersect(setOf(20623)))
                     check(planned.sequenceMap.keys == sequenceIds)
                     Files.createDirectories(output)
                     val packed = output.resolve("packed-cache")
@@ -107,7 +107,7 @@ object ZeahObjectAnimationPreview {
                         put("existingMapsObjectsModelsPreserved", true)
                         put("scopeComplete", false)
                         put("clientAnimationValidated", false)
-                        put("limitations", "Animation assets are staged, but object definitions still lack animation references. Two blocked sequences and dynamic morphs remain. Never use as runtime cache.")
+                        put("limitations", "Animation assets are staged, but object definitions still lack animation references here. Dynamic morphs and client playback remain unvalidated. Never use as runtime cache.")
                     }
                     Files.writeString(output.resolve("preview-report.json"), Json { prettyPrint = true }.encodeToString(report) + "\n")
                 }

@@ -87,6 +87,20 @@ class OsrsAnimationConverterTest {
     }
 
     @Test
+    fun sceneOnlyEquipmentOverrideIsPreservedWithoutItemLookup() {
+        val data = bytes(6, 3, 51, 0) // Raw OSRS override 819; scene animations do not use player appearance.
+        assertFailsWith<IllegalArgumentException> { OsrsAnimationConverter.convertSequence(20623, data, emptyMap()) }
+        val converted = OsrsAnimationConverter.convertSequence(20623, data, emptyMap(),
+            preserveSceneEquipmentOverrides = true)
+        assertEquals(819, converted.leftHandItem)
+        val writer = BufferWriter(64)
+        with(AnimationEncoder()) { writer.encode(converted) }
+        val decoded = AnimationDefinition(20623)
+        AnimationDecoder().readLoop(decoded, BufferReader(writer.toArray()))
+        assertEquals(819, decoded.leftHandItem)
+    }
+
+    @Test
     fun malformedAndUnsupportedDataFailsClosed() {
         for (data in listOf(bytes(), bytes(1), bytes(1, 6, 0), bytes(0, 0))) {
             assertFailsWith<IllegalArgumentException> { OsrsAnimationConverter.convertBase(1, data) }

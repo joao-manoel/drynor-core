@@ -115,16 +115,19 @@ object ZeahObjectAnimationAudit {
                                     frameFailures += "$archive/$file:${error.javaClass.simpleName}:${error.message?.take(100)}"
                                 }
                             }
+                            val approvedSceneEquipment = sequenceId == 20623 && equipmentIds == setOf(819) && objectIds == setOf(110946)
                             if (missingFrames.isEmpty() && missingBases.isEmpty() && frameFailures.isEmpty() &&
-                                reusableSoundIds.size == soundCount && equipmentCount == 0) {
+                                reusableSoundIds.size == soundCount && (equipmentCount == 0 || approvedSceneEquipment)) {
                                 try {
                                     val converted = OsrsAnimationConverter.convertSequence(sequenceId, sequenceBytes, frameSetMap,
-                                        verifiedSoundIds = reusableSoundIds)
+                                        verifiedSoundIds = reusableSoundIds,
+                                        preserveSceneEquipmentOverrides = approvedSceneEquipment)
                                     val writer = BufferWriter(sequenceBytes.size * 8 + 1024)
                                     with(AnimationEncoder()) { writer.encode(converted) }
                                     val native = AnimationDefinition(sequenceId)
                                     AnimationDecoder().readLoop(native, BufferReader(writer.toArray()))
                                     check(native.frames.contentEquals(converted.frames) && native.durations.contentEquals(converted.durations))
+                                    check(native.leftHandItem == converted.leftHandItem && native.rightHandItem == converted.rightHandItem)
                                     complete = true
                                 } catch (error: Exception) {
                                     sequenceError = "${error.javaClass.simpleName}:${error.message?.take(160)}"
