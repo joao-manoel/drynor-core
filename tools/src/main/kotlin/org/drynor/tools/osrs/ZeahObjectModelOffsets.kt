@@ -17,12 +17,17 @@ import java.security.MessageDigest
 
 /** Read-only inventory of Gielenor's object-model Y translations in the selected Zeah plan. */
 object ZeahObjectModelOffsets {
+    private const val REVIEWED_DONOR_CLIENT_SHA256 = "81efb092cb0ae745b2aa2f528a840bce17175f3dfe498a90774bc4f7d9920b95"
+
     fun audit(planPath: Path, donorClientPath: Path, outputPath: Path) {
         require(!Files.exists(outputPath))
         val planBytes = Files.readAllBytes(planPath)
         val plan = Json.parseToJsonElement(planBytes.decodeToString()).jsonObject
         val donorClient = donorClientPath.toRealPath()
         val clientCode = Files.readString(donorClient)
+        require(sha256(Files.readAllBytes(donorClient)) == REVIEWED_DONOR_CLIENT_SHA256) {
+            "Gielenor object-model rules changed; review the translation table before auditing"
+        }
         require("class64.translate(0, i_43_ == 22 ? -4 : 1, 0)" in clientCode)
         require("id >= 113705 && id <= 113714" in clientCode)
         require("id >= 137670 && id <= 137950" in clientCode)
@@ -53,6 +58,11 @@ object ZeahObjectModelOffsets {
             put("exceptionObjects", exceptions.size)
             put("modelOwners", modelOwners.size)
             put("sharedModels", modelOwners.count { it.value.size > 1 })
+            put("selectedMappings", buildJsonArray {
+                entries.forEach { (id, target) ->
+                    add(buildJsonObject { put("sourceRuntimeId", id); put("plannedTargetId", target) })
+                }
+            })
             put("exceptions", buildJsonArray {
                 exceptions.forEach { (id, target, models) ->
                     add(buildJsonObject {
