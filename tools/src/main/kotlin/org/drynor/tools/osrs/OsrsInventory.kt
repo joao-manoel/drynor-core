@@ -137,6 +137,11 @@ fun runOsrs(args: List<String>) {
         ZeahNpcDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.getOrNull(4)?.let(Path::of))
         return
     }
+    if (args.firstOrNull() == "plan-zeah-npc-ids") {
+        require(args.size == 6) { "osrs plan-zeah-npc-ids <gielenor-cache> <drynor-cache> <npc-spawn-report.json> <npc-deps-report.json> <new-plan.json>" }
+        ZeahNpcIdPlan.plan(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-npc-spawns") {
         require(args.size == 4) { "osrs inventory-zeah-npc-spawns <gielenor-root> <object-id-plan.json> <new-report.json>" }
         ZeahNpcSpawnInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
