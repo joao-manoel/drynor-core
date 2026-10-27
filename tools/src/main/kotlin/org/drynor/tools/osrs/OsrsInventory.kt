@@ -142,6 +142,21 @@ fun runOsrs(args: List<String>) {
         ZeahNpcIdPlan.plan(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
         return
     }
+    if (args.firstOrNull() == "audit-zeah-npc-conversion") {
+        require(args.size == 5) { "osrs audit-zeah-npc-conversion <gielenor-cache> <npc-deps-report.json> <npc-id-plan.json> <new-report.json>" }
+        ZeahNpcConversionAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-passive-npcs") {
+        require(args.size == 6) { "osrs preview-zeah-passive-npcs <gielenor-cache> <zeah-worldmap-preview-root> <npc-id-plan.json> <npc-conversion-audit.json> <new-output-root>" }
+        ZeahNpcAssetPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-npc-spawns") {
+        require(args.size == 6) { "osrs preview-zeah-npc-spawns <zeah-worldmap-preview-root> <zeah-npc-preview-root> <npc-spawn-report.json> <npc-id-plan.json> <new-output-root>" }
+        ZeahNpcSpawnPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-npc-spawns") {
         require(args.size == 4) { "osrs inventory-zeah-npc-spawns <gielenor-root> <object-id-plan.json> <new-report.json>" }
         ZeahNpcSpawnInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))

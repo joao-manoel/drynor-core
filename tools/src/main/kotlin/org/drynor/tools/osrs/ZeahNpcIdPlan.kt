@@ -10,7 +10,7 @@ import java.security.MessageDigest
 
 /** Plans NPC IDs without changing either cache or assuming that matching numeric IDs mean matching NPCs. */
 object ZeahNpcIdPlan {
-    private const val MAX_NPC_ID = 65535
+    private const val MAX_NPC_ID = 32767
 
     internal fun allocate(sourceIds: Set<Int>, occupied: Set<Int>): Map<Int, Int> {
         require(sourceIds.all { it in 0..MAX_NPC_ID } && occupied.all { it >= 0 })
