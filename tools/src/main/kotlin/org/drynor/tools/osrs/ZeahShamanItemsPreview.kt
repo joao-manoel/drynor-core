@@ -78,15 +78,17 @@ object ZeahShamanItemsPreview {
                             43383 -> item.options[0] = "Craft"
                             43393 -> {
                                 item.wearPos = 2
-                                item.options[0] = "Wear"
-                                item.options[1] = "Teleport"
-                                item.params = item.params.orEmpty() + mapOf(3 to 3, 9 to 1)
+                                item.options = arrayOf("Wear", "Rub", "Check", "Uncharge", "Drop")
+                                item.exchangeable = false
+                                item.params = item.params.orEmpty() + mapOf(3 to 3, 9 to 1,
+                                    528 to "Xeric's Lookout", 529 to "Xeric's Glade", 530 to "Xeric's Inferno",
+                                    531 to "Xeric's Heart", 1211 to "Xeric's Honour", 533 to "Check")
                             }
                             43576 -> {
                                 item.wearPos = 3
                                 item.options[0] = "Wield"
                                 item.params = item.params.orEmpty() + mapOf(0 to -4, 1 to -4, 2 to 95, 3 to -4,
-                                    14 to 4, 641 to 600, 749 to 0, 750 to 60, 687 to 1)
+                                    14 to 4, 641 to 850, 749 to 2, 750 to 60, 686 to 10, 687 to 1)
                             }
                         }
                         item.id = itemMap.getValue(from)
