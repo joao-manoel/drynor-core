@@ -5,6 +5,8 @@ description: Import or port OSRS maps, assets and gameplay from Gielenor or anot
 
 # OSRS content transfer
 
+For Zeah Shaman rewards, `osrs preview-zeah-shaman-items <gielenor-cache> <shaman-preview-root> <raid-equipment-report.json> <new-output-root>` builds an isolated native item preview. It pins the donor and input preview, reuses the production note template through the raid-equipment report, stages editable assets and verifies untouched cache archives. Its source-to-native item mapping lives in `preview-report.json`; never put donor item IDs directly into Drynor drop JSON. This preview does not enable drops or validate equipment/attack specials. See `drynor-world-server/docs/ZEAH_SHAMAN_DROPS_AUDIT.md` for the table and remaining gates.
+
 Read the owning repository AGENTS.md and drynor-code-standards. Use drynor-content-development for asset/gameplay integration and drynor-kotlin-plugins for hooks. Resolve sibling repositories from the actual checkout. Source projects and reference caches are read-only inputs.
 
 ## Workflow

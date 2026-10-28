@@ -142,6 +142,11 @@ fun runOsrs(args: List<String>) {
         ZeahItemDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
         return
     }
+    if (args.firstOrNull() == "preview-zeah-shaman-items") {
+        require(args.size == 5) { "osrs preview-zeah-shaman-items <gielenor-cache> <shaman-preview-root> <raid-equipment-report.json> <new-output-root>" }
+        ZeahShamanItemsPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-npc-drops") {
         require(args.size == 5) { "osrs inventory-zeah-npc-drops <gielenor-root> <npc-spawn-report.json> <npc-deps-report.json> <new-report.json>" }
         ZeahNpcDropInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
