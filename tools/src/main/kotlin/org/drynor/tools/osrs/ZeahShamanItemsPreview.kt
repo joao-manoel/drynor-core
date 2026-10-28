@@ -18,6 +18,7 @@ import java.security.MessageDigest
 /** Isolated item dependency closure for Shaman rewards; does not enable drops. */
 object ZeahShamanItemsPreview {
     private val rewardIds = setOf(43383, 43393, 43576)
+    private val craftingIds = setOf(43385, 43387, 43389)
 
     fun build(sourcePath: Path, inputRoot: Path, equipmentReportPath: Path, outputRoot: Path) {
         val sourceRoot = sourcePath.toRealPath()
@@ -39,7 +40,7 @@ object ZeahShamanItemsPreview {
                 val items = sortedMapOf<Int, ItemDefinition>()
                 val omittedPlaceholders = sortedMapOf<Int, Map<Int, Int>>()
                 val presentationOffsets = sortedMapOf<Int, Map<Int, Int>>()
-                val pending = java.util.TreeSet(rewardIds)
+                val pending = java.util.TreeSet(rewardIds + craftingIds)
                 while (pending.isNotEmpty()) {
                     val id = pending.pollFirst()
                     if (id in items || id == 30799) continue
@@ -58,9 +59,14 @@ object ZeahShamanItemsPreview {
                 val occupiedItems = baseline.archiveIds(Index.ITEMS)
                     .flatMap { archive -> baseline.files(Index.ITEMS, archive).map { (archive shl 8) or it } }.toMutableSet()
                 require(reusedTemplate in occupiedItems) { "Production note template missing from Shaman baseline" }
-                val itemMap = mapOf(30799 to reusedTemplate) + items.keys.associateWith { _ ->
-                    (30000..32766).first { it !in occupiedItems }.also(occupiedItems::add)
+                val stableItems = mapOf(43383 to 30100, 43384 to 30101, 43393 to 30102,
+                    43576 to 30103, 43577 to 30104)
+                require(stableItems.keys.all { it in items } && stableItems.values.none { it in occupiedItems })
+                occupiedItems.addAll(stableItems.values)
+                val added = items.keys.filterNot(stableItems::containsKey).associateWith { _ ->
+                    (30105..32766).first { it !in occupiedItems }.also(occupiedItems::add)
                 }
+                val itemMap = mapOf(30799 to reusedTemplate) + stableItems + added
                 val modelIds = items.values.flatMap(::models).toSet()
                 val modelMap = DeterministicIds.plan(modelIds, baseline.archiveIds(Index.MODELS).toSet())
                 val assets = mutableListOf<InfernoAssetWriter.Asset>()
@@ -76,6 +82,14 @@ object ZeahShamanItemsPreview {
                     for ((from, item) in items) {
                         when (from) {
                             43383 -> item.options[0] = "Craft"
+                            43385, 43387, 43389 -> {
+                                item.wearPos = when (from) { 43385 -> 0; 43387 -> 4; else -> 7 }
+                                item.options[0] = "Wear"
+                                val magicAttack = when (from) { 43385 -> 3; 43387 -> 12; else -> 8 }
+                                val magicDefence = when (from) { 43385 -> 3; 43387 -> 10; else -> 7 }
+                                item.params = item.params.orEmpty() + mapOf(3 to magicAttack, 8 to magicDefence,
+                                    749 to 6, 750 to 20, 751 to 1, 752 to 10)
+                            }
                             43393 -> {
                                 item.wearPos = 2
                                 item.options = arrayOf("Wear", "Rub", "Check", "Uncharge", "Drop")
@@ -150,6 +164,7 @@ object ZeahShamanItemsPreview {
                     put("reusedProductionNoteTemplate", reusedTemplate)
                     put("packedCache", "packed-cache")
                     put("rewards", JsonArray(expected.filter { it.jsonObject.getValue("source").jsonPrimitive.int in rewardIds }))
+                    put("craftingProducts", JsonArray(expected.filter { it.jsonObject.getValue("source").jsonPrimitive.int in craftingIds }))
                     put("items", expected)
                     put("itemCount", items.size)
                     put("modelCount", modelMap.size)
