@@ -74,6 +74,21 @@ object ZeahShamanItemsPreview {
                 }
                 val expected = buildJsonArray {
                     for ((from, item) in items) {
+                        when (from) {
+                            43383 -> item.options[0] = "Craft"
+                            43393 -> {
+                                item.wearPos = 2
+                                item.options[0] = "Wear"
+                                item.options[1] = "Teleport"
+                                item.params = item.params.orEmpty() + mapOf(3 to 3, 9 to 1)
+                            }
+                            43576 -> {
+                                item.wearPos = 3
+                                item.options[0] = "Wield"
+                                item.params = item.params.orEmpty() + mapOf(0 to -4, 1 to -4, 2 to 95, 3 to -4,
+                                    14 to 4, 641 to 600, 749 to 0, 750 to 60, 687 to 1)
+                            }
+                        }
                         item.id = itemMap.getValue(from)
                         item.modelId = model(item.modelId, modelMap)
                         item.primaryMaleModel = model(item.primaryMaleModel, modelMap)
@@ -96,7 +111,8 @@ object ZeahShamanItemsPreview {
                         val bytes = writer.toArray()
                         val read = ItemDefinition(item.id)
                         ItemDecoder().readLoop(read, BufferReader(bytes))
-                        check(read.name == item.name && read.modelId == item.modelId &&
+                        check(read.name == item.name && read.modelId == item.modelId && read.wearPos == item.wearPos &&
+                            read.options.contentEquals(item.options) && read.params == item.params &&
                             read.noteId == item.noteId && read.notedTemplateId == item.notedTemplateId)
                         assets += InfernoAssetWriter.Asset(Index.ITEMS, item.id ushr 8, item.id and 255, bytes)
                         add(buildJsonObject { put("source", from); put("target", item.id); put("name", item.name) })
