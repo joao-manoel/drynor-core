@@ -26,6 +26,39 @@ object ZeahShamanItemsPreview {
 
     fun removeDuplicateTabletUse(previewRoot: Path) = removeDuplicateUse(previewRoot, 51046, 30113, "Ancient tablet")
 
+    fun fixXericianTopSleeves(previewRoot: Path) {
+        val root = previewRoot.toRealPath()
+        val report = Json.parseToJsonElement(Files.readString(root.resolve("preview-report.json"))).jsonObject
+        require(report.getValue("items").jsonArray.any {
+            it.jsonObject["source"]?.jsonPrimitive?.int == 43387 &&
+                it.jsonObject["target"]?.jsonPrimitive?.int == 30107
+        })
+        val packed = root.resolve("packed-cache").toRealPath()
+        val id = 30107
+        val before = FileCache(packed.toString(), writable = false).use { cache ->
+            requireNotNull(cache.data(Index.ITEMS, id ushr 8, id and 255))
+        }
+        val item = ItemDefinition(id)
+        ItemDecoder().readLoop(item, BufferReader(before))
+        require(item.name == "Xerician top" && item.wearPos == 4 && item.wearPos2 == -1)
+        item.wearPos2 = 6 // Match the native robe body: hide the player's base sleeves.
+        item.opcodeOrder = null
+        val writer = BufferWriter(1 shl 20)
+        with(ItemEncoder()) { writer.encode(item) }
+        val corrected = writer.toArray()
+        val read = ItemDefinition(id)
+        ItemDecoder().readLoop(read, BufferReader(corrected))
+        require(read.name == item.name && read.wearPos2 == 6 && read.primaryMaleModel == item.primaryMaleModel)
+        val editable = root.resolve("editable-assets/config_obj/$id.json")
+        val source = Files.readString(editable)
+        require(source.contains("\"wearPos2\": -1"))
+        InfernoAssetWriter.write(packed, listOf(InfernoAssetWriter.Asset(Index.ITEMS, id ushr 8, id and 255, corrected, true)))
+        FileCache(packed.toString(), writable = false).use { cache ->
+            check(cache.data(Index.ITEMS, id ushr 8, id and 255).contentEquals(corrected))
+        }
+        Files.writeString(editable, source.replace("\"wearPos2\": -1", "\"wearPos2\": 6"))
+    }
+
     private fun removeDuplicateUse(previewRoot: Path, sourceId: Int, id: Int, name: String) {
         val root = previewRoot.toRealPath()
         val report = Json.parseToJsonElement(Files.readString(root.resolve("preview-report.json"))).jsonObject
@@ -128,6 +161,7 @@ object ZeahShamanItemsPreview {
                             43383 -> item.options[0] = "Craft"
                             43385, 43387, 43389 -> {
                                 item.wearPos = when (from) { 43385 -> 0; 43387 -> 4; else -> 7 }
+                                if (from == 43387) item.wearPos2 = 6
                                 item.options[0] = "Wear"
                                 val magicAttack = when (from) { 43385 -> 3; 43387 -> 12; else -> 8 }
                                 val magicDefence = when (from) { 43385 -> 3; 43387 -> 10; else -> 7 }
