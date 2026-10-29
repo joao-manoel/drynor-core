@@ -21,6 +21,41 @@ object ZeahShamanItemsPreview {
     private val utilityIds = setOf(51046) // Ancient tablet: Chambers of Xeric reward, not a Shaman drop.
     private val craftingIds = setOf(43385, 43387, 43389)
 
+    /** Correct one generated preview definition in place while all readers are stopped. */
+    fun removeDuplicateFangUse(previewRoot: Path) {
+        val root = previewRoot.toRealPath()
+        val report = Json.parseToJsonElement(Files.readString(root.resolve("preview-report.json"))).jsonObject
+        require(report.getValue("status").jsonPrimitive.content == "experimental-zeah-shaman-items")
+        require(report.getValue("items").jsonArray.any {
+            it.jsonObject["source"]?.jsonPrimitive?.int == 43391 && it.jsonObject["target"]?.jsonPrimitive?.int == 30111
+        })
+        val packed = root.resolve("packed-cache").toRealPath()
+        val id = 30111
+        val before = FileCache(packed.toString(), writable = false).use { cache ->
+            requireNotNull(cache.data(Index.ITEMS, id ushr 8, id and 255))
+        }
+        val item = ItemDefinition(id)
+        ItemDecoder().readLoop(item, BufferReader(before))
+        require(item.name == "Lizardman fang" && item.options[0] == "Use")
+        item.options[0] = null
+        item.opcodeOrder = null
+        val writer = BufferWriter(1 shl 20)
+        with(ItemEncoder()) { writer.encode(item) }
+        val corrected = writer.toArray()
+        val read = ItemDefinition(id)
+        ItemDecoder().readLoop(read, BufferReader(corrected))
+        require(read.name == item.name && read.options[0] == null && read.options[4] == "Drop")
+        val editable = root.resolve("editable-assets/config_obj/30111.json")
+        val source = Files.readString(editable)
+        require(source.contains("\"options\": [\"Use\", null, null, null, \"Drop\"]"))
+        InfernoAssetWriter.write(packed, listOf(InfernoAssetWriter.Asset(Index.ITEMS, id ushr 8, id and 255, corrected, true)))
+        FileCache(packed.toString(), writable = false).use { cache ->
+            check(cache.data(Index.ITEMS, id ushr 8, id and 255).contentEquals(corrected))
+        }
+        Files.writeString(editable, source.replace("\"options\": [\"Use\", null, null, null, \"Drop\"]",
+            "\"options\": [null, null, null, null, \"Drop\"]"))
+    }
+
     fun build(sourcePath: Path, inputRoot: Path, equipmentReportPath: Path, outputRoot: Path) {
         val sourceRoot = sourcePath.toRealPath()
         val input = inputRoot.toRealPath()
@@ -104,7 +139,8 @@ object ZeahShamanItemsPreview {
                                     528 to "Xeric's Lookout", 529 to "Xeric's Glade", 530 to "Xeric's Inferno",
                                     531 to "Xeric's Heart", 1211 to "Xeric's Honour", 533 to "Check")
                             }
-                            43391 -> item.options[0] = "Use"
+                            // The 727 client adds its own item-selection Use action.
+                            43391 -> item.options[0] = null
                             51046 -> item.options[0] = "Use"
                             43576 -> {
                                 item.wearPos = 3
