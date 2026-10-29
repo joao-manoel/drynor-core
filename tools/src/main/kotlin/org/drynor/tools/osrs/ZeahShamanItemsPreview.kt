@@ -15,9 +15,10 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption.CREATE_NEW
 import java.security.MessageDigest
 
-/** Isolated item dependency closure for Shaman rewards; does not enable drops. */
+/** Isolated item dependency closure for Shaman rewards and talisman support; runtime gates drops. */
 object ZeahShamanItemsPreview {
-    private val rewardIds = setOf(43383, 43393, 43576)
+    private val rewardIds = setOf(43383, 43391, 43393, 43576)
+    private val utilityIds = setOf(51046) // Ancient tablet: Chambers of Xeric reward, not a Shaman drop.
     private val craftingIds = setOf(43385, 43387, 43389)
 
     fun build(sourcePath: Path, inputRoot: Path, equipmentReportPath: Path, outputRoot: Path) {
@@ -40,7 +41,7 @@ object ZeahShamanItemsPreview {
                 val items = sortedMapOf<Int, ItemDefinition>()
                 val omittedPlaceholders = sortedMapOf<Int, Map<Int, Int>>()
                 val presentationOffsets = sortedMapOf<Int, Map<Int, Int>>()
-                val pending = java.util.TreeSet(rewardIds + craftingIds)
+                val pending = java.util.TreeSet(rewardIds + craftingIds + utilityIds)
                 while (pending.isNotEmpty()) {
                     val id = pending.pollFirst()
                     if (id in items || id == 30799) continue
@@ -49,6 +50,10 @@ object ZeahShamanItemsPreview {
                     val placeholders = linkedMapOf<Int, Int>()
                     val offsets = linkedMapOf<Int, Int>()
                     val item = OsrsItemConverter.decode(id, bytes, placeholders, offsets)
+                    when (id) {
+                        43391 -> require(item.name == "Lizardman fang") { "Unexpected donor item 43391: ${item.name}" }
+                        51046 -> require(item.name == "Ancient tablet") { "Unexpected donor item 51046: ${item.name}" }
+                    }
                     items[id] = item
                     if (placeholders.isNotEmpty()) omittedPlaceholders[id] = placeholders
                     if (offsets.isNotEmpty()) presentationOffsets[id] = offsets
@@ -60,7 +65,8 @@ object ZeahShamanItemsPreview {
                     .flatMap { archive -> baseline.files(Index.ITEMS, archive).map { (archive shl 8) or it } }.toMutableSet()
                 require(reusedTemplate in occupiedItems) { "Production note template missing from Shaman baseline" }
                 val stableItems = mapOf(43383 to 30100, 43384 to 30101, 43393 to 30102,
-                    43576 to 30103, 43577 to 30104)
+                    43576 to 30103, 43577 to 30104, 43391 to 30111,
+                    51046 to 30113)
                 require(stableItems.keys.all { it in items } && stableItems.values.none { it in occupiedItems })
                 occupiedItems.addAll(stableItems.values)
                 val added = items.keys.filterNot(stableItems::containsKey).associateWith { _ ->
@@ -98,6 +104,8 @@ object ZeahShamanItemsPreview {
                                     528 to "Xeric's Lookout", 529 to "Xeric's Glade", 530 to "Xeric's Inferno",
                                     531 to "Xeric's Heart", 1211 to "Xeric's Honour", 533 to "Check")
                             }
+                            43391 -> item.options[0] = "Use"
+                            51046 -> item.options[0] = "Use"
                             43576 -> {
                                 item.wearPos = 3
                                 item.options[0] = "Wield"
@@ -175,7 +183,7 @@ object ZeahShamanItemsPreview {
                     put("donorPresentationOffsets", buildJsonObject { presentationOffsets.forEach { (id, offsets) ->
                         put(id.toString(), buildJsonObject { offsets.forEach { (opcode, offset) -> put(opcode.toString(), offset) } })
                     } })
-                    put("dropsEnabled", false)
+                    put("dropsEnabled", true)
                     put("clientValidated", false)
                 }
                 Files.writeString(output.resolve("preview-report.json"), Json { prettyPrint = true }.encodeToString(report) + "\n", CREATE_NEW)
