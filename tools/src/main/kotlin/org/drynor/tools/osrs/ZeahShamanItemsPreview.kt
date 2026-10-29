@@ -22,21 +22,24 @@ object ZeahShamanItemsPreview {
     private val craftingIds = setOf(43385, 43387, 43389)
 
     /** Correct one generated preview definition in place while all readers are stopped. */
-    fun removeDuplicateFangUse(previewRoot: Path) {
+    fun removeDuplicateFangUse(previewRoot: Path) = removeDuplicateUse(previewRoot, 43391, 30111, "Lizardman fang")
+
+    fun removeDuplicateTabletUse(previewRoot: Path) = removeDuplicateUse(previewRoot, 51046, 30113, "Ancient tablet")
+
+    private fun removeDuplicateUse(previewRoot: Path, sourceId: Int, id: Int, name: String) {
         val root = previewRoot.toRealPath()
         val report = Json.parseToJsonElement(Files.readString(root.resolve("preview-report.json"))).jsonObject
         require(report.getValue("status").jsonPrimitive.content == "experimental-zeah-shaman-items")
         require(report.getValue("items").jsonArray.any {
-            it.jsonObject["source"]?.jsonPrimitive?.int == 43391 && it.jsonObject["target"]?.jsonPrimitive?.int == 30111
+            it.jsonObject["source"]?.jsonPrimitive?.int == sourceId && it.jsonObject["target"]?.jsonPrimitive?.int == id
         })
         val packed = root.resolve("packed-cache").toRealPath()
-        val id = 30111
         val before = FileCache(packed.toString(), writable = false).use { cache ->
             requireNotNull(cache.data(Index.ITEMS, id ushr 8, id and 255))
         }
         val item = ItemDefinition(id)
         ItemDecoder().readLoop(item, BufferReader(before))
-        require(item.name == "Lizardman fang" && item.options[0] == "Use")
+        require(item.name == name && item.options[0] == "Use")
         item.options[0] = null
         item.opcodeOrder = null
         val writer = BufferWriter(1 shl 20)
@@ -45,7 +48,7 @@ object ZeahShamanItemsPreview {
         val read = ItemDefinition(id)
         ItemDecoder().readLoop(read, BufferReader(corrected))
         require(read.name == item.name && read.options[0] == null && read.options[4] == "Drop")
-        val editable = root.resolve("editable-assets/config_obj/30111.json")
+        val editable = root.resolve("editable-assets/config_obj/$id.json")
         val source = Files.readString(editable)
         require(source.contains("\"options\": [\"Use\", null, null, null, \"Drop\"]"))
         InfernoAssetWriter.write(packed, listOf(InfernoAssetWriter.Asset(Index.ITEMS, id ushr 8, id and 255, corrected, true)))
@@ -141,7 +144,7 @@ object ZeahShamanItemsPreview {
                             }
                             // The 727 client adds its own item-selection Use action.
                             43391 -> item.options[0] = null
-                            51046 -> item.options[0] = "Use"
+                            51046 -> item.options[0] = null
                             43576 -> {
                                 item.wearPos = 3
                                 item.options[0] = "Wield"

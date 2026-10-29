@@ -152,6 +152,11 @@ fun runOsrs(args: List<String>) {
         ZeahShamanItemsPreview.removeDuplicateFangUse(Path.of(args[1]))
         return
     }
+    if (args.firstOrNull() == "fix-zeah-tablet-menu") {
+        require(args.size == 2) { "osrs fix-zeah-tablet-menu <zeah-shaman-items-preview-root>" }
+        ZeahShamanItemsPreview.removeDuplicateTabletUse(Path.of(args[1]))
+        return
+    }
     if (args.firstOrNull() == "inventory-zeah-npc-drops") {
         require(args.size == 5) { "osrs inventory-zeah-npc-drops <gielenor-root> <npc-spawn-report.json> <npc-deps-report.json> <new-report.json>" }
         ZeahNpcDropInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
