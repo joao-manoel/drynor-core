@@ -292,6 +292,31 @@ fun runOsrs(args: List<String>) {
         ZeahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
         return
     }
+    if (args.firstOrNull() == "preview-zeah-four-npc-combat") {
+        require(args.size == 4) { "osrs preview-zeah-four-npc-combat <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahFourNpcCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-cave-drop-items") {
+        require(args.size == 4) { "osrs preview-zeah-cave-drop-items <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahCaveDropItemsPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "probe-zeah-drop-items") {
+        require(args.size >= 3) { "osrs probe-zeah-drop-items <cache> <item-id>..." }
+        world.gregs.voidps.cache.FileCache(Path.of(args[1]).toRealPath().toString(), writable = false).use { cache ->
+            for (id in args.drop(2).map(String::toInt)) {
+                val bytes = cache.data(world.gregs.voidps.cache.Index.ITEMS, id ushr 8, id and 255)
+                val item = bytes?.let {
+                    world.gregs.voidps.cache.definition.data.ItemDefinition(id).also { definition ->
+                        world.gregs.voidps.cache.definition.decoder.ItemDecoder().readLoop(definition, world.gregs.voidps.buffer.read.BufferReader(it))
+                    }
+                }
+                println("$id ${item?.name ?: "<missing>"} note=${item?.noteId} wear=${item?.wearPos}")
+            }
+        }
+        return
+    }
     if (args.firstOrNull() == "probe-zeah-floor") {
         require(args.size == 6) { "osrs probe-zeah-floor <source-cache> <preview-cache> <palette.json> <x> <y>" }
         ZeahFloorProbe.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args[4].toInt(), args[5].toInt())
