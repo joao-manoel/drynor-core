@@ -6,9 +6,9 @@ import world.gregs.voidps.cache.definition.data.ObjectDefinition
 /**
  * Strict Gielenor decodeOSRS -> native 727 conversion. Reference maps use physical Gielenor IDs.
  * Morph selectors are deliberately rejected: Gielenor disables their vars, so copying either its
- * forced variant or OSRS vars would invent behavior. Sounds and minimap assets also need a separate
- * namespace conversion. No shape-dependent Y correction is baked into a shared definition.
- * [staticPreview] explicitly removes animation, mapscene/map-icon and ambient sound references;
+ * forced variant or OSRS vars would invent behavior. Minimap assets need a separate namespace
+ * conversion. Sounds require an audited identity mapping. No shape-dependent Y correction is baked
+ * into a shared definition. [staticPreview] removes animations and rejects mapscene/map-icon;
  * the caller must list these omissions from OsrsObjectDependencies in its export manifest.
  * It is unsuitable for gameplay exports.
  */
@@ -19,7 +19,11 @@ object OsrsObjectConverter {
         modelMap: Map<Int, Int>,
         animationMap: Map<Int, Int>,
         objectMap: Map<Int, Int>,
-        staticPreview: Boolean = false
+        staticPreview: Boolean = false,
+        verifiedSoundIds: Set<Int> = emptySet(),
+        verifiedMapsceneIds: Set<Int> = emptySet(),
+        auditedMapIconIds: Map<Int, Int?> = emptyMap(),
+        auditedMapsceneIds: Map<Int, Int> = emptyMap()
     ): ObjectDefinition {
         val input = OsrsByteReader(data)
         val result = ObjectDefinition(id)
@@ -95,7 +99,13 @@ object OsrsObjectConverter {
                 65 -> result.modelSizeX = input.u16()
                 66 -> result.modelSizeZ = input.u16()
                 67 -> result.modelSizeY = input.u16()
-                68 -> { input.u16(); check(staticPreview) { "Object $id: OSRS mapscene requires an explicit sprite mapping" } }
+                68 -> {
+                    val raw = input.u16()
+                    val effective = if (raw == 88) 0 else raw
+                    if (effective in auditedMapsceneIds) result.mapscene = auditedMapsceneIds.getValue(effective)
+                    else if (effective in verifiedMapsceneIds) result.mapscene = effective
+                    else check(staticPreview) { "Object $id: OSRS mapscene $raw requires an audited sprite mapping" }
+                }
                 69 -> result.blockFlag = input.u8()
                 // The native encoder divides by four. Do not apply Gielenor's additional shape Y patch.
                 70 -> result.offsetX = signedShort() shl 2
@@ -106,16 +116,33 @@ object OsrsObjectConverter {
                 75 -> result.supportItems = input.u8()
                 77, 92 -> error("Object $id: morph opcode $opcode requires a reviewed selector policy (${objectMap.size} object mappings supplied)")
                 78 -> {
-                    input.u16(); input.u8()
-                    check(staticPreview) { "Object $id: sound opcode $opcode requires an explicit sound mapping" }
+                    val sound = input.u16()
+                    val volume = input.u8()
+                    if (!staticPreview || verifiedSoundIds.isNotEmpty()) {
+                        require(sound in verifiedSoundIds) { "Object $id: unverified ambient sound $sound" }
+                        result.anInt3015 = sound
+                        result.anInt3012 = volume
+                    }
                 }
                 79 -> {
-                    input.u16(); input.u16(); input.u8()
-                    repeat(input.u8()) { input.u16() }
-                    check(staticPreview) { "Object $id: sound opcode $opcode requires an explicit sound mapping" }
+                    val start = input.u16()
+                    val end = input.u16()
+                    val volume = input.u8()
+                    val sounds = IntArray(input.u8()) { input.u16() }
+                    if (!staticPreview || verifiedSoundIds.isNotEmpty()) {
+                        require(sounds.all { it in verifiedSoundIds }) { "Object $id: unverified ambient sound sequence" }
+                        result.anInt2989 = start
+                        result.anInt2971 = end
+                        result.anInt3012 = volume
+                        result.anIntArray3036 = sounds
+                    }
                 }
                 81 -> { result.contouredGround = 2; result.anInt3023 = input.u8() * 256 }
-                82 -> { input.u16(); check(staticPreview) { "Object $id: OSRS map icon requires an explicit map-element mapping" } }
+                82 -> {
+                    val raw = input.u16()
+                    if (raw in auditedMapIconIds) auditedMapIconIds[raw]?.let { result.mapDefinitionId = it }
+                    else check(staticPreview) { "Object $id: OSRS map icon $raw requires an audited map-element mapping" }
+                }
                 249 -> {
                     val records = ArrayList<KeyedValue>()
                     repeat(input.u8()) {

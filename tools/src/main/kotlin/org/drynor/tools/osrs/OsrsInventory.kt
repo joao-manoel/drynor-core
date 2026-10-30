@@ -22,6 +22,224 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-zeah-karuulm-combat-visuals") {
+        require(args.size == 5) { "osrs preview-zeah-karuulm-combat-visuals <gielenor-cache> <common-preview-root> <karuulm-audit.json> <new-output-root>" }
+        ZeahKaruulmCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-karuulm-combat-visuals") {
+        require(args.size == 4) { "osrs audit-zeah-karuulm-combat-visuals <gielenor-cache> <current-preview-cache> <new-report.json>" }
+        ZeahCommonCombatAnimations.auditKaruulm(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-common-combat-animations") {
+        require(args.size == 4) { "osrs preview-zeah-common-combat-animations <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahCommonCombatAnimations.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "inspect-zeah-region-objects") {
+        require(args.size == 4) { "osrs inspect-zeah-region-objects <cache> <region-id> <new-report.json>" }
+        ZeahRegionObjectInspection.inspect(Path.of(args[1]), args[2].toInt(), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-shaman-combat-assets") {
+        require(args.size == 5) { "osrs preview-zeah-shaman-combat-assets <gielenor-cache> <zeah-npc-preview-root> <shaman-asset-audit.json> <new-output-root>" }
+        ZeahShamanCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-shaman-combat-assets") {
+        require(args.size == 4) { "osrs audit-zeah-shaman-combat-assets <gielenor-cache> <preview-cache> <new-report.json>" }
+        ZeahShamanCombatAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-equipment-parity") {
+        require(args.size == 5) { "osrs audit-zeah-equipment-parity <production-cache> <zeah-preview-cache> <equipment-preview.json> <new-report.json>" }
+        ZeahEquipmentParityAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-production-subset") {
+        require(args.size in 5..6) { "osrs audit-zeah-production-subset <production-cache> <zeah-preview-cache> <xteaKeys.json> <new-report.json> [approved-worldmap-preview-root]" }
+        ZeahProductionSubsetAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), args.getOrNull(5)?.let(Path::of))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-icon-objects") {
+        require(args.size == 11) { "osrs preview-zeah-icon-objects <icon-remap-preview-root> <animated-objects-preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <material-audit.json> <sound-audit.json> <icon-audit.json> <animation-audit.json> <new-output-root>" }
+        ZeahIconObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]), Path.of(args[7]), Path.of(args[8]), Path.of(args[9]), Path.of(args[10]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-icon-remaps") {
+        require(args.size == 6) { "osrs preview-zeah-icon-remaps <base-preview-root> <bounded-object-plan.json> <object-icons-audit.json> <icon-alias-audit.json> <new-output-root>" }
+        ZeahIconRemapPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-remaining-objects") {
+        require(args.size == 6) { "osrs audit-zeah-remaining-objects <preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-report.json>" }
+        ZeahRemainingObjectAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-animated-objects") {
+        require(args.size == 10) { "osrs preview-zeah-animated-objects <animation-assets-preview-root> <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <material-audit.json> <sound-audit.json> <icon-audit.json> <animation-audit.json> <new-output-root>" }
+        ZeahAnimatedObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]), Path.of(args[7]), Path.of(args[8]), Path.of(args[9]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-object-animation-assets") {
+        require(args.size == 5) { "osrs preview-zeah-object-animation-assets <static-preview-root> <bounded-object-plan.json> <object-animation-audit.json> <new-output-root>" }
+        ZeahObjectAnimationPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-animations") {
+        require(args.size == 3) { "osrs audit-zeah-object-animations <bounded-object-plan.json> <new-report.json>" }
+        ZeahObjectAnimationAudit.audit(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-icon-aliases") {
+        require(args.size == 4) { "osrs audit-zeah-icon-aliases <bounded-object-plan.json> <object-icon-audit.json> <new-report.json>" }
+        ZeahIconAliasAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-icons") {
+        require(args.size == 4) { "osrs audit-zeah-object-icons <bounded-object-plan.json> <donor-client-ObjectConfig.java> <new-report.json>" }
+        ZeahObjectIconAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-sounds") {
+        require(args.size == 3) { "osrs audit-zeah-object-sounds <bounded-object-plan.json> <new-report.json>" }
+        ZeahObjectSoundAudit.audit(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-morph-visuals") {
+        require(args.size == 6) { "osrs preview-zeah-morph-visuals <static-preview-root> <landscape-preview-root> <bounded-object-plan.json> <morph-audit.json> <new-output-root>" }
+        ZeahMorphVisualPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-morphs") {
+        require(args.size == 3) { "osrs audit-zeah-morphs <bounded-object-plan.json> <new-report.json>" }
+        ZeahMorphAudit.audit(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-materials") {
+        require(args.size == 4) { "osrs audit-zeah-materials <bounded-object-plan.json> <static-object-audit.json> <new-report.json>" }
+        ZeahMaterialAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-static-objects") {
+        require(args.size in 5..8) { "osrs preview-zeah-static-objects <landscape-preview-root> <bounded-object-plan.json> <static-audit.json> <new-output-root> [material-closure-audit.json] [object-sound-audit.json] [object-icon-audit.json]" }
+        ZeahStaticObjectPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), args.getOrNull(5)?.let(Path::of), args.getOrNull(6)?.let(Path::of), args.getOrNull(7)?.let(Path::of))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-static-objects") {
+        require(args.size == 3) { "osrs audit-zeah-static-objects <bounded-object-plan.json> <new-report.json>" }
+        ZeahStaticObjectAudit.audit(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-landscapes") {
+        require(args.size == 4) { "osrs preview-zeah-landscapes <terrain-preview-root> <bounded-object-plan.json> <new-output-root>" }
+        ZeahLandscapePreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-terrain-set") {
+        require(args.size == 5) { "osrs preview-zeah-terrain-set <floor-definitions-preview-root> <terrain-audit.json> <floor-plan.json> <new-output-root>" }
+        ZeahTerrainSetPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-floor-definitions") {
+        require(args.size == 5) { "osrs preview-zeah-floor-definitions <gielenor-cache> <drynor-cache> <floor-plan.json> <new-output-root>" }
+        ZeahFloorDefinitionsPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "plan-zeah-floor-palettes") {
+        require(args.size == 3) { "osrs plan-zeah-floor-palettes <terrain-audit.json> <new-plan.json>" }
+        ZeahFloorPalettePlan.plan(Path.of(args[1]), Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-floor") {
+        require(args.size == 5) { "osrs preview-zeah-floor <gielenor-cache> <drynor-cache> <terrain-audit.json> <new-output-root>" }
+        ZeahFloorPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-item-deps") {
+        require(args.size == 4) { "osrs audit-zeah-item-deps <gielenor-cache> <npc-drop-report.json> <new-report.json>" }
+        ZeahItemDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-shaman-items") {
+        require(args.size == 5) { "osrs preview-zeah-shaman-items <gielenor-cache> <shaman-preview-root> <raid-equipment-report.json> <new-output-root>" }
+        ZeahShamanItemsPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "fix-zeah-fang-menu") {
+        require(args.size == 2) { "osrs fix-zeah-fang-menu <zeah-shaman-items-preview-root>" }
+        ZeahShamanItemsPreview.removeDuplicateFangUse(Path.of(args[1]))
+        return
+    }
+    if (args.firstOrNull() == "fix-zeah-tablet-menu") {
+        require(args.size == 2) { "osrs fix-zeah-tablet-menu <zeah-shaman-items-preview-root>" }
+        ZeahShamanItemsPreview.removeDuplicateTabletUse(Path.of(args[1]))
+        return
+    }
+    if (args.firstOrNull() == "fix-zeah-xerician-sleeves") {
+        require(args.size == 2) { "osrs fix-zeah-xerician-sleeves <zeah-shaman-items-preview-root>" }
+        ZeahShamanItemsPreview.fixXericianTopSleeves(Path.of(args[1]))
+        return
+    }
+    if (args.firstOrNull() == "inventory-zeah-npc-drops") {
+        require(args.size == 5) { "osrs inventory-zeah-npc-drops <gielenor-root> <npc-spawn-report.json> <npc-deps-report.json> <new-report.json>" }
+        ZeahNpcDropInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-terrain") {
+        require(args.size == 4) { "osrs audit-zeah-terrain <gielenor-cache> <object-id-plan.json> <new-report.json>" }
+        ZeahTerrainAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-npc-deps") {
+        require(args.size == 4 || args.size == 5) { "osrs audit-zeah-npc-deps <gielenor-cache> <npc-spawn-report.json> <new-report.json> [drynor-cache]" }
+        ZeahNpcDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.getOrNull(4)?.let(Path::of))
+        return
+    }
+    if (args.firstOrNull() == "plan-zeah-npc-ids") {
+        require(args.size == 6) { "osrs plan-zeah-npc-ids <gielenor-cache> <drynor-cache> <npc-spawn-report.json> <npc-deps-report.json> <new-plan.json>" }
+        ZeahNpcIdPlan.plan(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-npc-conversion") {
+        require(args.size == 5) { "osrs audit-zeah-npc-conversion <gielenor-cache> <npc-deps-report.json> <npc-id-plan.json> <new-report.json>" }
+        ZeahNpcConversionAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-passive-npcs") {
+        require(args.size == 6) { "osrs preview-zeah-passive-npcs <gielenor-cache> <zeah-worldmap-preview-root> <npc-id-plan.json> <npc-conversion-audit.json> <new-output-root>" }
+        ZeahNpcAssetPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-npc-spawns") {
+        require(args.size == 6) { "osrs preview-zeah-npc-spawns <zeah-worldmap-preview-root> <zeah-npc-preview-root> <npc-spawn-report.json> <npc-id-plan.json> <new-output-root>" }
+        ZeahNpcSpawnPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]))
+        return
+    }
+    if (args.firstOrNull() == "inventory-zeah-npc-spawns") {
+        require(args.size == 4) { "osrs inventory-zeah-npc-spawns <gielenor-root> <object-id-plan.json> <new-report.json>" }
+        ZeahNpcSpawnInventory.inventory(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-deps") {
+        require(args.size == 4 || args.size == 5) { "osrs audit-zeah-object-deps <gielenor-cache> <object-id-plan.json> <new-audit.json> [drynor-cache]" }
+        ZeahObjectDependencyAudit.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.getOrNull(4)?.let(Path::of))
+        return
+    }
+    if (args.firstOrNull() == "plan-zeah-object-ids") {
+        require(args.size >= 4) { "osrs plan-zeah-object-ids <drynor-cache> <new-plan.json> <region-report.json> [more-region-reports.json...]" }
+        ZeahObjectIdPlan.build(Path.of(args[1]), Path.of(args[2]), args.drop(3).map(Path::of))
+        return
+    }
+    if (args.firstOrNull() == "inventory-zeah-regions") {
+        require(args.size == 11) { "osrs inventory-zeah-regions <gielenor-cache> <gielenor-Settings.java> <gielenor-packed.mcx> <drynor-cache> <drynor-xteaKeys.json> <new-report.json> <min-x> <max-x> <min-y> <max-y>" }
+        ZeahRegionInventory.inspect(
+            Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]), Path.of(args[5]), Path.of(args[6]),
+            args[7].toInt(), args[8].toInt(), args[9].toInt(), args[10].toInt(),
+        )
+        return
+    }
     if (args.firstOrNull() == "preview-raid-equipment") {
         RaidEquipmentPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3])); return
     }
@@ -67,6 +285,46 @@ fun runOsrs(args: List<String>) {
     if (args.firstOrNull() == "preview-zulrah-worldmap") {
         require(args.size == 3) { "osrs preview-zulrah-worldmap <static-preview-root> <new-output-root>" }
         ZulrahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-worldmap") {
+        require(args.size == 4) { "osrs preview-zeah-worldmap <visual-preview-root> <bounded-object-plan.json> <new-output-root>" }
+        ZeahWorldMapPreview.build(Path.of(args[1]),Path.of(args[2]),Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-four-npc-combat") {
+        require(args.size == 4) { "osrs preview-zeah-four-npc-combat <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahFourNpcCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-cave-drop-items") {
+        require(args.size == 4) { "osrs preview-zeah-cave-drop-items <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahCaveDropItemsPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "probe-zeah-drop-items") {
+        require(args.size >= 3) { "osrs probe-zeah-drop-items <cache> <item-id>..." }
+        world.gregs.voidps.cache.FileCache(Path.of(args[1]).toRealPath().toString(), writable = false).use { cache ->
+            for (id in args.drop(2).map(String::toInt)) {
+                val bytes = cache.data(world.gregs.voidps.cache.Index.ITEMS, id ushr 8, id and 255)
+                val item = bytes?.let {
+                    world.gregs.voidps.cache.definition.data.ItemDefinition(id).also { definition ->
+                        world.gregs.voidps.cache.definition.decoder.ItemDecoder().readLoop(definition, world.gregs.voidps.buffer.read.BufferReader(it))
+                    }
+                }
+                println("$id ${item?.name ?: "<missing>"} note=${item?.noteId} wear=${item?.wearPos}")
+            }
+        }
+        return
+    }
+    if (args.firstOrNull() == "probe-zeah-floor") {
+        require(args.size == 6) { "osrs probe-zeah-floor <source-cache> <preview-cache> <palette.json> <x> <y>" }
+        ZeahFloorProbe.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args[4].toInt(), args[5].toInt())
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-object-model-offsets") {
+        require(args.size == 4) { "osrs audit-zeah-object-model-offsets <bounded-object-plan.json> <gielenor-client-ObjectConfig.java> <new-report.json>" }
+        ZeahObjectModelOffsets.audit(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
         return
     }
     require(args.size == 4 && args[0] in setOf("preview-zulrah-static", "inventory-zulrah", "inventory-inferno", "plan-inferno", "preview-inferno", "audit-actors-inferno", "preview-actors-inferno", "reward-inferno")) {

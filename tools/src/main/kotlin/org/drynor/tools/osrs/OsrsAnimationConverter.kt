@@ -52,7 +52,8 @@ object OsrsAnimationConverter {
 
     /**
      * Map keys are physical Gielenor frame-set IDs (raw sequence archive + 5000).
-     * Preview mode explicitly drops sounds and equipment overrides whose IDs need separate imports.
+     * Preview mode explicitly drops unverified sounds and equipment overrides. Verified sound IDs
+     * and the audited object-only equipment value can instead survive native encoding.
      * Gielenor AnimationConfig.decodeOSRS opcode 4 reads no payload and sets only a local
      * discarded boolean. Its runtime behavior is therefore preserved by emitting no native opcode.
      */
@@ -61,6 +62,8 @@ object OsrsAnimationConverter {
         data: ByteArray,
         frameSetMap: Map<Int, Int>,
         previewWithoutSoundsAndEquipment: Boolean = false,
+        verifiedSoundIds: Set<Int> = emptySet(),
+        preserveSceneEquipmentOverrides: Boolean = false,
     ): AnimationDefinition {
         val reader = AnimationImportReader(data)
         val result = AnimationDefinition(targetId)
@@ -97,7 +100,12 @@ object OsrsAnimationConverter {
                 5 -> result.priority = reader.u8()
                 6, 7 -> {
                     val value = reader.u16()
-                    require(previewWithoutSoundsAndEquipment) { "Equipment override $value requires explicit item mapping" }
+                    require(previewWithoutSoundsAndEquipment || preserveSceneEquipmentOverrides) {
+                        "Equipment override $value requires explicit scene-only approval or item mapping"
+                    }
+                    if (preserveSceneEquipmentOverrides) {
+                        if (opcode == 6) result.leftHandItem = value else result.rightHandItem = value
+                    }
                 }
                 8 -> result.maxLoops = reader.u8()
                 9 -> result.animatingPrecedence = reader.u8()
@@ -106,8 +114,16 @@ object OsrsAnimationConverter {
                 12 -> result.expressionFrames = frames(reader.u8())
                 13 -> {
                     val count = reader.u8()
-                    repeat(count) { reader.u8(); reader.u16() }
-                    require(previewWithoutSoundsAndEquipment || count == 0) { "Sounds require explicit sound mapping" }
+                    val sounds = Array<IntArray?>(count) {
+                        val packed = (reader.u8() shl 16) or reader.u16()
+                        if (packed == 0) null else {
+                            require((packed ushr 8) in verifiedSoundIds || previewWithoutSoundsAndEquipment) {
+                                "Sound ${packed ushr 8} requires verified cache identity"
+                            }
+                            if (previewWithoutSoundsAndEquipment) null else intArrayOf(packed)
+                        }
+                    }
+                    if (!previewWithoutSoundsAndEquipment) result.sounds = sounds
                 }
                 else -> throw IllegalArgumentException("Unsupported OSRS sequence opcode $opcode")
             }
