@@ -22,6 +22,11 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "inspect-zeah-region-objects") {
+        require(args.size == 4) { "osrs inspect-zeah-region-objects <cache> <region-id> <new-report.json>" }
+        ZeahRegionObjectInspection.inspect(Path.of(args[1]), args[2].toInt(), Path.of(args[3]))
+        return
+    }
     if (args.firstOrNull() == "preview-zeah-shaman-combat-assets") {
         require(args.size == 5) { "osrs preview-zeah-shaman-combat-assets <gielenor-cache> <zeah-npc-preview-root> <shaman-asset-audit.json> <new-output-root>" }
         ZeahShamanCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
