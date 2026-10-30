@@ -22,6 +22,21 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "preview-zeah-karuulm-combat-visuals") {
+        require(args.size == 5) { "osrs preview-zeah-karuulm-combat-visuals <gielenor-cache> <common-preview-root> <karuulm-audit.json> <new-output-root>" }
+        ZeahKaruulmCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))
+        return
+    }
+    if (args.firstOrNull() == "audit-zeah-karuulm-combat-visuals") {
+        require(args.size == 4) { "osrs audit-zeah-karuulm-combat-visuals <gielenor-cache> <current-preview-cache> <new-report.json>" }
+        ZeahCommonCombatAnimations.auditKaruulm(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "preview-zeah-common-combat-animations") {
+        require(args.size == 4) { "osrs preview-zeah-common-combat-animations <gielenor-cache> <current-preview-root> <new-output-root>" }
+        ZeahCommonCombatAnimations.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
     if (args.firstOrNull() == "inspect-zeah-region-objects") {
         require(args.size == 4) { "osrs inspect-zeah-region-objects <cache> <region-id> <new-report.json>" }
         ZeahRegionObjectInspection.inspect(Path.of(args[1]), args[2].toInt(), Path.of(args[3]))
