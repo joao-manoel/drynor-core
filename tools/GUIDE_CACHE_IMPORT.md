@@ -13,3 +13,9 @@ The resulting packed `main_file_cache.dat2` SHA-256 is `0531cda029318b0ab819dd47
 5. Promote the new packed cache only with lobby and world stopped and a verified rollback copy available. Validate login, Guide option, interface navigation, teleport, and return to world.
 
 The world implementation owns destinations and excludes unvalidated bosses, raids, and Wilderness locations. Changes to the donor cache must be reviewed separately from this import.
+
+## Appearance correction (2026-11-01)
+
+The initial NPC `16000` used Drynor `3088` (Ronan), which rendered as a fairy in the client. Gielenor `2253` is the Wise Old Man with a renamed label; Drynor's native `2253` already has the Wise Old Man model. The corrected `16000` copies native `2253` (model `49461`, dialogue model `49476`, render emote `4`), then changes only its ID, name and fourth option to `Teleport` in both `options` and `rawOptions`. Do not replace native NPC `2253` or import unrelated donor models.
+
+Build this correction from the exact cache deployed above, in an isolated source and packed output. The resulting `main_file_cache.dat2` SHA-256 is `7c034c97454c45ccd4370a03a0726b662ff11b08b44bdabbd2d15cbcb9254102`. A container comparison with the prior packed cache found **only index 18, archive 125** changed. The full `cache verify` passed through models and other early indices but stopped on pre-existing clientscripts without source (`cs2_0.ts`); it is not a complete verification result. Confirm the appearance and Teleport interaction in a real client after deployment.
