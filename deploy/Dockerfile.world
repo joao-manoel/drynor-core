@@ -1,0 +1,26 @@
+# syntax=docker/dockerfile:1.7
+FROM eclipse-temurin:26-jdk AS build
+WORKDIR /src/drynor-world-server
+COPY --from=drynor_core . /src/drynor-core
+COPY --from=cache_source gamevals /src/cache-unpacked/gamevals
+COPY . .
+ARG TEST_MONGO_URI=mongodb://127.0.0.1:27018
+ENV TEST_MONGO_URI=$TEST_MONGO_URI
+RUN --mount=type=cache,id=drynor-gradle,target=/root/.gradle,sharing=locked \
+    chmod +x gradlew /src/drynor-core/gradlew && \
+    ./gradlew test shadowJar --no-daemon --no-parallel --max-workers=1 \
+      -Dorg.gradle.jvmargs="-Xmx1536m -XX:MaxMetaspaceSize=512m" \
+      -Pkotlin.compiler.execution.strategy=in-process && \
+    mkdir -p /release && cp build/libs/*-all.jar /release/world-server.jar && \
+    tar --exclude='*/addedSpawns.json' --exclude='*/.gitignore' \
+      -cf /release/gameplay.tar data/areas data/items data/map data/music data/npcs data/partyroom plugins
+
+FROM eclipse-temurin:26-jre
+ARG SOURCE_COMMIT=unknown
+ARG CORE_COMMIT=unknown
+LABEL org.opencontainers.image.revision=$SOURCE_COMMIT drynor.core-revision=$CORE_COMMIT
+WORKDIR /app
+COPY --from=build /release /opt/drynor
+ENV DRYNOR_CACHE_BUILD=false
+EXPOSE 43595 43596
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "--enable-final-field-mutation=ALL-UNNAMED", "-Xms512m", "-Xmx2g", "-jar", "/opt/drynor/world-server.jar"]

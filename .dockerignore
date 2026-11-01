@@ -1,6 +1,7 @@
 .git
 .gradle
 .kotlin
+.local-runtime
 .idea
 /build
 /modern-core/build

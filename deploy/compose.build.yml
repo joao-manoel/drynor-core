@@ -1,0 +1,27 @@
+services:
+  world:
+    image: ${TARGET_IMAGE:?Defina TARGET_IMAGE}
+    build:
+      context: ${DRYNOR_ROOT}/repositories/drynor-world-server
+      dockerfile: ${DRYNOR_ROOT}/repositories/drynor-core/deploy/Dockerfile.world
+      network: host
+      entitlements: [network.host]
+      additional_contexts:
+        drynor_core: ${DRYNOR_ROOT}/repositories/drynor-core
+        cache_source: ${DRYNOR_ROOT}/cache-unpacked
+      args:
+        SOURCE_COMMIT: ${SOURCE_COMMIT}
+        CORE_COMMIT: ${CORE_COMMIT}
+  lobby:
+    image: ${TARGET_IMAGE:?Defina TARGET_IMAGE}
+    build:
+      context: ${DRYNOR_ROOT}/repositories/drynor-lobby-server
+      dockerfile: ${DRYNOR_ROOT}/repositories/drynor-core/deploy/Dockerfile.lobby
+      network: host
+      entitlements: [network.host]
+      additional_contexts:
+        drynor_core: ${DRYNOR_ROOT}/repositories/drynor-core
+        cache_source: ${DRYNOR_ROOT}/cache-unpacked
+      args:
+        SOURCE_COMMIT: ${SOURCE_COMMIT}
+        CORE_COMMIT: ${CORE_COMMIT}
