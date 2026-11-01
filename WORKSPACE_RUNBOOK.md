@@ -61,6 +61,20 @@ Nunca usar `down -v` como rotina.
 
 ## Deploy e release
 
+O fluxo normal de servidores agora está em `deploy/`: Dockerfiles com JDK 26
+compilam e testam diretamente na VPS. O comando instalado em
+`/home/neto/drynor-rsps/deploy.sh` recebe `world`, `lobby`, `status`, `check` ou
+`rollback world`/`rollback lobby`. Ele atualiza os repositórios originais por
+fast-forward e cria imagens com a fonte e o core identificados por commit.
+Não é necessário enviar JARs do PC. O deploy para o jogo durante o build para
+liberar memória na VPS e preserva um rollback antes de instalar a imagem.
+Os testes usam MongoDB temporário na porta local 27018, sem acesso às bases
+de produção. Dados de gameplay do world são sincronizados com a imagem;
+cache, configuração do GE, arquivos de configuração, spawns adicionados em
+execução e bindings de conteúdo ficam preservados e exigem entrega específica
+quando forem alterados. `check` apenas valida a estrutura/configuração.
+As instruções manuais anteriores ficam como referência de recuperação.
+
 A VPS ativa usa o checkout `/home/neto/drynor-rsps/` e monta seu `cache/` nos
 containers de lobby e world. Verificar a configuração e os mounts **dos
 containers em execução** antes de publicar; arquivos Compose históricos em um
