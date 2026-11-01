@@ -1,6 +1,11 @@
 package org.drynor.tools.cache
 
 import org.drynor.core.EnvVars
+import org.drynor.tools.rsinterface.InterfaceStore
+import world.gregs.voidps.cache.source.ArchiveMetadata
+import world.gregs.voidps.cache.source.SourceFiles
+import world.gregs.voidps.cache.source.codec.SourceArchive
+import world.gregs.voidps.cache.source.codec.SourceCodecs
 import world.gregs.voidps.cache.FileCache
 import world.gregs.voidps.cache.source.Builder
 import world.gregs.voidps.cache.source.Packer
@@ -8,6 +13,7 @@ import world.gregs.voidps.cache.source.SourceTree
 import world.gregs.voidps.cache.source.Unpacker
 import world.gregs.voidps.cache.source.Verifier
 import java.io.File
+import java.nio.file.Files
 import kotlin.system.exitProcess
 
 /**
@@ -31,6 +37,10 @@ import kotlin.system.exitProcess
 fun runCache(args: List<String>) {
     when (args.firstOrNull()?.lowercase()) {
         "unpack" -> unpack(args.drop(1))
+        "export-interface" -> exportInterface(args.drop(1))
+        "import-archive" -> importArchive(args.drop(1))
+        "compare" -> compareCaches(args.drop(1))
+        "preserve-archive" -> preserveArchive(args.drop(1))
         "pack" -> pack(args.drop(1))
         "build" -> build(args.drop(1))
         "verify" -> verify(args.drop(1))
@@ -44,6 +54,10 @@ fun printCacheUsage() {
         """
         cache unpack <tree> [packedDir]  Unpack a packed cache into a source tree.
                                          packedDir defaults to CACHE_PATH (${EnvVars.cachePath}).
+        cache export-interface <id> <packedDir> <output.json>  Export one interface without unpacking unrelated cache indices.
+        cache import-archive <index> <archive> <donorDir> <tree>  Add one missing donor archive to an isolated cache source tree.
+        cache compare <oldDir> <newDir>  List payload differences between two packed caches.
+        cache preserve-archive <index> <archive> <packedDir> <tree>  Keep an incompatible archive's original container.
         cache pack <tree> <outDir>       Pack a source tree into a cache, from scratch.
         cache build <tree> <outDir>      Rebuild a cache, repacking only what changed.
         cache verify <tree> <packedDir>  Prove packing <tree> reproduces <packedDir> exactly.
@@ -51,6 +65,124 @@ fun printCacheUsage() {
         cache status <tree>              Per index: codec, archives, files, pristine, opaque.
         """.trimIndent()
     )
+}
+
+private fun preserveArchive(args: List<String>) {
+    val index = args.getOrNull(0)?.toIntOrNull()
+    val archive = args.getOrNull(1)?.toIntOrNull()
+    val packed = args.getOrNull(2)
+    val target = args.getOrNull(3)
+    if (index == null || archive == null || packed == null || target == null) {
+        println("usage: cache preserve-archive <index> <archive> <packedDir> <tree>")
+        return
+    }
+    val tree = SourceTree.open(File(target))
+    val metadata = tree.metadata(index)
+    val entry = metadata.archive(archive) ?: error("Archive $index/$archive is absent from $target")
+    FileCache.load(packed).use { cache ->
+        val bytes = cache.container(index, archive) ?: error("Archive $index/$archive is absent from $packed")
+        val version = cache.archiveVersion(index, archive) and 0xffff
+        val trailer = if (bytes.size >= 2 && version ==
+            (((bytes[bytes.size - 2].toInt() and 0xff) shl 8) or (bytes[bytes.size - 1].toInt() and 0xff))
+        ) 2 else 0
+        entry.opaque = true
+        entry.pristine = emptyMap()
+        entry.fileIds(cache.files(index, archive))
+        Files.write(tree.indexDirectory(index).resolve("$archive${SourceTree.OPAQUE_EXTENSION}"), bytes.copyOf(bytes.size - trailer))
+        tree.writeMetadata(metadata)
+        println("Preserved $index/$archive as an opaque container")
+    }
+}
+
+private fun compareCaches(args: List<String>) {
+    val oldDir = args.getOrNull(0)
+    val newDir = args.getOrNull(1)
+    if (oldDir == null || newDir == null) {
+        println("usage: cache compare <oldDir> <newDir>")
+        return
+    }
+    FileCache.load(oldDir).use { old ->
+        FileCache.load(newDir).use { current ->
+            var changed = 0
+            var added = 0
+            var removed = 0
+            for (index in 0 until maxOf(old.indexCount(), current.indexCount())) {
+                val oldArchives = old.archives(index).toSet()
+                val newArchives = current.archives(index).toSet()
+                for (archive in oldArchives + newArchives) {
+                    if (archive !in oldArchives) {
+                        println("added $index/$archive")
+                        added++
+                        continue
+                    }
+                    if (archive !in newArchives) {
+                        println("removed $index/$archive")
+                        removed++
+                        continue
+                    }
+                    if (old.container(index, archive)?.contentEquals(current.container(index, archive) ?: byteArrayOf()) == true) continue
+                    val oldFiles = old.files(index, archive)
+                    val newFiles = current.files(index, archive)
+                    val equal = oldFiles.contentEquals(newFiles) && oldFiles.all { file ->
+                        val before = old.data(index, archive, file)
+                        val after = current.data(index, archive, file)
+                        before != null && after != null && before.contentEquals(after)
+                    }
+                    if (!equal) {
+                        println("changed $index/$archive")
+                        changed++
+                    }
+                }
+            }
+            println("Differences: $added added, $removed removed, $changed changed archives")
+        }
+    }
+}
+
+private fun importArchive(args: List<String>) {
+    val index = args.getOrNull(0)?.toIntOrNull()
+    val archive = args.getOrNull(1)?.toIntOrNull()
+    val donor = args.getOrNull(2)
+    val target = args.getOrNull(3)
+    if (index == null || archive == null || donor == null || target == null) {
+        println("usage: cache import-archive <index> <archive> <donorDir> <tree>")
+        return
+    }
+    val tree = SourceTree.open(File(target))
+    val metadata = tree.metadata(index)
+    check(metadata.archive(archive) == null) { "Target index $index archive $archive already exists" }
+    FileCache.load(donor).use { cache ->
+        val ids = cache.files(index, archive)
+        check(ids.isNotEmpty()) { "Donor index $index archive $archive is empty" }
+        val bytes = ids.map { file -> cache.data(index, archive, file) ?: error("Missing donor file $file") }
+        val entry = ArchiveMetadata(version = cache.archiveVersion(index, archive))
+        val codec = SourceCodecs.codec(index)
+        val output = codec.unpack(tree.indexDirectory(index), SourceArchive(index, archive, null, ids, byteArrayOf(), bytes, emptyList(), entry))
+        for (file in output.files) {
+            SourceFiles.write(tree.indexDirectory(index).resolve(file.path), file.bytes)
+        }
+        entry.pristine = output.pristine
+        metadata.archives[archive] = entry
+        tree.writeMetadata(metadata)
+        println("Imported index $index archive $archive (${ids.size} files) into $target")
+    }
+}
+
+private fun exportInterface(args: List<String>) {
+    val id = args.getOrNull(0)?.toIntOrNull()
+    val packed = args.getOrNull(1)
+    val output = args.getOrNull(2)
+    if (id == null || packed == null || output == null) {
+        println("usage: cache export-interface <id> <packedDir> <output.json>")
+        return
+    }
+    FileCache.load(packed).use { cache ->
+        val store = InterfaceStore(cache)
+        check(store.exists(id)) { "Interface $id does not exist in $packed" }
+        val document = store.open(id)
+        store.exportJson(document, File(output))
+        println("Exported interface $id with ${document.componentCount} components to $output")
+    }
 }
 
 /** `cache unpack <tree> [packedDir]` - a packed cache into a source tree. */
