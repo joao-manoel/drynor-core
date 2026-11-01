@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=drynor-gradle,target=/root/.gradle,sharing=locked \
       -Pkotlin.compiler.execution.strategy=in-process && \
     mkdir -p /release && cp build/libs/*-all.jar /release/world-server.jar && \
     tar --exclude='*/addedSpawns.json' --exclude='*/.gitignore' \
-      -cf /release/gameplay.tar data/areas data/items data/map data/music data/npcs data/partyroom plugins
+      -cf /release/gameplay.tar data/areas data/ge data/items data/map data/music data/npcs data/partyroom plugins
 
 FROM eclipse-temurin:26-jre
 ARG SOURCE_COMMIT=unknown

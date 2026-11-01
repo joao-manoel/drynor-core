@@ -2,11 +2,40 @@
 import os
 from pathlib import Path
 import subprocess
+import re
+import shlex
+import tarfile
 import tempfile
 import unittest
 
 
 class DeployFlowTest(unittest.TestCase):
+    def test_world_archive_includes_managed_data_and_nested_ge_categories(self):
+        dockerfile = Path(__file__).with_name("Dockerfile.world").read_text().replace("\\\n", " ")
+        command = re.search(r"tar (--exclude=.*?)\n", dockerfile).group(1)
+        arguments = shlex.split(command)
+        payloads = arguments[arguments.index("-cf") + 2:]
+        required = {"areas", "ge", "items", "map", "music", "npcs"}
+        self.assertTrue({f"data/{name}" for name in required}.issubset(payloads))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for payload in payloads:
+                (root / payload).mkdir(parents=True)
+                (root / payload / "sample.json").write_text("{}")
+            (root / "data/ge/instant").mkdir()
+            (root / "data/ge/settings.json").write_text('{"enabled":true}')
+            (root / "data/ge/instant/new-category.json").write_text('{"items":[]}')
+            (root / "data/worldConfig.json").write_text("private configuration")
+            (root / "data/npcs/addedSpawns.json").write_text("local spawns")
+            arguments[arguments.index("-cf") + 1] = str(root / "payload.tar")
+            subprocess.run(["tar", *arguments], cwd=root, check=True, capture_output=True)
+            with tarfile.open(root / "payload.tar") as archive:
+                names = set(archive.getnames())
+            self.assertIn("data/ge/settings.json", names)
+            self.assertIn("data/ge/instant/new-category.json", names)
+            self.assertNotIn("data/worldConfig.json", names)
+            self.assertNotIn("data/npcs/addedSpawns.json", names)
+
     def run_flow(self, fail_build=False):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
