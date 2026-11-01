@@ -70,6 +70,15 @@ diferença, backup/rollback apropriado, atualização coordenada de lobby/world 
 verificação de `/ready`, portas, registro do world e login externo. Não tomar
 um build local bem-sucedido como autorização ou confirmação de deploy.
 
+Ao publicar NPCs novos, sincronizar também `world/data/npcs/combatdefs/`,
+`world/data/npcs/drops/` e `world/data/npcs/spawns/` a partir do mesmo commit
+do JAR. Antes do reinício, comparar contagem e SHA-256 dos arquivos da área no
+checkout com os arquivos realmente montados em `/app/data` pelo container.
+Após reiniciar, testar um NPC atacável recém-publicado: o fallback de combate
+do world tem apenas **1 HP**, então um spawn visível não comprova que sua
+definição de combate foi implantada. Preservar cópia dos dados anteriores
+para rollback e não sobrescrever saves ou dados do MongoDB.
+
 O cliente distribuível pertence a `drynor-client-v2/`. O repositório
 `drynor-client-release` contém os JARs/manifests publicados; alterar o código
 do cliente não atualiza automaticamente uma release. A versão e os endpoints
