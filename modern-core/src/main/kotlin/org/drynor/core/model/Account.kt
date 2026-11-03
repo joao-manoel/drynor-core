@@ -2,6 +2,8 @@ package org.drynor.core.model
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import org.bson.codecs.pojo.annotations.BsonIgnore
 import org.drynor.core.formatPlayerNameForDisplay
 import org.drynor.core.formatPlayerNameForProtocol
@@ -27,6 +29,14 @@ class Account {
     var displayNameChanges: Int = 0
     var nameChangeRequired: Boolean = false
     var rights: Rights = Rights.PLAYER
+    @SerialName("donatorTier")
+    @SerializedName("donatorTier")
+    private var storedDonatorTier: DonatorTier? = DonatorTier.NONE
+    var donatorTier: DonatorTier
+        get() = storedDonatorTier ?: DonatorTier.NONE
+        set(value) { storedDonatorTier = value }
+    @get:BsonIgnore
+    val chatCrown: Int get() = if (rights != Rights.PLAYER) rights.crown else donatorTier.chatCrown
     @Contextual
     var previousPasswords: MutableSet<String> = mutableSetOf()
     @Contextual
@@ -106,7 +116,7 @@ class Account {
         nameChangeRequired = false
     }
 
-    fun view() = AccountView(username, displayName, rights, banned, muted, social, bot)
+    fun view() = AccountView(username, displayName, rights, banned, muted, social, bot, donatorTier)
 
     fun onlineTo(other: Account) =
         !(other.social.status.toInt() == 2 || (other.social.status.toInt() == 1 && !other.social.friends.contains(username)))

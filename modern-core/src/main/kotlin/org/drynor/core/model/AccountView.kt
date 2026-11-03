@@ -1,6 +1,8 @@
 package org.drynor.core.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -13,7 +15,14 @@ data class AccountView @JvmOverloads constructor(
     var muted: Long = 0,
     var social: Social = Social(),
     val bot: Boolean = false,
+    @SerialName("donatorTier")
+    @SerializedName("donatorTier")
+    private var storedDonatorTier: DonatorTier? = DonatorTier.NONE,
 ) {
+    var donatorTier: DonatorTier
+        get() = storedDonatorTier ?: DonatorTier.NONE
+        set(value) { storedDonatorTier = value }
+    val chatCrown: Int get() = if (rights != Rights.PLAYER) rights.crown else donatorTier.chatCrown
     fun hasRights(checkRights: Rights) = rights.ordinal >= checkRights.ordinal
     fun checkMuted() = System.currentTimeMillis() < muted
     fun checkBanned() = System.currentTimeMillis() < banned

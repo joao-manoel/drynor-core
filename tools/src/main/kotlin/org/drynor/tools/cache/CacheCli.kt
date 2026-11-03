@@ -1,6 +1,7 @@
 package org.drynor.tools.cache
 
 import org.drynor.core.EnvVars
+import org.drynor.tools.osrs.DonatorAssets
 import org.drynor.tools.rsinterface.InterfaceStore
 import world.gregs.voidps.cache.source.ArchiveMetadata
 import world.gregs.voidps.cache.source.SourceFiles
@@ -36,6 +37,7 @@ import kotlin.system.exitProcess
  */
 fun runCache(args: List<String>) {
     when (args.firstOrNull()?.lowercase()) {
+        "donator-assets" -> DonatorAssets.run(args.drop(1))
         "unpack" -> unpack(args.drop(1))
         "export-interface" -> exportInterface(args.drop(1))
         "import-archive" -> importArchive(args.drop(1))
@@ -53,6 +55,7 @@ fun printCacheUsage() {
     println(
         """
         cache unpack <tree> [packedDir]  Unpack a packed cache into a source tree.
+        cache donator-assets <audit|apply> <gielenor-packed> <drynor-packed> <report.json>  Transfer six chat icons and eleven bonds after backup/readers-stop.
                                          packedDir defaults to CACHE_PATH (${EnvVars.cachePath}).
         cache export-interface <id> <packedDir> <output.json>  Export one interface without unpacking unrelated cache indices.
         cache import-archive <index> <archive> <donorDir> <tree>  Add one missing donor archive to an isolated cache source tree.

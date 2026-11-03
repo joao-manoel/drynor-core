@@ -8,6 +8,7 @@ import org.drynor.core.EnvVars
 import org.drynor.core.clan.ClanAction
 import org.drynor.core.clan.ClanChannelState
 import org.drynor.core.model.AccountView
+import org.drynor.core.model.DonatorTier
 import org.drynor.core.model.Clan
 import org.drynor.core.model.Rights
 import org.drynor.core.model.FriendsChat
@@ -153,7 +154,7 @@ data class WorldLoginAuthResult(val username: String, val requestId: Long, val a
 enum class WorldLoginStatus { SUCCESS, INVALID_TOKEN, BANNED, UNAVAILABLE }
 
 @Serializable enum class AccountLookupKind { USERNAME, DISPLAY_NAME }
-@Serializable enum class AccountMutationKind { RIGHTS, PUNISHMENTS }
+@Serializable enum class AccountMutationKind { RIGHTS, PUNISHMENTS, DONATOR_TIER, DONATOR_BOND }
 @Serializable enum class AccountOperationStatus { SUCCESS, NOT_FOUND, INVALID, UNAVAILABLE }
 
 @Serializable @SerialName("AccountLookup")
@@ -165,10 +166,14 @@ data class AccountLookupResult(val name: String, val kind: AccountLookupKind, va
 @Serializable sealed interface AccountMutation {
     @Serializable @SerialName("Rights") data class SetRights(val rights: Rights) : AccountMutation
     @Serializable @SerialName("Punishments") data class Punishments(val banned: Long? = null, val muted: Long? = null) : AccountMutation
+    @Serializable @SerialName("DonatorTier") data class SetDonatorTier(val tier: DonatorTier) : AccountMutation
+    @Serializable @SerialName("DonatorBond") data class RedeemDonatorBond(val receiptId: String, val tier: DonatorTier) : AccountMutation
 }
 fun AccountMutation.kind() = when (this) {
     is AccountMutation.SetRights -> AccountMutationKind.RIGHTS
     is AccountMutation.Punishments -> AccountMutationKind.PUNISHMENTS
+    is AccountMutation.SetDonatorTier -> AccountMutationKind.DONATOR_TIER
+    is AccountMutation.RedeemDonatorBond -> AccountMutationKind.DONATOR_BOND
 }
 @Serializable @SerialName("AccountMutationRequest")
 data class AccountMutationRequest(val username: String, val mutation: AccountMutation, val requestId: Long) : SocialGatewayWireMessage
