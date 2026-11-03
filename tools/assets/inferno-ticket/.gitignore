@@ -1,0 +1,4 @@
+# Generated packed model and Blender recovery files; keep the editable source/script.
+*.dat
+*.blend[0-9]*
+roundtrip-result.txt
