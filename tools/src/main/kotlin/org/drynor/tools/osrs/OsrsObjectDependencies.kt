@@ -58,7 +58,7 @@ object OsrsObjectDependencies {
                 in 30..34 -> input.string()
                 40 -> input.skip(input.u8() * 4)
                 41 -> repeat(input.u8()) { reference(textures); reference(textures) }
-                65, 66, 67, 70, 71, 72 -> input.skip(2)
+                61, 65, 66, 67, 70, 71, 72 -> input.skip(2)
                 68 -> reference(sprites)
                 77, 92 -> {
                     check(morphSelector == null) { "Duplicate OSRS morph selector" }

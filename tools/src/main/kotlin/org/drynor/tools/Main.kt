@@ -9,6 +9,7 @@ import org.drynor.tools.gameval.runGameval
 import org.drynor.tools.rs3port.runIcon
 import org.drynor.tools.rs3port.runRs3Port
 import org.drynor.tools.osrs.runOsrs
+import org.drynor.tools.tarnish.runTarnish
 import org.drynor.tools.cache.map.DisplaceProbe
 import org.drynor.tools.cache.map.ObjectRenderer
 import org.drynor.tools.cache.map.TiltProbe
@@ -39,6 +40,11 @@ import kotlin.math.sqrt
  */
 fun main(args: Array<String>) {
     val mode = args.firstOrNull() ?: "model"
+
+    if (mode.lowercase() == "tarnish") {
+        runTarnish(args.drop(1))
+        return
+    }
 
     if (mode.lowercase() == "osrs") {
         runOsrs(args.drop(1))

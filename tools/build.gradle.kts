@@ -26,6 +26,7 @@ tasks.named<JavaExec>("run") {
 dependencies {
     testImplementation(kotlin("test"))
     implementation(project(":core"))
+    implementation("org.apache.commons:commons-compress:1.28.0")
     // The CS2 toolchain, which is headless and shared with the server; see cs2/build.gradle.kts.
     implementation(project(":cs2"))
 
