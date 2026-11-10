@@ -7,11 +7,11 @@ description: Develop or port Drynor gameplay and cache assets while preserving c
 
 Establish the actual cache source path from DRYNOR_CACHE_SOURCE, build properties and the checkout. Do not assume the reference tree's custom assets or paths exist in Drynor. Read definitions, gameval catalogs and client scripts before allocating or changing IDs.
 
-For the active Drynor runtime, first identify the packed cache mounted by VPS lobby/world and compare its hashes with `A:/dev/drynor/cache`. `cache-unpacked` may lag behind production; do not repack it over the active cache during ordinary startup. Build edited source to a separate directory, verify readback, then promote it with services stopped and a rollback path. See `A:/dev/drynor/WORKSPACE_ORGANIZATION.md`.
+For the active Drynor runtime, first identify the packed cache mounted by VPS lobby/world and compare its hashes with `A:/dev/drynor/cache`. `cache-unpacked` may lag behind production; do not repack it during ordinary startup. Follow the user's current workspace policy: original checkout only, no worktrees or working clones; stop cache consumers, create one rollback backup, then edit/build the project's canonical cache and verify readback before restarting. Restore the backup on failure. New documentation belongs in `A:/dev/drynor/DOCS`. See `A:/dev/drynor/DOCS/ORGANIZACAO.md`.
 
 1. Trace the feature through the world handler, cache definition and client consumer. Record the behavior that must survive migration.
 2. Reuse an existing asset only when the definitions and client behavior support it. New IDs need collision checks, deterministic allocation and meaningful catalog names.
-3. Edit the source representation, build into a separate packed output and read it back through the current decoder. Compare intended fields and unaffected archive signatures against a baseline captured before editing.
+3. Edit the source representation, build the project's packed cache with consumers stopped and read it back through the current decoder. Compare intended fields and unaffected archive signatures against the backup captured before editing.
 4. Connect the world logic using current model/codec APIs. Preserve Drynor-specific rewards, rates, permissions and controller behavior.
 5. Validate the affected engine invariants and user flow. Report which checks were automated and which the user confirmed. Never claim a live client test that was not performed.
 

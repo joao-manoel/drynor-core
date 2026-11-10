@@ -1,5 +1,7 @@
 # Drynor workspace
 
+Current workspace policy: use only the original repositories in `A:/dev/drynor`. Do not create worktrees or cloned project copies. Large implementations use a branch in the existing checkout. New documentation belongs in `A:/dev/drynor/DOCS`; required instruction and skill files stay in their discovery locations. Before cache changes, stop consumers and back up the canonical cache, then edit/build the project's cache in place and restore the backup if validation fails. Do not retain a new cache copy for every adjustment. This policy supersedes historical isolated-preview/worktree workflows.
+
 This workspace contains independent repositories: drynor-core (modern-core, cs2, tools and temporary legacy-compat), drynor-world-server, drynor-lobby-server and drynor-client-v2. Referencia contains the read-only reference checkouts drynor-cache-tools and client-reference unless the user explicitly assigns a change there.
 
 Read the owning repository's AGENTS.md and the shared .agents/skills/drynor-code-standards/SKILL.md before source changes. The canonical skills and Codex agent profiles are versioned in drynor-core/.agents and drynor-core/.codex. Workspace-level links expose them when Codex starts in A:/dev/drynor. Resolve paths relative to the actual checkout rather than assuming the reference monorepo layout.

@@ -1,5 +1,7 @@
 # Organização do workspace Drynor
 
+Regra atual de 01/11/2026: desenvolver nos repositórios originais em `A:/dev/drynor`, sem worktrees ou clones de trabalho. Implementações grandes usam branches no próprio checkout. Documentação nova fica em `A:/dev/drynor/DOCS`, por projeto. Arquivos de instrução/descoberta permanecem nos locais exigidos. O cache é alterado no projeto com os consumidores parados e uma cópia de backup identificada para restauração; não gerar cópias por ajuste. Procedimentos históricos de prévia isolada não substituem esta regra.
+
 Para iniciar, testar e entregar os serviços, use [WORKSPACE_RUNBOOK.md](WORKSPACE_RUNBOOK.md).
 Este arquivo trata de diretórios, cache e retenção de dados.
 

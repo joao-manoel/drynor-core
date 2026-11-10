@@ -5,6 +5,8 @@ description: Import or port OSRS maps, assets and gameplay from Gielenor or anot
 
 # OSRS content transfer
 
+Current user workflow (2026-11-01): use the original repository checkout, with a branch for substantial work; never create worktrees or working clones. Stop cache consumers, create one rollback backup and work on the project's canonical cache. Do not generate a new packed cache per adjustment. Validate against the backup before restarting, and restore it on failure. Historical isolated-preview output instructions in this skill describe earlier deliveries and do not override this workflow. New documentation belongs in `A:/dev/drynor/DOCS`.
+
 For Zeah Shaman rewards, `osrs preview-zeah-shaman-items <gielenor-cache> <shaman-preview-root> <raid-equipment-report.json> <new-output-root>` builds an isolated native item preview. It pins the donor and input preview, reuses the production note template through the raid-equipment report, stages editable assets and verifies untouched cache archives. Its source-to-native item mapping lives in `preview-report.json`; never put donor item IDs directly into Drynor drop JSON. This preview does not enable drops or validate equipment/attack specials. See `drynor-world-server/docs/ZEAH_SHAMAN_DROPS_AUDIT.md` for the table and remaining gates.
 
 Read the owning repository AGENTS.md and drynor-code-standards. Use drynor-content-development for asset/gameplay integration and drynor-kotlin-plugins for hooks. Resolve sibling repositories from the actual checkout. Source projects and reference caches are read-only inputs.
