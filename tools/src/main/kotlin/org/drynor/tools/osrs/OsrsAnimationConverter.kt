@@ -104,7 +104,9 @@ object OsrsAnimationConverter {
                         "Equipment override $value requires explicit scene-only approval or item mapping"
                     }
                     if (preserveSceneEquipmentOverrides) {
-                        if (opcode == 6) result.leftHandItem = value else result.rightHandItem = value
+                        // OSRS zero means hide the held item; native PlayerAppearance uses 65535.
+                        val nativeValue = if (value == 0) 65535 else value
+                        if (opcode == 6) result.leftHandItem = nativeValue else result.rightHandItem = nativeValue
                     }
                 }
                 8 -> result.maxLoops = reader.u8()

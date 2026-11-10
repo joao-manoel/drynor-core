@@ -22,6 +22,10 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "pool-animation") {
+        PoolAnimationAssets.run(args.drop(1))
+        return
+    }
     if (args.firstOrNull() == "preview-zeah-karuulm-combat-visuals") {
         require(args.size == 5) { "osrs preview-zeah-karuulm-combat-visuals <gielenor-cache> <common-preview-root> <karuulm-audit.json> <new-output-root>" }
         ZeahKaruulmCombatPreview.build(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), Path.of(args[4]))

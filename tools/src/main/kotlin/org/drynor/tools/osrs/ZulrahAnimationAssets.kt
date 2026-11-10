@@ -34,7 +34,7 @@ internal object ZulrahAnimationAssets {
         val dependencies = sequences.mapValues { (_, bytes) -> OsrsSequenceDependencies.parse(bytes) }
         require(equipmentClearedByDonor.all { it == 25061 && it in sequenceIds }) { "Only the audited CustomAnims blowpipe override may clear equipment" }
         require(sceneOnlySequences.all { it in sequenceIds })
-        require(preservedSceneEquipmentSequences.all { it == 20623 && it in sequenceIds && dependencies.getValue(it).equipment == setOf(819) })
+        require(preservedSceneEquipmentSequences.all { it in sequenceIds && auditedEquipmentOverride(it, dependencies.getValue(it).equipment) })
         require(dependencies.all { (id,deps) -> deps.sounds.all { it in verifiedSoundIds } && (deps.equipment.isEmpty() || id in equipmentClearedByDonor || id in sceneOnlySequences || id in preservedSceneEquipmentSequences) }) {
             "Actor animations require explicit sound/equipment import: $dependencies"
         }
@@ -114,6 +114,10 @@ internal object ZulrahAnimationAssets {
         }
         return Result(sequenceMap, assets, report)
     }
+
+    /** Raw zero hides held equipment during the pool sip; it is not an imported item ID. */
+    internal fun auditedEquipmentOverride(sequence: Int, equipment: Set<Int>): Boolean =
+        sequence == 20623 && equipment == setOf(819) || sequence == 27305 && equipment == setOf(0)
 
     private fun mappings(map: Map<Int, Int>) = JsonArray(map.toSortedMap().map { (source, target) -> buildJsonObject { put("source", source); put("target", target) } })
     internal fun decodeSourceBase(sourceId: Int,targetId: Int,bytes: ByteArray): AnimationBaseDefinition =

@@ -48,8 +48,10 @@ class AnimationDecoder : DefinitionDecoder<AnimationDefinition>(ANIMATIONS) {
                 }
             }
             5 -> priority = buffer.readUnsignedByte()
-            6 -> leftHandItem = buffer.readShort()
-            7 -> rightHandItem = buffer.readShort()
+            // These are unsigned in the revision-727 client: 65535 explicitly hides equipment.
+            // -1 is reserved for an absent opcode, not a decoded 0xffff payload.
+            6 -> leftHandItem = buffer.readUnsignedShort()
+            7 -> rightHandItem = buffer.readUnsignedShort()
             8 -> maxLoops = buffer.readUnsignedByte()
             9 -> animatingPrecedence = buffer.readUnsignedByte()
             10 -> walkingPrecedence = buffer.readUnsignedByte()
