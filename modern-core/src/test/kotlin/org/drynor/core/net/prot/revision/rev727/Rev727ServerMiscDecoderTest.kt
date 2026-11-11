@@ -234,7 +234,7 @@ class Rev727ServerMiscDecoderTest {
         val entries = listOf(
             WorldListEntry(1, 0, 225, "Home", "127.0.0.1", 43595, members = true, quickChat = false, botsAllowed = true, lootShare = false, highlighted = true, playersOnline = 40000),
             WorldListEntry(200, 1, 0, "", "world2.drynor.org", 43596, members = false, quickChat = true, botsAllowed = false, lootShare = true, highlighted = false, playersOnline = -1, customCache = true),
-            WorldListEntry(3, 7, 161, "PvP £", "w3", 60000, members = true, quickChat = true, botsAllowed = true, lootShare = true, highlighted = true, playersOnline = 0),
+            WorldListEntry(3, 7, 161, "PvP £", "w3", 60000, members = true, quickChat = true, botsAllowed = false, lootShare = true, highlighted = true, playersOnline = 0, pvp = true),
         )
         codec.assertServerRoundTrip(WorldListPacket(WorldListSnapshot(entries, maxWorlds = 250, revision = -7), refreshOnClient = true, refreshOnlyPlayerCounts = false))
         codec.assertServerRoundTrip(WorldListPacket(WorldListSnapshot(emptyList(), maxWorlds = 0, revision = 3), refreshOnClient = false, refreshOnlyPlayerCounts = false))

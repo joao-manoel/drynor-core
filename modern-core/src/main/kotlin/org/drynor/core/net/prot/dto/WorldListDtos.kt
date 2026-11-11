@@ -8,6 +8,11 @@
  */
 package org.drynor.core.net.prot.dto
 
+object WorldListFlags {
+    const val PVP = 0x4
+    const val BOTS_ALLOWED = 0x40
+}
+
 /** One world as the client's world list renders it. */
 data class WorldListEntry(
     val number: Int,
@@ -24,6 +29,7 @@ data class WorldListEntry(
     /** Players currently online, or -1 when the world is offline. */
     val playersOnline: Int,
     val customCache: Boolean = false,
+    val pvp: Boolean = false,
 )
 
 /**

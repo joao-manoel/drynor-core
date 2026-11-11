@@ -13,7 +13,8 @@ data class WorldMetadata(
     val lootShare: Boolean,
     val members: Boolean,
     val botsAllowed: Boolean,
-    val highlighted: Boolean)
+    val highlighted: Boolean,
+    val pvp: Boolean = false)
 {
     val isLobby get() = number >= 1000
 

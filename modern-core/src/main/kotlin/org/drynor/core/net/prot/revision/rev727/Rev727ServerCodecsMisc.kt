@@ -13,6 +13,7 @@ import org.drynor.core.net.prot.dto.CheckEmailReplyOpcode
 import org.drynor.core.net.prot.dto.CreateAccountReplyOpcode
 import org.drynor.core.net.prot.dto.InstanceLoadType
 import org.drynor.core.net.prot.dto.WorldListEntry
+import org.drynor.core.net.prot.dto.WorldListFlags
 import org.drynor.core.net.prot.dto.WorldListSnapshot
 import org.drynor.core.net.prot.packet.*
 import world.gregs.voidps.buffer.*
@@ -266,7 +267,8 @@ internal fun Codec.registerRev727MiscPackets() {
                 var flags = 0
                 if (world.members) flags = flags or 0x1
                 if (world.quickChat) flags = flags or 0x2
-                if (world.botsAllowed) flags = flags or 0x4
+                if (world.pvp) flags = flags or WorldListFlags.PVP
+                if (world.botsAllowed) flags = flags or WorldListFlags.BOTS_ALLOWED
                 if (world.lootShare) flags = flags or 0x8
                 if (world.highlighted) flags = flags or 0x10
                 if (world.customCache) flags = flags or WORLD_FLAG_CUSTOM_CACHE
@@ -848,7 +850,8 @@ private fun Source.readWorldListEntry(firstWorld: Int, location: Pair<Int, Strin
         port = port,
         members = flags and 0x1 != 0,
         quickChat = flags and 0x2 != 0,
-        botsAllowed = flags and 0x4 != 0,
+        botsAllowed = flags and WorldListFlags.BOTS_ALLOWED != 0,
+        pvp = flags and WorldListFlags.PVP != 0,
         lootShare = flags and 0x8 != 0,
         highlighted = flags and 0x10 != 0,
         playersOnline = -1,

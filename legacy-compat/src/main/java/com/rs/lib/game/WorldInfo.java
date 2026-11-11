@@ -16,7 +16,12 @@
 //
 package com.rs.lib.game;
 
-public record WorldInfo(int number, String ipAddress, int port, String activity, int country, boolean quickChat, boolean lootShare, boolean members, boolean pvp, boolean highlight) {
+public record WorldInfo(int number, String ipAddress, int port, String activity, int country, boolean quickChat, boolean lootShare, boolean members, boolean pvp, boolean highlight, boolean botsAllowed) {
+
+	public WorldInfo(int number, String ipAddress, int port, String activity, int country, boolean quickChat,
+					 boolean lootShare, boolean members, boolean pvp, boolean highlight) {
+		this(number, ipAddress, port, activity, country, quickChat, lootShare, members, pvp, highlight, false);
+	}
 	
 	public static String getCountryFromId(int country) {
 		return switch(country) {

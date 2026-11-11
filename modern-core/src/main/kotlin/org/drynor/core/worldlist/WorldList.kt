@@ -103,6 +103,7 @@ class WorldList(val maxWorlds: Int, private val localWorldId: Int = EnvVars.loca
                     highlighted = meta.highlighted,
                     playersOnline = if (world.offline) -1 else world.playersOnline,
                     customCache = world.customCache,
+                    pvp = meta.pvp,
                 )
             },
             maxWorlds = advertisedMaxWorld,

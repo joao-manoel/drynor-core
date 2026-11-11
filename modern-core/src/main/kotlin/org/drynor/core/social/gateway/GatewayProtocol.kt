@@ -112,6 +112,7 @@ data class GatewayWorldInfo(
         members = members,
         botsAllowed = botsAllowed,
         highlighted = highlighted,
+        pvp = pvp,
     )
 
     companion object {
