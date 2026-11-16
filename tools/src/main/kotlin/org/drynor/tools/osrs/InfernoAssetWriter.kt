@@ -12,7 +12,7 @@ import java.nio.file.Path
 
 /** Offline preview copy only. Rewrite each group and reference table once, not once per frame. */
 internal object InfernoAssetWriter {
-    data class Asset(val index: Int, val archive: Int, val file: Int, val bytes: ByteArray, val replaceExisting: Boolean = false)
+    data class Asset(val index: Int, val archive: Int, val file: Int, val bytes: ByteArray, val replaceExisting: Boolean = false, val archiveName: String? = null)
     fun write(path: Path, assets: List<Asset>) {
         FileStore.open(path.toFile(), writable = true).use { store ->
             for ((index, indexed) in assets.groupBy { it.index }) {
@@ -39,6 +39,11 @@ internal object InfernoAssetWriter {
                     val bytes = container.encode()
                     store.write(index, archive, bytes)
                     val target = table.archiveOrCreate(archive)
+                    val name = additions.mapNotNull { it.archiveName }.distinct().singleOrNull()
+                    if (name != null) {
+                        check(table.named && entry == null)
+                        target.nameHash = name.hashCode()
+                    }
                     target.crc = CRC.calculate(bytes, 0, bytes.size - 2)
                     target.version = version
                     if (table.whirlpool) target.whirlpool = container.whirlpool()

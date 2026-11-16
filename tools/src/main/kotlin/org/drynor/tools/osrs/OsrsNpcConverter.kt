@@ -79,7 +79,7 @@ object OsrsNpcConverter {
             106, 118 -> error("NPC $targetId: OSRS morphs require explicit selector/target conversion")
             107 -> npc.clickable = false
             109 -> npc.slowWalk = false
-            111 -> omit("NPC $targetId: omitted OSRS opcode 111; native animation/shadow semantics unverified")
+            111 -> npc.animateIdle = false // Both clients use opcode 111 to disable the NPC shadow.
             249 -> repeat(input.u8()) {
                 val type = input.u8()
                 require(type in 0..1) { "Invalid NPC param type $type" }

@@ -22,6 +22,35 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "convert-collection-log-npc") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        KrakenNpcAssets.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5, collector = true)
+        return
+    }
+    if (args.firstOrNull() == "convert-kraken-encounter") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        KrakenEncounterAssets.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "convert-kraken-npcs") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup") {
+            "osrs convert-kraken-npcs <gielenor-cache> <drynor-cache> <new-output-directory> [--offline-with-backup]"
+        }
+        KrakenNpcAssets.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "convert-kraken-cave") {
+        require(args.size == 4) { "osrs convert-kraken-cave <gielenor-cache> <drynor-cache> <new-output-directory>" }
+        KrakenCaveAssets.convert(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]))
+        return
+    }
+    if (args.firstOrNull() == "install-kraken-cave") {
+        require(args.size in 4..5 && args[3] == "--offline-with-backup") {
+            "osrs install-kraken-cave <converted-assets> <offline-cache> --offline-with-backup [previous-assets]"
+        }
+        KrakenCaveAssets.install(Path.of(args[1]), Path.of(args[2]), args.getOrNull(4)?.let { Path.of(it) })
+        return
+    }
     if (args.firstOrNull() == "pool-animation") {
         PoolAnimationAssets.run(args.drop(1))
         return

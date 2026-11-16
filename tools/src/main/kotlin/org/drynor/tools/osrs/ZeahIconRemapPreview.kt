@@ -164,7 +164,7 @@ object ZeahIconRemapPreview {
     }
 
     /** Changes only big-smart sprite references; all other bytes retain their original offsets. */
-    private fun remapConfig(group: Int, bytes: ByteArray, mapping: Map<Int, Int>): Pair<ByteArray, Set<Int>> {
+    internal fun remapConfig(group: Int, bytes: ByteArray, mapping: Map<Int, Int>): Pair<ByteArray, Set<Int>> {
         val result = bytes.copyOf()
         val reader = BufferReader(bytes)
         val references = sortedSetOf<Int>()

@@ -42,7 +42,7 @@ object ZulrahWaterPreview {
     }
 
     internal fun underwater(surface: MapDefinition): MapDefinition {
-        require(surface.id in regions && surface.levels == 4)
+        require(surface.levels == 4)
         val result = MapDefinition(surface.id,levels=1)
         for (i in 0 until 4096) {
             val tile = MapTile(surface.tiles[i])
