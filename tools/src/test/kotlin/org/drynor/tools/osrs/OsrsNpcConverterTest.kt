@@ -56,7 +56,8 @@ class OsrsNpcConverterTest {
         val preview = convert(bytes(102, 0, 4, 111, 0))
         assertEquals(-1, preview.npc.headIcon)
         assertTrue(preview.warnings.any { "head icon 4" in it })
-        assertTrue(preview.warnings.any { "opcode 111" in it })
+        assertFalse(preview.npc.animateIdle)
+        assertFalse(convert(bytes(111, 0), false).npc.animateIdle)
         assertFailsWith<IllegalArgumentException> { convert(bytes(102, 0, 4, 0), false) }
         assertFailsWith<IllegalArgumentException> { convert(bytes(41, 1, 0, 59, 0, 1, 0)) }
     }

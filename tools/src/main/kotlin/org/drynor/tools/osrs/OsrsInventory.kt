@@ -22,6 +22,17 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "stage-native-boss-pets") {
+        require(args.size == 3 || args.size == 4 && args[3] == "--offline-with-backup")
+        BossPetNativeAssets.run(Path.of(args[1]), Path.of(args[2]), args.size == 4)
+        return
+    }
+    if (args.firstOrNull() in setOf("stage-boss-pet-npcs", "stage-boss-pet-items")) {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        if (args[0] == "stage-boss-pet-npcs") KrakenNpcAssets.bossPets(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        else KrakenEncounterAssets.bossPets(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
     if (args.firstOrNull() == "convert-cerberus-combat-animations") {
         require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
         KrakenNpcAssets.cerberusCombatAnimations(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)

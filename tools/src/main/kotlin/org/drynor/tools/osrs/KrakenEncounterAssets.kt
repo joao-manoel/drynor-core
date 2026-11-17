@@ -30,6 +30,14 @@ internal object KrakenEncounterAssets {
                 43235 to 30123, 43237 to 30124, 43239 to 30125, 43241 to 30126, 43243 to 30127, 51031 to 30128),
             (6242..6248).toSet() + setOf(5100, 5101), replaceEffects = false)
 
+    fun bossPets(sourcePath: Path, targetPath: Path, output: Path, install: Boolean) =
+        convert(sourcePath, targetPath, output, install, mapOf(
+            42646 to 30350, 42654 to 30351, 42647 to 30352, 42644 to 30353,
+            42645 to 30354, 42643 to 30355, 42816 to 30356, 52318 to 30357,
+            42650 to 30358, 42652 to 30359, 42649 to 30360, 42651 to 30361,
+            42653 to 30362, 41995 to 30363,
+        ), emptySet(), replaceEffects = false)
+
     fun infernalTools(targetPath: Path, output: Path, install: Boolean) {
         require(!Files.exists(output))
         val assets = FileCache(targetPath.toString(), writable = false).use { target ->
@@ -98,7 +106,8 @@ internal object KrakenEncounterAssets {
                     it.tertiaryMaleModel, it.primaryFemaleModel, it.secondaryFemaleModel, it.tertiaryFemaleModel) }
                 val models = DeterministicIds.plan((references + spots.values.map { it.modelId }).filter { it > 0 }.toSet(),
                     target.archiveIds(Index.MODELS).toSet())
-                val animation = ZulrahAnimationAssets.plan(donor, target, spots.values.map { it.animationId }.toSet())
+                val animation = if (spots.isEmpty()) ZulrahAnimationAssets.Result(emptyMap(), emptyList(), kotlinx.serialization.json.JsonObject(emptyMap()))
+                    else ZulrahAnimationAssets.plan(donor, target, spots.values.map { it.animationId }.toSet())
                 val result = animation.assets.toMutableList()
                 for ((from, to) in models) {
                     val mesh = ModelDecoder.read(to, requireNotNull(donor.data(Index.MODELS, from)))
@@ -136,6 +145,10 @@ internal object KrakenEncounterAssets {
                     item.noteId = -1
                     item.notedTemplateId = -1
                     check(item.stackIds == null && item.lendId < 0 && item.primaryMaleDialogueHead < 0 && item.primaryFemaleDialogueHead < 0)
+                    if (item.id in 30350..30363) {
+                        item.options = arrayOf(null, null, null, null, "Drop")
+                        item.exchangeable = false
+                    }
                     if (item.id in 30123..30125) configureCerberusBoots(item)
                     if (item.id == 30116) {
                         val whip = ItemDefinition(4151)

@@ -32,6 +32,11 @@ internal object KrakenNpcAssets {
         convert(sourcePath, targetPath, output, install, setOf(25862, 25863, 25867, 25868, 25869, 25870, 20964),
             setOf(24486, 24487, 24490, 24491, 24492, 24494, 24495, 24503, 24504), emptySet())
 
+    fun bossPets(sourcePath: Path, targetPath: Path, output: Path, install: Boolean) =
+        convert(sourcePath, targetPath, output, install,
+            setOf(26635, 26637, 26638, 26627, 26630, 26626, 20318, 28010, 26632, 26634, 26631, 26633, 26636, 22055) +
+                (21672..21677), emptySet(), emptySet(), (21672..21677).associateWith { 16010 + it - 21672 })
+
     fun repairCerberusAttack(cachePath: Path) {
         val id = 25863
         val archive = id ushr 7
@@ -91,13 +96,14 @@ internal object KrakenNpcAssets {
 
     private fun convert(
         sourcePath: Path, targetPath: Path, output: Path, install: Boolean, selected: Set<Int>,
-        combatSequences: Set<Int>, adjustedWhirlpools: Set<Int>,
+        combatSequences: Set<Int>, adjustedWhirlpools: Set<Int>, npcTargets: Map<Int, Int> = emptyMap(),
     ) {
         require(!Files.exists(output))
         val assets = FileCache(sourcePath.toString(), writable = false).use { source ->
             FileCache(targetPath.toString(), writable = false).use { target ->
                 val definitions = selected.sorted().associateWith {
-                    check(target.data(Index.NPCS, it ushr 7, it and 127) == null) { "Occupied source NPC $it" }
+                    val nativeId = npcTargets[it] ?: it
+                    check(target.data(Index.NPCS, nativeId ushr 7, nativeId and 127) == null) { "Occupied source NPC $it" }
                     requireNotNull(source.data(Index.NPCS, it ushr 7, it and 127))
                 }
                 val deps = definitions.values.map(OsrsNpcDependencies::parse)
@@ -106,14 +112,31 @@ internal object KrakenNpcAssets {
                 val modelIds = deps.flatMap { dep -> dep.models.map { it + 200_000 } }.toSet()
                 val models = DeterministicIds.plan(modelIds, target.archiveIds(Index.MODELS).toSet())
                 val sequences = combatSequences + deps.flatMap { dep -> dep.animations.map { it + 20_000 } }
-                val animations = ZulrahAnimationAssets.plan(source, target, sequences)
+                val verifiedSounds = if (selected.contains(26635)) sequences.flatMap { sequence ->
+                    OsrsSequenceDependencies.parse(requireNotNull(source.data(Index.ANIMATIONS, sequence ushr 7, sequence and 127))).sounds
+                }.toSet().also { sounds ->
+                    for (sound in sounds) check(requireNotNull(source.data(Index.SYNTH_SOUNDS, sound, 0))
+                        .contentEquals(target.data(Index.SYNTH_SOUNDS, sound, 0))) { "Different pet sound $sound" }
+                } else emptySet()
+                val animations = ZulrahAnimationAssets.plan(source, target, sequences, verifiedSoundIds = verifiedSounds)
                 val result = animations.assets.toMutableList()
                 val reservedBas = target.files(Index.CONFIGS, Config.RENDER_ANIMATIONS).toMutableSet()
-                for ((id, definition) in definitions) {
+                for ((sourceId, definition) in definitions) {
+                    val id = npcTargets[sourceId] ?: sourceId
                     val bas = (0..65534).first { it !in reservedBas }
                     reservedBas.add(bas)
                     val converted = OsrsNpcConverter.convert(id, definition, models, animations.sequenceMap, bas, preview = false)
                     enableCerberusAttack(converted.npc)
+                    if (selected.contains(26635)) {
+                        converted.npc.options = arrayOf("Talk-to", "Pick-up", if (id in setOf(26637, 26638, 20318, 28010)) "Metamorphosis" else null, null, null, "Examine")
+                        converted.npc.rawOptions = null
+                        converted.npc.combat = 0
+                        converted.npc.drawMinimapDot = false
+                        if (sourceId in 21672..21677) {
+                            converted.npc.scaleXY = 64
+                            converted.npc.scaleZ = 64
+                        }
+                    }
                     val npcBytes = encode { with(NPCEncoder()) { it.encode(converted.npc) } }
                     val npcRead = NPCDefinition(id)
                     NPCDecoder().readLoop(npcRead, BufferReader(npcBytes))
