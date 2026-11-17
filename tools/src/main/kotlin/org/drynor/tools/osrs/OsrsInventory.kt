@@ -22,6 +22,53 @@ import java.security.MessageDigest
 
 /** Read-only discovery for Gielenor's hybrid cache, not a generic OSRS definition decoder. */
 fun runOsrs(args: List<String>) {
+    if (args.firstOrNull() == "convert-cerberus-combat-animations") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        KrakenNpcAssets.cerberusCombatAnimations(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "repair-cerberus-attack") {
+        require(args.size == 3 && args[2] == "--offline-with-backup")
+        KrakenNpcAssets.repairCerberusAttack(Path.of(args[1]))
+        return
+    }
+    if (args.firstOrNull() == "stage-infernal-tool-animations") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        InfernalToolAnimations.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "stage-infernal-tools") {
+        require(args.size == 3 || args.size == 4 && args[3] == "--offline-with-backup")
+        KrakenEncounterAssets.infernalTools(Path.of(args[1]), Path.of(args[2]), args.size == 4)
+        return
+    }
+    if (args.firstOrNull() == "stage-cerberus-boot-stats") {
+        require(args.size == 3 || args.size == 4 && args[3] == "--offline-with-backup")
+        KrakenEncounterAssets.cerberusBootStats(Path.of(args[1]), Path.of(args[2]), args.size == 4)
+        return
+    }
+    if (args.firstOrNull() == "stage-cerberus-rewards") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        KrakenEncounterAssets.cerberus(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "stage-cerberus-npcs") {
+        require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
+        KrakenNpcAssets.cerberus(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5)
+        return
+    }
+    if (args.firstOrNull() == "install-cerberus-map") {
+        require(args.size in 5..6 && args[4] == "--offline-with-backup") {
+            "osrs install-cerberus-map <assets> <offline-cache> <rollback-cache> --offline-with-backup [previous-assets]"
+        }
+        CerberusMapAssets.install(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.getOrNull(5)?.let { Path.of(it) })
+        return
+    }
+    if (args.firstOrNull() == "stage-cerberus-map") {
+        require(args.size in 3..4) { "osrs stage-cerberus-map <object-id-plan.json> <new-output-directory> [allocation-baseline]" }
+        CerberusMapAssets.stage(Path.of(args[1]), Path.of(args[2]), args.getOrNull(3)?.let { Path.of(it) })
+        return
+    }
     if (args.firstOrNull() == "convert-collection-log-npc") {
         require(args.size == 4 || args.size == 5 && args[4] == "--offline-with-backup")
         KrakenNpcAssets.run(Path.of(args[1]), Path.of(args[2]), Path.of(args[3]), args.size == 5, collector = true)

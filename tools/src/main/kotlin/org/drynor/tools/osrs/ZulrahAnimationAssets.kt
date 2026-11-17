@@ -26,7 +26,8 @@ internal object ZulrahAnimationAssets {
     )
     private data class Frame(val archive: Int, val file: Int, val sourceBase: Int, val bytes: ByteArray)
 
-    fun plan(source: Cache, target: Cache, sequenceIds: Set<Int>, equipmentClearedByDonor: Set<Int> = emptySet(), sceneOnlySequences: Set<Int> = emptySet(), verifiedSoundIds: Set<Int> = emptySet(), preservedSceneEquipmentSequences: Set<Int> = emptySet()): Result {
+    fun plan(source: Cache, target: Cache, sequenceIds: Set<Int>, equipmentClearedByDonor: Set<Int> = emptySet(), sceneOnlySequences: Set<Int> = emptySet(), verifiedSoundIds: Set<Int> = emptySet(), preservedSceneEquipmentSequences: Set<Int> = emptySet(),
+             equipmentOverrides: Map<Int, Map<Int, Int>> = emptyMap()): Result {
         require(sequenceIds.isNotEmpty() && sequenceIds.all { it >= 20000 })
         val sequences = sequenceIds.sorted().associateWith { id ->
             requireNotNull(source.data(Index.ANIMATIONS, id ushr 7, id and 127)) { "Missing source sequence $id" }
@@ -35,7 +36,11 @@ internal object ZulrahAnimationAssets {
         require(equipmentClearedByDonor.all { it == 25061 && it in sequenceIds }) { "Only the audited CustomAnims blowpipe override may clear equipment" }
         require(sceneOnlySequences.all { it in sequenceIds })
         require(preservedSceneEquipmentSequences.all { it in sequenceIds && auditedEquipmentOverride(it, dependencies.getValue(it).equipment) })
-        require(dependencies.all { (id,deps) -> deps.sounds.all { it in verifiedSoundIds } && (deps.equipment.isEmpty() || id in equipmentClearedByDonor || id in sceneOnlySequences || id in preservedSceneEquipmentSequences) }) {
+        require(equipmentOverrides.all { (id, mapping) ->
+            id in sequenceIds && mapping.keys == dependencies.getValue(id).equipment - 0 &&
+                mapping.isNotEmpty() && mapping.values.all { it in 0..65534 && target.data(Index.ITEMS, it ushr 8, it and 255) != null }
+        })
+        require(dependencies.all { (id,deps) -> deps.sounds.all { it in verifiedSoundIds } && (deps.equipment.isEmpty() || id in equipmentClearedByDonor || id in sceneOnlySequences || id in preservedSceneEquipmentSequences || id in equipmentOverrides) }) {
             "Actor animations require explicit sound/equipment import: $dependencies"
         }
         val frames = sortedMapOf<Long, Frame>()
@@ -88,7 +93,8 @@ internal object ZulrahAnimationAssets {
             // pass through. CustomAnims.modify case25061 clears both hands after source decoding.
             val converted = OsrsAnimationConverter.convertSequence(targetId, sequences.getValue(origin), frameMap,
                 origin in equipmentClearedByDonor || origin in sceneOnlySequences, verifiedSoundIds,
-                preserveSceneEquipmentOverrides = origin in preservedSceneEquipmentSequences)
+                preserveSceneEquipmentOverrides = origin in preservedSceneEquipmentSequences,
+                equipmentOverrides = equipmentOverrides[origin].orEmpty())
             val bytes = encode { with(AnimationEncoder()) { it.encode(converted) } }
             val decoded = AnimationDefinition(targetId)
             AnimationDecoder().readLoop(decoded, BufferReader(bytes))

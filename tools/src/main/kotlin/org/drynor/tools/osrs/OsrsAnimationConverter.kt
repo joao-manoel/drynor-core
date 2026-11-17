@@ -64,6 +64,7 @@ object OsrsAnimationConverter {
         previewWithoutSoundsAndEquipment: Boolean = false,
         verifiedSoundIds: Set<Int> = emptySet(),
         preserveSceneEquipmentOverrides: Boolean = false,
+        equipmentOverrides: Map<Int, Int> = emptyMap(),
     ): AnimationDefinition {
         val reader = AnimationImportReader(data)
         val result = AnimationDefinition(targetId)
@@ -100,12 +101,16 @@ object OsrsAnimationConverter {
                 5 -> result.priority = reader.u8()
                 6, 7 -> {
                     val value = reader.u16()
-                    require(previewWithoutSoundsAndEquipment || preserveSceneEquipmentOverrides) {
+                    require(previewWithoutSoundsAndEquipment || preserveSceneEquipmentOverrides || equipmentOverrides.isNotEmpty()) {
                         "Equipment override $value requires explicit scene-only approval or item mapping"
                     }
-                    if (preserveSceneEquipmentOverrides) {
+                    if (preserveSceneEquipmentOverrides || equipmentOverrides.isNotEmpty()) {
                         // OSRS zero means hide the held item; native PlayerAppearance uses 65535.
-                        val nativeValue = if (value == 0) 65535 else value
+                        val nativeValue = when {
+                            value == 0 || value == 65535 -> 65535
+                            equipmentOverrides.isNotEmpty() -> equipmentOverrides.getValue(value)
+                            else -> value
+                        }
                         if (opcode == 6) result.leftHandItem = nativeValue else result.rightHandItem = nativeValue
                     }
                 }
